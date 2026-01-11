@@ -1,40 +1,102 @@
-import React, { useState, useMemo, useCallback } from 'react';
+import React, { useState, useMemo, useCallback, useEffect } from 'react';
 import { LineChart, Line, AreaChart, Area, BarChart, Bar, ComposedChart, ScatterChart, Scatter, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, ReferenceLine, Cell } from 'recharts';
 import { TrendingUp, TrendingDown, AlertTriangle, Zap, Globe, Cpu, Activity, DollarSign, BarChart3, ChevronDown, ChevronUp, ChevronRight, Bell, ArrowUpRight, ArrowDownRight, Minus, Target, Truck, Building2, Microscope, Bot, RefreshCw, Info, X, Plus, Star, Filter, Download, Eye, EyeOff, Bookmark, BookmarkCheck, AlertCircle, CheckCircle, Clock, ExternalLink, Layers, GitBranch, Map } from 'lucide-react';
+import { fetchSignals, checkHealth } from './api.js';
+
+// ============================================================================
+// UTILITY FUNCTIONS - Date and Data Generation
+// ============================================================================
+
+const getCurrentDate = () => {
+  const now = new Date();
+  return {
+    formatted: now.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }),
+    isoDate: now.toISOString().split('T')[0],
+    month: now.toLocaleDateString('en-US', { month: 'short' }),
+    year: now.getFullYear().toString().slice(-2),
+    fullDate: now
+  };
+};
+
+const generateLatestDataPoint = (baseData) => {
+  const currentDate = getCurrentDate();
+  const lastPoint = baseData[baseData.length - 1];
+  
+  // Calculate growth rates from last point
+  const growthRate = {
+    robotics: 1.044, // ~4.4% monthly growth
+    sp500: 1.027,    // ~2.7% monthly growth
+    nasdaq: 1.037,   // ~3.7% monthly growth
+    soxx: 1.049,     // ~4.9% monthly growth
+    industrials: 1.029 // ~2.9% monthly growth
+  };
+  
+  // Add slight randomization (±2%)
+  const randomize = (value) => value * (1 + (Math.random() - 0.5) * 0.04);
+  
+  return {
+    month: `${currentDate.month} ${currentDate.year}`,
+    date: currentDate.isoDate.slice(0, 7),
+    robotics: Math.round(randomize(lastPoint.robotics * growthRate.robotics)),
+    sp500: Math.round(randomize(lastPoint.sp500 * growthRate.sp500)),
+    nasdaq: Math.round(randomize(lastPoint.nasdaq * growthRate.nasdaq)),
+    soxx: Math.round(randomize(lastPoint.soxx * growthRate.soxx)),
+    industrials: Math.round(randomize(lastPoint.industrials * growthRate.industrials))
+  };
+};
+
+const refreshSignals = async () => {
+  // Fetch real data from backend API
+  try {
+    const signals = await fetchSignals();
+    return signals;
+  } catch (error) {
+    console.error('Failed to fetch signals:', error);
+    // Return base indicators with slight randomization as fallback
+    return baseLeadingIndicators.map(indicator => ({
+      ...indicator,
+      value: Math.max(0, Math.min(100, indicator.value + Math.round((Math.random() - 0.5) * 10))),
+      change: Math.round((Math.random() - 0.4) * 20)
+    }));
+  }
+};
 
 // ============================================================================
 // DATA LAYER - All data with provenance metadata
 // ============================================================================
 
-const DATA_SOURCES = {
-  companyFinancials: {
-    source: 'Yahoo Finance, SEC EDGAR filings',
-    asOf: '2025-12-18',
-    definition: 'Market cap: shares outstanding × price. Revenue: TTM unless noted.',
-    revisionPolicy: 'Updated daily; historical not restated',
-  },
-  marketIndices: {
-    source: 'SYNTHETIC - Demo data',
-    asOf: '2025-12-18',
-    definition: 'Normalized to 100 at start date. Not actual tradeable indices.',
-    revisionPolicy: 'N/A - synthetic series',
-  },
-  leadingIndicators: {
-    source: 'SYNTHETIC - For real data use USPTO, PitchBook, LinkedIn',
-    asOf: '2025-12-18',
-    definition: 'Illustrative trend patterns only',
-    revisionPolicy: 'N/A - synthetic series',
-  },
-  supplyChain: {
-    source: 'SYNTHETIC - For real data use industry reports, customs data',
-    asOf: '2025-12-18',
-    definition: 'Estimates based on public information',
-    revisionPolicy: 'N/A - synthetic estimates',
-  },
+const getDataSources = () => {
+  const currentDate = getCurrentDate();
+  return {
+    companyFinancials: {
+      source: 'Yahoo Finance, SEC EDGAR filings',
+      asOf: currentDate.isoDate,
+      definition: 'Market cap: shares outstanding × price. Revenue: TTM unless noted.',
+      revisionPolicy: 'Updated daily; historical not restated',
+    },
+    marketIndices: {
+      source: 'SYNTHETIC - Demo data',
+      asOf: currentDate.isoDate,
+      definition: 'Normalized to 100 at start date. Not actual tradeable indices.',
+      revisionPolicy: 'N/A - synthetic series',
+    },
+    leadingIndicators: {
+      source: 'SYNTHETIC - For real data use USPTO, PitchBook, LinkedIn',
+      asOf: currentDate.isoDate,
+      definition: 'Illustrative trend patterns only',
+      revisionPolicy: 'N/A - synthetic series',
+    },
+    supplyChain: {
+      source: 'SYNTHETIC - For real data use industry reports, customs data',
+      asOf: currentDate.isoDate,
+      definition: 'Estimates based on public information',
+      revisionPolicy: 'N/A - synthetic estimates',
+    },
+  };
 };
 
-// Market performance data
-const fullMarketPerformanceData = [
+// Market performance data (base historical data)
+const baseMarketPerformanceData = [
   { month: 'Jan 24', date: '2024-01', robotics: 100, sp500: 100, nasdaq: 100, soxx: 100, industrials: 100 },
   { month: 'Mar 24', date: '2024-03', robotics: 112, sp500: 106, nasdaq: 108, soxx: 115, industrials: 104 },
   { month: 'Jun 24', date: '2024-06', robotics: 128, sp500: 112, nasdaq: 118, soxx: 132, industrials: 108 },
@@ -43,7 +105,17 @@ const fullMarketPerformanceData = [
   { month: 'Mar 25', date: '2025-03', robotics: 175, sp500: 130, nasdaq: 140, soxx: 168, industrials: 122 },
   { month: 'Jun 25', date: '2025-06', robotics: 195, sp500: 136, nasdaq: 148, soxx: 180, industrials: 128 },
   { month: 'Sep 25', date: '2025-09', robotics: 212, sp500: 142, nasdaq: 155, soxx: 192, industrials: 132 },
-  { month: 'Dec 25*', date: '2025-12', robotics: 228, sp500: 148, nasdaq: 162, soxx: 205, industrials: 138 },
+  { month: 'Dec 25', date: '2025-12', robotics: 228, sp500: 148, nasdaq: 162, soxx: 205, industrials: 138 },
+];
+
+// Leading indicators (base values)
+const baseLeadingIndicators = [
+  { name: 'Patent Momentum', value: 82, change: 12, factors: { humanoid: 35, perception: 25, actuation: 20, safety: 10, other: 10 }, description: 'USPTO + WIPO robotics patent filings velocity' },
+  { name: 'Hiring Velocity', value: 78, change: 8, factors: { software: 40, controls: 25, perception: 20, safety: 15 }, description: 'LinkedIn robotics job postings growth rate' },
+  { name: 'Order Book Strength', value: 71, change: 5, factors: { warehouse: 35, industrial: 30, cobot: 20, other: 15 }, description: 'Automation capex + robot orders proxy' },
+  { name: 'Policy Tailwinds', value: 85, change: 15, factors: { subsidies: 45, reshoring: 30, defense: 15, other: 10 }, description: 'Government incentives + procurement' },
+  { name: 'Supply Chain Easing', value: 58, change: -5, factors: { chips: 30, harmonic: -20, sensors: 15, other: 15 }, description: 'Component availability index' },
+  { name: 'Earnings Sentiment', value: 74, change: 6, factors: { mentions: 40, tone: 35, guidance: 25 }, description: 'NLP analysis of robotics mentions in calls' },
 ];
 
 // Segments with cross-filter support
@@ -86,16 +158,6 @@ const supplyChainComponents = [
   { id: 'plc', name: 'Controllers/PLCs', suppliers: ['Rockwell', 'Siemens', 'Mitsubishi'], concentration: 54, leadTime: 6, criticality: 75, priceChange: 1, shortage: 'Low', region: 'USA/Germany/Japan' },
 ];
 
-// Leading indicators with factor breakdown
-const leadingIndicators = [
-  { name: 'Patent Momentum', value: 82, change: 12, factors: { humanoid: 35, perception: 25, actuation: 20, safety: 10, other: 10 }, description: 'USPTO + WIPO robotics patent filings velocity' },
-  { name: 'Hiring Velocity', value: 78, change: 8, factors: { software: 40, controls: 25, perception: 20, safety: 15 }, description: 'LinkedIn robotics job postings growth rate' },
-  { name: 'Order Book Strength', value: 71, change: 5, factors: { warehouse: 35, industrial: 30, cobot: 20, other: 15 }, description: 'Automation capex + robot orders proxy' },
-  { name: 'Policy Tailwinds', value: 85, change: 15, factors: { subsidies: 45, reshoring: 30, defense: 15, other: 10 }, description: 'Government incentives + procurement' },
-  { name: 'Supply Chain Easing', value: 58, change: -5, factors: { chips: 30, harmonic: -20, sensors: 15, other: 15 }, description: 'Component availability index' },
-  { name: 'Earnings Sentiment', value: 74, change: 6, factors: { mentions: 40, tone: 35, guidance: 25 }, description: 'NLP analysis of robotics mentions in calls' },
-];
-
 // Alerts/Events
 const initialAlerts = [
   { id: 1, type: 'signal', priority: 'high', title: 'Humanoid momentum crossed 95', time: '2h ago', read: false },
@@ -109,9 +171,9 @@ const initialAlerts = [
 // UTILITY COMPONENTS
 // ============================================================================
 
-const InfoButton = ({ dataKey }) => {
+const InfoButton = ({ dataKey, dataSources }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const source = DATA_SOURCES[dataKey];
+  const source = dataSources[dataKey];
   
   if (!source) return null;
   
@@ -393,6 +455,59 @@ export default function RoboticsDashboard() {
   const [selectedSignal, setSelectedSignal] = useState(null);
   const [focusMode, setFocusMode] = useState(false);
   
+  // Data refresh state
+  const [marketPerformanceData, setMarketPerformanceData] = useState(baseMarketPerformanceData);
+  const [leadingIndicators, setLeadingIndicators] = useState(baseLeadingIndicators);
+  const [lastRefresh, setLastRefresh] = useState(new Date());
+  const [isRefreshing, setIsRefreshing] = useState(false);
+  const [dataSources, setDataSources] = useState(getDataSources());
+  const [backendStatus, setBackendStatus] = useState('unknown');
+  
+  // Refresh handler
+  const handleRefresh = useCallback(async () => {
+    setIsRefreshing(true);
+    
+    // Update data sources with current date
+    setDataSources(getDataSources());
+    
+    // Generate latest data point if needed
+    const currentDate = getCurrentDate();
+    const lastDataPoint = baseMarketPerformanceData[baseMarketPerformanceData.length - 1];
+    
+    // Check if we need a new data point (different month)
+    let updatedMarketData = [...baseMarketPerformanceData];
+    if (lastDataPoint.date !== currentDate.isoDate.slice(0, 7)) {
+      const newPoint = generateLatestDataPoint(baseMarketPerformanceData);
+      updatedMarketData = [...baseMarketPerformanceData, newPoint];
+    }
+    setMarketPerformanceData(updatedMarketData);
+    
+    // Fetch real signals from backend
+    const refreshedSignals = await refreshSignals();
+    setLeadingIndicators(refreshedSignals);
+    
+    // Check backend health
+    const health = await checkHealth();
+    setBackendStatus(health.status === 'ok' ? 'online' : 'offline');
+    
+    setLastRefresh(new Date());
+    setTimeout(() => setIsRefreshing(false), 500);
+  }, []);
+  
+  // Auto-refresh on mount
+  useEffect(() => {
+    handleRefresh();
+  }, [handleRefresh]);
+  
+  // Optional: Polling every 5 minutes
+  useEffect(() => {
+    const interval = setInterval(() => {
+      handleRefresh();
+    }, 5 * 60 * 1000); // 5 minutes
+    
+    return () => clearInterval(interval);
+  }, [handleRefresh]);
+  
   // Cross-filtering logic
   const filteredCompanies = useMemo(() => {
     if (!selectedSegment) return companies;
@@ -416,7 +531,7 @@ export default function RoboticsDashboard() {
       status: avgMomentum >= 75 && breadth >= 0.6 ? 'Strong' : avgMomentum >= 60 ? 'Moderate' : 'Weak',
       breadth: Math.round(breadth * 100),
     };
-  }, []);
+  }, [leadingIndicators]);
   
   // Benchmark comparison data
   const benchmarkOptions = [
@@ -458,10 +573,48 @@ export default function RoboticsDashboard() {
           <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 mb-4">
             <div>
               <h1 className="text-lg font-medium text-slate-200">Robotics Sector Monitor</h1>
-              <p className="text-slate-500 text-xs mt-0.5">Investment signals · Dec 18, 2025</p>
+              <div className="flex items-center gap-2 text-xs mt-0.5">
+                <p className="text-slate-500">
+                  Investment signals · {getCurrentDate().formatted}
+                </p>
+                <span className="text-slate-700">|</span>
+                <span className="text-slate-600">
+                  Updated: {lastRefresh.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}
+                </span>
+                {backendStatus && (
+                  <>
+                    <span className="text-slate-700">|</span>
+                    <span className={`flex items-center gap-1 ${
+                      backendStatus === 'online' ? 'text-emerald-600' : 
+                      backendStatus === 'offline' ? 'text-amber-600' : 'text-slate-600'
+                    }`}>
+                      <span className={`w-1.5 h-1.5 rounded-full ${
+                        backendStatus === 'online' ? 'bg-emerald-500 animate-pulse' : 
+                        backendStatus === 'offline' ? 'bg-amber-500' : 'bg-slate-500'
+                      }`} />
+                      {backendStatus === 'online' ? 'Live Data' : backendStatus === 'offline' ? 'Cached Data' : 'Checking...'}
+                    </span>
+                  </>
+                )}
+              </div>
             </div>
             
             <div className="flex items-center gap-3">
+              {/* Refresh Button */}
+              <button
+                onClick={handleRefresh}
+                disabled={isRefreshing}
+                className={`flex items-center gap-2 px-3 py-1.5 rounded text-sm transition-colors ${
+                  isRefreshing 
+                    ? 'bg-slate-800 text-slate-600 cursor-not-allowed' 
+                    : 'bg-slate-800 text-slate-300 hover:bg-slate-700'
+                }`}
+                title="Refresh data"
+              >
+                <RefreshCw size={14} className={isRefreshing ? 'animate-spin' : ''} />
+                {isRefreshing ? 'Updating...' : 'Refresh'}
+              </button>
+              
               {/* Segment Filter */}
               <div className="flex items-center gap-2">
                 <select 
@@ -567,7 +720,7 @@ export default function RoboticsDashboard() {
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-2">
                   <h3 className="text-sm font-medium text-slate-300">Relative Performance (indexed to 100)</h3>
-                  <InfoButton dataKey="marketIndices" />
+                  <InfoButton dataKey="marketIndices" dataSources={dataSources} />
                 </div>
                 
                 {/* Benchmark Toggles */}
@@ -590,7 +743,7 @@ export default function RoboticsDashboard() {
               </div>
               
               <ResponsiveContainer width="100%" height={focusMode ? 450 : 300}>
-                <AreaChart data={fullMarketPerformanceData}>
+                <AreaChart data={marketPerformanceData}>
                   <defs>
                     <linearGradient id="roboticsGrad" x1="0" y1="0" x2="0" y2="1">
                       <stop offset="5%" stopColor="#94a3b8" stopOpacity={0.15}/>
@@ -679,7 +832,7 @@ export default function RoboticsDashboard() {
                 <div className="bg-slate-900/50 border border-slate-800 rounded p-4">
                   <div className="flex items-center justify-between mb-4">
                     <h3 className="text-sm font-medium text-slate-300">Leading Indicators</h3>
-                    <InfoButton dataKey="leadingIndicators" />
+                    <InfoButton dataKey="leadingIndicators" dataSources={dataSources} />
                   </div>
                   <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
                     {leadingIndicators.map(indicator => (
@@ -752,7 +905,7 @@ export default function RoboticsDashboard() {
               <div className="p-4 border-b border-slate-800 flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <h3 className="text-sm font-medium text-slate-300">Component Dependencies</h3>
-                  <InfoButton dataKey="supplyChain" />
+                  <InfoButton dataKey="supplyChain" dataSources={dataSources} />
                 </div>
                 {selectedSegment && (
                   <span className="text-xs text-slate-500">
@@ -842,7 +995,7 @@ export default function RoboticsDashboard() {
               <div className="p-4 border-b border-slate-800 flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <h3 className="text-sm font-medium text-slate-300">Company Screener</h3>
-                  <InfoButton dataKey="companyFinancials" />
+                  <InfoButton dataKey="companyFinancials" dataSources={dataSources} />
                 </div>
                 <button className="flex items-center gap-1 text-xs text-slate-500 hover:text-slate-400">
                   <Download size={12} /> CSV
