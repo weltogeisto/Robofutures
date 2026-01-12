@@ -1,7 +1,8 @@
 import axios from 'axios';
 import { cache } from '../index.js';
+import { config } from '../config.js';
 
-const ALPHA_VANTAGE_KEY = process.env.ALPHA_VANTAGE_API_KEY;
+const ALPHA_VANTAGE_KEY = config.alphaVantageKey;
 
 /**
  * Get company financials and calculate earnings sentiment
@@ -103,7 +104,7 @@ export async function getSECFinancials(ticker) {
       `https://data.sec.gov/submissions/CIK${ticker}.json`,
       {
         headers: {
-          'User-Agent': process.env.SEC_USER_AGENT || 'RobofuturesDashboard contact@example.com'
+          'User-Agent': config.secUserAgent || 'RobofuturesDashboard contact@example.com'
         },
         timeout: 10000
       }

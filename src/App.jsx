@@ -1,7 +1,7 @@
 import React, { useState, useMemo, useCallback, useEffect } from 'react';
 import { LineChart, Line, AreaChart, Area, BarChart, Bar, ComposedChart, ScatterChart, Scatter, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, ReferenceLine, Cell } from 'recharts';
 import { TrendingUp, TrendingDown, AlertTriangle, Zap, Globe, Cpu, Activity, DollarSign, BarChart3, ChevronDown, ChevronUp, ChevronRight, Bell, ArrowUpRight, ArrowDownRight, Minus, Target, Truck, Building2, Microscope, Bot, RefreshCw, Info, X, Plus, Star, Filter, Download, Eye, EyeOff, Bookmark, BookmarkCheck, AlertCircle, CheckCircle, Clock, ExternalLink, Layers, GitBranch, Map } from 'lucide-react';
-import { fetchSignals, checkHealth, fetchCompanies } from './api.js';
+import { fetchSignals, checkHealth, fetchCompanies, fetchPerformance } from './api.js';
 
 // ============================================================================
 // UTILITY FUNCTIONS - Date and Data Generation
@@ -471,6 +471,8 @@ export default function RoboticsDashboard() {
   
   // Data refresh state
   const [marketPerformanceData, setMarketPerformanceData] = useState(baseMarketPerformanceData);
+  const [performanceLoading, setPerformanceLoading] = useState(false);
+  const [performanceLastUpdate, setPerformanceLastUpdate] = useState(null);
   const [leadingIndicators, setLeadingIndicators] = useState(baseLeadingIndicators);
   const [companies, setCompanies] = useState(baseCompanies);
   const [companiesLoading, setCompaniesLoading] = useState(false);
@@ -479,6 +481,50 @@ export default function RoboticsDashboard() {
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [dataSources, setDataSources] = useState(getDataSources());
   const [backendStatus, setBackendStatus] = useState('unknown');
+  
+  // Load performance data (separate from main refresh due to long loading time ~2 minutes)
+  const loadPerformanceData = useCallback(async () => {
+    // Check localStorage cache first (24 hour cache)
+    const cachedData = localStorage.getItem('performanceData');
+    const cachedTimestamp = localStorage.getItem('performanceDataTimestamp');
+    
+    if (cachedData && cachedTimestamp) {
+      const age = Date.now() - parseInt(cachedTimestamp);
+      const twentyFourHours = 24 * 60 * 60 * 1000;
+      
+      if (age < twentyFourHours) {
+        // Use cached data
+        const parsed = JSON.parse(cachedData);
+        setMarketPerformanceData(parsed.chartData);
+        setPerformanceLastUpdate(parsed.lastUpdate);
+        console.log('Performance loaded from localStorage cache (age: ' + Math.round(age / 3600000) + 'h)');
+        return;
+      }
+    }
+    
+    // Fetch fresh data
+    setPerformanceLoading(true);
+    try {
+      const result = await fetchPerformance();
+      
+      // Backend returns { data: { data: [...], metadata: {...}, source: '...' } }
+      // We only need the data array for the chart
+      const chartData = result.data.data || result.data;
+      
+      setMarketPerformanceData(chartData);
+      setPerformanceLastUpdate(result.lastUpdate);
+      
+      // Cache in localStorage
+      localStorage.setItem('performanceData', JSON.stringify({ chartData, lastUpdate: result.lastUpdate }));
+      localStorage.setItem('performanceDataTimestamp', Date.now().toString());
+      
+      console.log('Performance loaded:', result.cached ? 'from backend cache' : 'fresh from API');
+    } catch (error) {
+      console.error('Failed to load performance:', error);
+    } finally {
+      setPerformanceLoading(false);
+    }
+  }, []);
   
   // Load companies data (separate from main refresh due to long loading time)
   const loadCompaniesData = useCallback(async () => {
@@ -526,13 +572,15 @@ export default function RoboticsDashboard() {
     setTimeout(() => setIsRefreshing(false), 500);
   }, []);
   
-  // Auto-refresh on mount
+  // Auto-refresh on mount (only once!)
   useEffect(() => {
     handleRefresh();
-    loadCompaniesData(); // Load companies once on mount
-  }, [handleRefresh, loadCompaniesData]);
+    loadCompaniesData(); // Load companies once on mount (cached for 1 hour)
+    loadPerformanceData(); // Load performance once on mount (cached for 24 hours)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // Empty deps = run only on mount
   
-  // Optional: Polling every 5 minutes (only for signals, not companies)
+  // Optional: Polling every 5 minutes (only for signals, not companies or performance)
   useEffect(() => {
     const interval = setInterval(() => {
       handleRefresh();
@@ -752,9 +800,39 @@ export default function RoboticsDashboard() {
             <div className="bg-slate-900/50 border border-slate-800 rounded p-4">
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-2">
-                  <h3 className="text-sm font-medium text-slate-300">Relative Performance (indexed to 100)</h3>
+                  <h3 className="text-sm font-medium text-slate-300">
+                    Relative Performance (indexed to 100)
+                  </h3>
+                  <div className="relative group">
+                    <Info size={14} className="text-slate-600 hover:text-slate-400 cursor-help" />
+                    <div className="absolute left-0 top-6 w-80 bg-slate-900 border border-slate-700 rounded p-3 shadow-xl text-xs opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-50">
+                      <div className="font-medium text-slate-300 mb-2">Robotics Index Composition</div>
+                      <div className="text-slate-400 space-y-1">
+                        <div className="grid grid-cols-2 gap-x-3 gap-y-0.5">
+                          <div>• NVDA: 25%</div>
+                          <div>• ISRG: 20%</div>
+                          <div>• ROK: 15%</div>
+                          <div>• ABB: 10%</div>
+                          <div>• SYM: 10%</div>
+                          <div>• TSLA: 10%</div>
+                          <div>• PATH: 5%</div>
+                          <div>• FANUY: 5%</div>
+                        </div>
+                        <div className="mt-2 pt-2 border-t border-slate-800 text-slate-500">
+                          Weighted by robotics exposure and market cap. Rebalanced quarterly.
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                   <InfoButton dataKey="marketIndices" dataSources={dataSources} />
-                  <DataSourceBadge isSimulated={true} />
+                  {!performanceLastUpdate && performanceLoading && (
+                    <span className="text-xs text-amber-500 flex items-center gap-1">
+                      <RefreshCw size={12} className="animate-spin" />
+                      Loading (~2 min)...
+                    </span>
+                  )}
+                  {performanceLastUpdate && <DataSourceBadge isCached={true} />}
+                  {!performanceLastUpdate && !performanceLoading && <DataSourceBadge isSimulated={true} />}
                 </div>
                 
                 {/* Benchmark Toggles */}

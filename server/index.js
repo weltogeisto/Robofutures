@@ -1,13 +1,13 @@
+// CRITICAL: Load configuration FIRST (includes dotenv.config())
+import { config } from './config.js';
+
 import express from 'express';
 import cors from 'cors';
-import dotenv from 'dotenv';
 import NodeCache from 'node-cache';
 import signalsRouter from './routes/signals.js';
 
-dotenv.config();
-
 const app = express();
-const PORT = process.env.PORT || 3001;
+const PORT = config.port;
 
 // Initialize cache (TTL: 5 minutes)
 export const cache = new NodeCache({ stdTTL: 300 });
@@ -28,6 +28,16 @@ app.get('/api/health', (req, res) => {
       keys: cache.keys().length,
       stats: cache.getStats()
     }
+  });
+});
+
+// Cache management (development only)
+app.post('/api/cache/clear', (req, res) => {
+  cache.flushAll();
+  res.json({ 
+    success: true, 
+    message: 'Cache cleared',
+    timestamp: new Date().toISOString()
   });
 });
 

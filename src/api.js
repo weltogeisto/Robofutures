@@ -104,6 +104,79 @@ export async function fetchCompanies() {
 }
 
 /**
+ * Fetch performance data (slow endpoint - ~2 minutes)
+ */
+export async function fetchPerformance() {
+  try {
+    const response = await fetch(`${API_BASE_URL}/api/signals/performance`);
+    
+    if (!response.ok) {
+      throw new Error(`API Error: ${response.status}`);
+    }
+    
+    const result = await response.json();
+    
+    if (result.success && result.data) {
+      return {
+        data: result.data,
+        lastUpdate: result.lastUpdate,
+        cached: result.cached || false
+      };
+    }
+    
+    throw new Error('Invalid response format');
+    
+  } catch (error) {
+    console.error('Error fetching performance:', error);
+    
+    // Return fallback data if API fails
+    return {
+      data: getFallbackPerformance(),
+      cached: true,
+      error: error.message
+    };
+  }
+}
+
+/**
+ * Fallback performance if backend is unavailable
+ */
+function getFallbackPerformance() {
+  // Generate baseline data for last 24 months
+  const months = [];
+  const baseDate = new Date('2024-01-01');
+  
+  for (let i = 0; i < 24; i++) {
+    const date = new Date(baseDate);
+    date.setMonth(date.getMonth() - (23 - i));
+    months.push(date.toISOString().substring(0, 7)); // YYYY-MM
+  }
+  
+  return {
+    robotics: months.map((month, i) => ({
+      month,
+      value: 100 + i * 3.5 + Math.random() * 10 // ~80% annual growth
+    })),
+    sp500: months.map((month, i) => ({
+      month,
+      value: 100 + i * 1.2 + Math.random() * 5 // ~15% annual growth
+    })),
+    nasdaq: months.map((month, i) => ({
+      month,
+      value: 100 + i * 1.8 + Math.random() * 6 // ~22% annual growth
+    })),
+    semis: months.map((month, i) => ({
+      month,
+      value: 100 + i * 2.2 + Math.random() * 8 // ~27% annual growth
+    })),
+    industrials: months.map((month, i) => ({
+      month,
+      value: 100 + i * 0.8 + Math.random() * 4 // ~10% annual growth
+    }))
+  };
+}
+
+/**
  * Fallback companies if backend is unavailable
  */
 function getFallbackCompanies() {

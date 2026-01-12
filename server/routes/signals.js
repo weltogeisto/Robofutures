@@ -3,6 +3,7 @@ import { getPatentMomentum } from '../services/patents.js';
 import { getEarningsSentiment, getOrderBookStrength } from '../services/financials.js';
 import { getPolicyTailwinds, getHiringVelocity } from '../services/market.js';
 import { getAllCompanies } from '../services/companies.js';
+import { getPerformanceData, getFallbackPerformanceData } from '../services/performance.js';
 
 const router = express.Router();
 
@@ -141,6 +142,35 @@ router.get('/companies', async (req, res) => {
     res.status(500).json({ 
       success: false, 
       error: error.message 
+    });
+  }
+});
+
+/**
+ * GET /api/signals/performance
+ * Returns historical performance data for robotics index and benchmarks
+ * NOTE: This is a slow endpoint (~2 minutes) due to Alpha Vantage rate limits
+ */
+router.get('/performance', async (req, res) => {
+  try {
+    console.log('Fetching performance data...');
+    const data = await getPerformanceData();
+    res.json({ 
+      success: true, 
+      data,
+      lastUpdate: new Date().toISOString()
+    });
+  } catch (error) {
+    console.error('Error in /performance route:', error);
+    
+    // Return fallback data on error
+    const fallbackData = getFallbackPerformanceData();
+    res.json({ 
+      success: true, 
+      data: fallbackData,
+      lastUpdate: new Date().toISOString(),
+      cached: true,
+      error: 'Using cached baseline data'
     });
   }
 });

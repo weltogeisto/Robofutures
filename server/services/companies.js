@@ -1,7 +1,11 @@
 import axios from 'axios';
 import { cache } from '../index.js';
+import { config } from '../config.js';
 
-const ALPHA_VANTAGE_KEY = process.env.ALPHA_VANTAGE_API_KEY;
+const ALPHA_VANTAGE_KEY = config.alphaVantageKey;
+
+// Debug: Log API key status on module load
+console.log('🔑 Companies Service - API Key Status:', ALPHA_VANTAGE_KEY ? `Present (${ALPHA_VANTAGE_KEY.substring(0, 4)}...)` : 'MISSING!');
 
 // Helper function for delays
 const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
@@ -11,6 +15,8 @@ const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
  */
 async function getCompanyData(ticker) {
   try {
+    console.log(`  🔍 Fetching ${ticker} with API key: ${ALPHA_VANTAGE_KEY ? 'YES' : 'NO'}`);
+    
     const response = await axios.get('https://www.alphavantage.co/query', {
       params: {
         function: 'OVERVIEW',
@@ -22,6 +28,11 @@ async function getCompanyData(ticker) {
 
     const data = response.data;
     
+    console.log(`  📦 Response for ${ticker}:`, data.Symbol ? 'SUCCESS' : 'FAILED', data['Note'] || data['Error Message'] || '');
+    if (!data.Symbol) {
+      console.log(`  📄 Raw response keys:`, Object.keys(data).slice(0, 5));
+    }
+    
     // Check for rate limit or errors
     if (data['Note']) {
       throw new Error('Rate limit exceeded');
@@ -31,8 +42,10 @@ async function getCompanyData(ticker) {
       throw new Error(data['Error Message']);
     }
     
-    if (!data.Symbol) {
-      throw new Error('No data returned');
+    // Check if we got an empty response (common with free tier)
+    if (!data.Symbol || Object.keys(data).length === 0) {
+      console.log(`  ⚠️  Empty response for ${ticker} - using fallback data`);
+      throw new Error('No data returned - will use fallback');
     }
 
     // Parse and normalize data

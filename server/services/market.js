@@ -1,7 +1,8 @@
 import axios from 'axios';
 import { cache } from '../index.js';
+import { config } from '../config.js';
 
-const NEWS_API_KEY = process.env.NEWS_API_KEY;
+const NEWS_API_KEY = config.newsApiKey;
 
 /**
  * Policy Tailwinds from news analysis
@@ -114,8 +115,8 @@ export async function getHiringVelocity() {
   if (cached) return cached;
 
   try {
-    const ADZUNA_APP_ID = process.env.ADZUNA_APP_ID;
-    const ADZUNA_APP_KEY = process.env.ADZUNA_APP_KEY;
+    const ADZUNA_APP_ID = config.adzunaAppId;
+    const ADZUNA_APP_KEY = config.adzunaAppKey;
 
     if (!ADZUNA_APP_ID || !ADZUNA_APP_KEY) {
       throw new Error('Adzuna API credentials not configured');
