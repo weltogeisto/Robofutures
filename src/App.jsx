@@ -171,6 +171,20 @@ const initialAlerts = [
 // UTILITY COMPONENTS
 // ============================================================================
 
+const DataSourceBadge = ({ isSimulated = false, isCached = false }) => {
+  if (!isSimulated && !isCached) return null;
+  
+  return (
+    <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-medium ${
+      isSimulated 
+        ? 'bg-amber-500/10 text-amber-500/70 border border-amber-500/20' 
+        : 'bg-slate-500/10 text-slate-500/70 border border-slate-500/20'
+    }`}>
+      {isSimulated ? '⚠️ Simulated' : '💾 Cached'}
+    </span>
+  );
+};
+
 const InfoButton = ({ dataKey, dataSources }) => {
   const [isOpen, setIsOpen] = useState(false);
   const source = dataSources[dataKey];
@@ -740,6 +754,7 @@ export default function RoboticsDashboard() {
                 <div className="flex items-center gap-2">
                   <h3 className="text-sm font-medium text-slate-300">Relative Performance (indexed to 100)</h3>
                   <InfoButton dataKey="marketIndices" dataSources={dataSources} />
+                  <DataSourceBadge isSimulated={true} />
                 </div>
                 
                 {/* Benchmark Toggles */}
@@ -825,7 +840,12 @@ export default function RoboticsDashboard() {
             {!focusMode && (
               <>
                 {/* Segment Grid */}
-                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-2">
+                <div className="mb-4">
+                  <div className="flex items-center gap-2 mb-3">
+                    <h3 className="text-sm font-medium text-slate-300">Market Segments</h3>
+                    <DataSourceBadge isSimulated={true} />
+                  </div>
+                  <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-2">
                   {segments.map(segment => (
                     <button
                       key={segment.id}
@@ -845,13 +865,17 @@ export default function RoboticsDashboard() {
                       <TrendIndicator value={segment.growth} />
                     </button>
                   ))}
+                  </div>
                 </div>
                 
                 {/* Leading Indicators Summary */}
                 <div className="bg-slate-900/50 border border-slate-800 rounded p-4">
                   <div className="flex items-center justify-between mb-4">
-                    <h3 className="text-sm font-medium text-slate-300">Leading Indicators</h3>
-                    <InfoButton dataKey="leadingIndicators" dataSources={dataSources} />
+                    <div className="flex items-center gap-2">
+                      <h3 className="text-sm font-medium text-slate-300">Leading Indicators</h3>
+                      <InfoButton dataKey="leadingIndicators" dataSources={dataSources} />
+                      {backendStatus !== 'online' && <DataSourceBadge isCached={true} />}
+                    </div>
                   </div>
                   <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
                     {leadingIndicators.map(indicator => (
@@ -925,6 +949,7 @@ export default function RoboticsDashboard() {
                 <div className="flex items-center gap-2">
                   <h3 className="text-sm font-medium text-slate-300">Component Dependencies</h3>
                   <InfoButton dataKey="supplyChain" dataSources={dataSources} />
+                  <DataSourceBadge isSimulated={true} />
                 </div>
                 {selectedSegment && (
                   <span className="text-xs text-slate-500">
@@ -1015,6 +1040,7 @@ export default function RoboticsDashboard() {
                 <div className="flex items-center gap-2">
                   <h3 className="text-sm font-medium text-slate-300">Company Screener</h3>
                   <InfoButton dataKey="companyFinancials" dataSources={dataSources} />
+                  {!companiesLastUpdate && <DataSourceBadge isSimulated={true} />}
                   {companiesLoading && (
                     <span className="text-xs text-amber-500 flex items-center gap-1">
                       <RefreshCw size={12} className="animate-spin" />
