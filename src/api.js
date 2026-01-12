@@ -68,6 +68,58 @@ export async function checkHealth() {
 }
 
 /**
+ * Fetch company data
+ */
+export async function fetchCompanies() {
+  try {
+    const response = await fetch(`${API_BASE_URL}/api/signals/companies`);
+    
+    if (!response.ok) {
+      throw new Error(`API Error: ${response.status}`);
+    }
+    
+    const data = await response.json();
+    
+    if (data.success && data.companies) {
+      return {
+        companies: data.companies,
+        cached: data.cached,
+        lastUpdated: data.lastUpdated,
+        stats: data.stats
+      };
+    }
+    
+    throw new Error('Invalid response format');
+    
+  } catch (error) {
+    console.error('Error fetching companies:', error);
+    
+    // Return fallback data if API fails
+    return {
+      companies: getFallbackCompanies(),
+      cached: true,
+      error: error.message
+    };
+  }
+}
+
+/**
+ * Fallback companies if backend is unavailable
+ */
+function getFallbackCompanies() {
+  return [
+    { ticker: 'NVDA', name: 'NVIDIA', marketCap: 4200, revenue: 187.1, revenueGrowth: 94, exposure: 38, momentum: 94, segments: ['humanoid', 'warehouse', 'surgical'], tier: 'Core', source: 'Cached' },
+    { ticker: 'ISRG', name: 'Intuitive Surgical', marketCap: 200, revenue: 9.6, revenueGrowth: 16, exposure: 95, momentum: 86, segments: ['surgical'], tier: 'Core', source: 'Cached' },
+    { ticker: 'ABB', name: 'ABB Ltd', marketCap: 134, revenue: 34.5, revenueGrowth: 10, exposure: 48, momentum: 70, segments: ['cobot', 'industrial'], tier: 'Satellite', source: 'Cached' },
+    { ticker: 'FANUY', name: 'Fanuc Corp', marketCap: 34, revenue: 5.3, revenueGrowth: 6, exposure: 88, momentum: 62, segments: ['cobot', 'industrial'], tier: 'Satellite', source: 'Cached' },
+    { ticker: 'ROK', name: 'Rockwell Automation', marketCap: 45, revenue: 8.3, revenueGrowth: 12, exposure: 58, momentum: 68, segments: ['cobot', 'industrial'], tier: 'Core', source: 'Cached' },
+    { ticker: 'SYM', name: 'Symbotic', marketCap: 7, revenue: 2.4, revenueGrowth: 72, exposure: 100, momentum: 90, segments: ['warehouse'], tier: 'Speculative', source: 'Cached' },
+    { ticker: 'PATH', name: 'UiPath', marketCap: 8.5, revenue: 1.4, revenueGrowth: 18, exposure: 72, momentum: 65, segments: [], tier: 'Satellite', source: 'Cached' },
+    { ticker: 'TSLA', name: 'Tesla (Optimus)', marketCap: 1600, revenue: 95.6, revenueGrowth: 22, exposure: 28, momentum: 82, segments: ['humanoid'], tier: 'Satellite', source: 'Cached' }
+  ];
+}
+
+/**
  * Fallback signals if backend is unavailable
  */
 function getFallbackSignals() {

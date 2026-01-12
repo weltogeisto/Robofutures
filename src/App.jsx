@@ -1,7 +1,7 @@
 import React, { useState, useMemo, useCallback, useEffect } from 'react';
 import { LineChart, Line, AreaChart, Area, BarChart, Bar, ComposedChart, ScatterChart, Scatter, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, ReferenceLine, Cell } from 'recharts';
 import { TrendingUp, TrendingDown, AlertTriangle, Zap, Globe, Cpu, Activity, DollarSign, BarChart3, ChevronDown, ChevronUp, ChevronRight, Bell, ArrowUpRight, ArrowDownRight, Minus, Target, Truck, Building2, Microscope, Bot, RefreshCw, Info, X, Plus, Star, Filter, Download, Eye, EyeOff, Bookmark, BookmarkCheck, AlertCircle, CheckCircle, Clock, ExternalLink, Layers, GitBranch, Map } from 'lucide-react';
-import { fetchSignals, checkHealth } from './api.js';
+import { fetchSignals, checkHealth, fetchCompanies } from './api.js';
 
 // ============================================================================
 // UTILITY FUNCTIONS - Date and Data Generation
@@ -134,8 +134,8 @@ const segments = [
     companies: ['ABB', 'FANUY', 'ROK'], components: ['Servo Motors', 'Harmonic Drives', 'Controllers/PLCs'] },
 ];
 
-// Company data with exposure mapping
-const companies = [
+// Company data with exposure mapping (base/fallback)
+const baseCompanies = [
   { ticker: 'NVDA', name: 'NVIDIA', marketCap: 4200, revenue: 187.1, revenueGrowth: 94, exposure: 38, momentum: 94, segments: ['humanoid', 'warehouse', 'surgical'], tier: 'Core' },
   { ticker: 'ISRG', name: 'Intuitive Surgical', marketCap: 200, revenue: 9.6, revenueGrowth: 16, exposure: 95, momentum: 86, segments: ['surgical'], tier: 'Core' },
   { ticker: 'ABB', name: 'ABB Ltd', marketCap: 134, revenue: 34.5, revenueGrowth: 10, exposure: 48, momentum: 70, segments: ['cobot', 'industrial'], tier: 'Satellite' },
@@ -458,10 +458,28 @@ export default function RoboticsDashboard() {
   // Data refresh state
   const [marketPerformanceData, setMarketPerformanceData] = useState(baseMarketPerformanceData);
   const [leadingIndicators, setLeadingIndicators] = useState(baseLeadingIndicators);
+  const [companies, setCompanies] = useState(baseCompanies);
+  const [companiesLoading, setCompaniesLoading] = useState(false);
+  const [companiesLastUpdate, setCompaniesLastUpdate] = useState(null);
   const [lastRefresh, setLastRefresh] = useState(new Date());
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [dataSources, setDataSources] = useState(getDataSources());
   const [backendStatus, setBackendStatus] = useState('unknown');
+  
+  // Load companies data (separate from main refresh due to long loading time)
+  const loadCompaniesData = useCallback(async () => {
+    setCompaniesLoading(true);
+    try {
+      const data = await fetchCompanies();
+      setCompanies(data.companies);
+      setCompaniesLastUpdate(data.lastUpdated);
+      console.log('Companies loaded:', data.stats || 'from cache');
+    } catch (error) {
+      console.error('Failed to load companies:', error);
+    } finally {
+      setCompaniesLoading(false);
+    }
+  }, []);
   
   // Refresh handler
   const handleRefresh = useCallback(async () => {
@@ -497,9 +515,10 @@ export default function RoboticsDashboard() {
   // Auto-refresh on mount
   useEffect(() => {
     handleRefresh();
-  }, [handleRefresh]);
+    loadCompaniesData(); // Load companies once on mount
+  }, [handleRefresh, loadCompaniesData]);
   
-  // Optional: Polling every 5 minutes
+  // Optional: Polling every 5 minutes (only for signals, not companies)
   useEffect(() => {
     const interval = setInterval(() => {
       handleRefresh();
@@ -996,10 +1015,36 @@ export default function RoboticsDashboard() {
                 <div className="flex items-center gap-2">
                   <h3 className="text-sm font-medium text-slate-300">Company Screener</h3>
                   <InfoButton dataKey="companyFinancials" dataSources={dataSources} />
+                  {companiesLoading && (
+                    <span className="text-xs text-amber-500 flex items-center gap-1">
+                      <RefreshCw size={12} className="animate-spin" />
+                      Loading live data (~90s)...
+                    </span>
+                  )}
+                  {!companiesLoading && companiesLastUpdate && (
+                    <span className="text-xs text-slate-600">
+                      Updated: {new Date(companiesLastUpdate).toLocaleTimeString()} (cached 1h)
+                    </span>
+                  )}
                 </div>
-                <button className="flex items-center gap-1 text-xs text-slate-500 hover:text-slate-400">
-                  <Download size={12} /> CSV
-                </button>
+                <div className="flex items-center gap-2">
+                  <button 
+                    onClick={loadCompaniesData}
+                    disabled={companiesLoading}
+                    className={`flex items-center gap-1 text-xs px-2 py-1 rounded transition-colors ${
+                      companiesLoading 
+                        ? 'text-slate-600 cursor-not-allowed' 
+                        : 'text-slate-500 hover:text-slate-400 hover:bg-slate-800'
+                    }`}
+                    title="Refresh company data"
+                  >
+                    <RefreshCw size={12} className={companiesLoading ? 'animate-spin' : ''} />
+                    Refresh
+                  </button>
+                  <button className="flex items-center gap-1 text-xs text-slate-500 hover:text-slate-400">
+                    <Download size={12} /> CSV
+                  </button>
+                </div>
               </div>
               
               <div className="overflow-x-auto">
@@ -1008,12 +1053,12 @@ export default function RoboticsDashboard() {
                     <tr>
                       <th className="text-left p-3 text-slate-500 text-xs font-medium w-8"></th>
                       <th className="text-left p-3 text-slate-500 text-xs font-medium">Company</th>
-                      <th className="text-right p-3 text-slate-500 text-xs font-medium">Mkt Cap</th>
-                      <th className="text-right p-3 text-slate-500 text-xs font-medium">Rev</th>
-                      <th className="text-right p-3 text-slate-500 text-xs font-medium">Growth</th>
-                      <th className="text-center p-3 text-slate-500 text-xs font-medium">Exposure</th>
-                      <th className="text-center p-3 text-slate-500 text-xs font-medium">Mom</th>
-                      <th className="text-center p-3 text-slate-500 text-xs font-medium">Tier</th>
+                      <th className="text-right p-3 text-slate-500 text-xs font-medium" title="Market Capitalization">Mkt Cap</th>
+                      <th className="text-right p-3 text-slate-500 text-xs font-medium" title="Revenue (TTM)">Rev</th>
+                      <th className="text-right p-3 text-slate-500 text-xs font-medium" title="Quarterly Revenue Growth Year-over-Year">Growth (YoY)</th>
+                      <th className="text-center p-3 text-slate-500 text-xs font-medium" title="Robotics Revenue Exposure %">Exposure</th>
+                      <th className="text-center p-3 text-slate-500 text-xs font-medium" title="Momentum Score">Mom</th>
+                      <th className="text-center p-3 text-slate-500 text-xs font-medium" title="Investment Tier Classification">Tier</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-800">

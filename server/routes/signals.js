@@ -2,6 +2,7 @@ import express from 'express';
 import { getPatentMomentum } from '../services/patents.js';
 import { getEarningsSentiment, getOrderBookStrength } from '../services/financials.js';
 import { getPolicyTailwinds, getHiringVelocity } from '../services/market.js';
+import { getAllCompanies } from '../services/companies.js';
 
 const router = express.Router();
 
@@ -121,6 +122,26 @@ router.get('/orders', async (req, res) => {
     res.json({ success: true, data });
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+/**
+ * GET /api/signals/companies
+ * Returns all company data with real financials
+ */
+router.get('/companies', async (req, res) => {
+  try {
+    const data = await getAllCompanies();
+    res.json({ 
+      success: true, 
+      ...data
+    });
+  } catch (error) {
+    console.error('Error in /companies route:', error);
+    res.status(500).json({ 
+      success: false, 
+      error: error.message 
+    });
   }
 });
 
