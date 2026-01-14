@@ -514,11 +514,11 @@ export default function RoboticsDashboard() {
       setMarketPerformanceData(chartData);
       setPerformanceLastUpdate(result.lastUpdate);
       
+      console.log('Performance loaded:', result.cached ? 'from backend cache' : 'fresh from API');
+      
       // Cache in localStorage
       localStorage.setItem('performanceData', JSON.stringify({ chartData, lastUpdate: result.lastUpdate }));
       localStorage.setItem('performanceDataTimestamp', Date.now().toString());
-      
-      console.log('Performance loaded:', result.cached ? 'from backend cache' : 'fresh from API');
     } catch (error) {
       console.error('Failed to load performance:', error);
     } finally {
@@ -855,7 +855,7 @@ export default function RoboticsDashboard() {
               </div>
               
               <ResponsiveContainer width="100%" height={focusMode ? 450 : 300}>
-                <AreaChart data={marketPerformanceData}>
+                <ComposedChart data={marketPerformanceData} key={`chart-${marketPerformanceData?.length || 0}`}>
                   <defs>
                     <linearGradient id="roboticsGrad" x1="0" y1="0" x2="0" y2="1">
                       <stop offset="5%" stopColor="#94a3b8" stopOpacity={0.15}/>
@@ -868,30 +868,65 @@ export default function RoboticsDashboard() {
                   <Tooltip content={<CustomTooltip />} />
                   <ReferenceLine y={100} stroke="#334155" strokeDasharray="5 5" />
                   
+                  {/* Benchmark Lines */}
+                  {selectedBenchmarks.includes('sp500') && (
+                    <Line 
+                      type="monotone" 
+                      dataKey="sp500" 
+                      stroke="#3b82f6" 
+                      strokeWidth={2} 
+                      dot={false} 
+                      name="S&P 500"
+                      isAnimationActive={false}
+                    />
+                  )}
+                  {selectedBenchmarks.includes('nasdaq') && (
+                    <Line 
+                      type="monotone" 
+                      dataKey="nasdaq" 
+                      stroke="#10b981" 
+                      strokeWidth={2} 
+                      dot={false} 
+                      name="NASDAQ"
+                      isAnimationActive={false}
+                    />
+                  )}
+                  {selectedBenchmarks.includes('soxx') && (
+                    <Line 
+                      type="monotone" 
+                      dataKey="soxx" 
+                      stroke="#f59e0b" 
+                      strokeWidth={2} 
+                      dot={false} 
+                      name="SOXX"
+                      isAnimationActive={false}
+                    />
+                  )}
+                  {selectedBenchmarks.includes('industrials') && (
+                    <Line 
+                      type="monotone" 
+                      dataKey="industrials" 
+                      stroke="#ec4899" 
+                      strokeWidth={2} 
+                      dot={false} 
+                      name="Industrials"
+                      isAnimationActive={false}
+                    />
+                  )}
+                  
+                  {/* Robotics Index Area - rendered last so it's on top */}
                   <Area 
                     type="monotone" 
                     dataKey="robotics" 
                     stroke="#e2e8f0" 
                     strokeWidth={2} 
                     fill="url(#roboticsGrad)" 
-                    name="Robotics" 
+                    name="Robotics"
+                    isAnimationActive={false}
                   />
                   
-                  {selectedBenchmarks.includes('sp500') && (
-                    <Line type="monotone" dataKey="sp500" stroke="#3b82f6" strokeWidth={1.5} dot={false} name="S&P 500" />
-                  )}
-                  {selectedBenchmarks.includes('nasdaq') && (
-                    <Line type="monotone" dataKey="nasdaq" stroke="#10b981" strokeWidth={1.5} dot={false} name="NASDAQ" />
-                  )}
-                  {selectedBenchmarks.includes('soxx') && (
-                    <Line type="monotone" dataKey="soxx" stroke="#f59e0b" strokeWidth={1.5} dot={false} name="SOXX" />
-                  )}
-                  {selectedBenchmarks.includes('industrials') && (
-                    <Line type="monotone" dataKey="industrials" stroke="#ec4899" strokeWidth={1.5} dot={false} name="Industrials" />
-                  )}
-                  
                   <Legend />
-                </AreaChart>
+                </ComposedChart>
               </ResponsiveContainer>
               
               {/* Outperformance Stats */}
