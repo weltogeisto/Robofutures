@@ -1,0 +1,74 @@
+[
+  {
+    "name": "Patent Momentum",
+    "value": 82,
+    "change": 12,
+    "factors": {
+      "humanoid": 35,
+      "perception": 25,
+      "actuation": 20,
+      "safety": 10,
+      "other": 10
+    },
+    "description": "USPTO + WIPO robotics patent filings velocity"
+  },
+  {
+    "name": "Hiring Velocity",
+    "value": 78,
+    "change": 8,
+    "factors": {
+      "software": 40,
+      "controls": 25,
+      "perception": 20,
+      "safety": 15
+    },
+    "description": "LinkedIn robotics job postings growth rate"
+  },
+  {
+    "name": "Order Book Strength",
+    "value": 71,
+    "change": 5,
+    "factors": {
+      "warehouse": 35,
+      "industrial": 30,
+      "cobot": 20,
+      "other": 15
+    },
+    "description": "Automation capex + robot orders proxy"
+  },
+  {
+    "name": "Policy Tailwinds",
+    "value": 85,
+    "change": 15,
+    "factors": {
+      "subsidies": 45,
+      "reshoring": 30,
+      "defense": 15,
+      "other": 10
+    },
+    "description": "Government incentives + procurement"
+  },
+  {
+    "name": "Supply Chain Easing",
+    "value": 58,
+    "change": -5,
+    "factors": {
+      "chips": 30,
+      "harmonic": -20,
+      "sensors": 15,
+      "other": 15
+    },
+    "description": "Component availability index"
+  },
+  {
+    "name": "Earnings Sentiment",
+    "value": 74,
+    "change": 6,
+    "factors": {
+      "mentions": 40,
+      "tone": 35,
+      "guidance": 25
+    },
+    "description": "NLP analysis of robotics mentions in calls"
+  }
+]
