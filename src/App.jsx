@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useCallback } from 'react';
+import React, { useState, useMemo, useCallback, useEffect } from 'react';
 import { LineChart, Line, AreaChart, Area, BarChart, Bar, ComposedChart, ScatterChart, Scatter, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, ReferenceLine, Cell } from 'recharts';
 import { TrendingUp, TrendingDown, AlertTriangle, Zap, Globe, Cpu, Activity, DollarSign, BarChart3, ChevronDown, ChevronUp, ChevronRight, Bell, ArrowUpRight, ArrowDownRight, Minus, Target, Truck, Building2, Microscope, Bot, RefreshCw, Info, X, Plus, Star, Filter, Download, Eye, EyeOff, Bookmark, BookmarkCheck, AlertCircle, CheckCircle, Clock, ExternalLink, Layers, GitBranch, Map } from 'lucide-react';
 import dataSources from './data/dataSources.json';
@@ -302,12 +302,44 @@ export default function RoboticsDashboard() {
   const [alerts, setAlerts] = useState(initialAlerts);
   const [selectedSignal, setSelectedSignal] = useState(null);
   const [focusMode, setFocusMode] = useState(false);
-  
+  const [liveData, setLiveData] = useState(null);
+  const [dataLastUpdated, setDataLastUpdated] = useState('Dec 18, 2025');
+
+  // Load live data from daily-updated JSON (falls back to embedded data)
+  useEffect(() => {
+    fetch(import.meta.env.BASE_URL + 'data/market.json')
+      .then(res => {
+        if (!res.ok) throw new Error('No live data');
+        return res.json();
+      })
+      .then(data => {
+        setLiveData(data);
+        if (data.meta?.lastUpdated) {
+          const d = new Date(data.meta.lastUpdated + 'T00:00:00Z');
+          setDataLastUpdated(d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }));
+        }
+      })
+      .catch(() => {
+        // Silently fall back to embedded data
+      });
+  }, []);
+
+  // Merge live data over defaults
+  const activeCompanies = useMemo(() => {
+    if (!liveData?.companies?.length) return companies;
+    return liveData.companies;
+  }, [liveData]);
+
+  const activeMarketData = useMemo(() => {
+    if (!liveData?.marketPerformance?.length) return fullMarketPerformanceData;
+    return liveData.marketPerformance;
+  }, [liveData]);
+
   // Cross-filtering logic
   const filteredCompanies = useMemo(() => {
-    if (!selectedSegment) return companies;
-    return companies.filter(c => c.segments.includes(selectedSegment));
-  }, [selectedSegment]);
+    if (!selectedSegment) return activeCompanies;
+    return activeCompanies.filter(c => c.segments.includes(selectedSegment));
+  }, [selectedSegment, activeCompanies]);
   
   const filteredComponents = useMemo(() => {
     if (!selectedSegment) return supplyChainComponents;
@@ -358,7 +390,7 @@ export default function RoboticsDashboard() {
         setWatchlist={setWatchlist}
         alerts={alerts}
         setAlerts={setAlerts}
-        companies={companies}
+        companies={activeCompanies}
       />
       
       {/* Main Content */}
@@ -368,7 +400,7 @@ export default function RoboticsDashboard() {
           <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 mb-4">
             <div>
               <h1 className="text-lg font-medium text-slate-200">Robotics Sector Monitor</h1>
-              <p className="text-slate-500 text-xs mt-0.5">Investment signals · Dec 18, 2025</p>
+              <p className="text-slate-500 text-xs mt-0.5">Investment signals · {dataLastUpdated}{liveData ? ' · Live' : ''}</p>
             </div>
             
             <div className="flex items-center gap-3">
@@ -500,7 +532,7 @@ export default function RoboticsDashboard() {
               </div>
               
               <ResponsiveContainer width="100%" height={focusMode ? 450 : 300}>
-                <AreaChart data={fullMarketPerformanceData}>
+                <AreaChart data={activeMarketData}>
                   <defs>
                     <linearGradient id="roboticsGrad" x1="0" y1="0" x2="0" y2="1">
                       <stop offset="5%" stopColor="#94a3b8" stopOpacity={0.15}/>
@@ -539,25 +571,29 @@ export default function RoboticsDashboard() {
                 </AreaChart>
               </ResponsiveContainer>
               
-              {/* Outperformance Stats */}
-              <div className="grid grid-cols-4 gap-4 mt-4 pt-4 border-t border-slate-800">
-                <div>
-                  <div className="text-xs text-slate-600">vs S&P 500</div>
-                  <div className="text-sm font-mono text-emerald-500">+54%</div>
-                </div>
-                <div>
-                  <div className="text-xs text-slate-600">vs NASDAQ</div>
-                  <div className="text-sm font-mono text-emerald-500">+41%</div>
-                </div>
-                <div>
-                  <div className="text-xs text-slate-600">vs Industrials</div>
-                  <div className="text-sm font-mono text-emerald-500">+65%</div>
-                </div>
-                <div>
-                  <div className="text-xs text-slate-600">Sharpe</div>
-                  <div className="text-sm font-mono text-slate-300">1.82</div>
-                </div>
-              </div>
+              {/* Outperformance Stats - computed from data */}
+              {(() => {
+                const d = activeMarketData;
+                const last = d[d.length - 1] || {};
+                const r = last.robotics || 100;
+                const stats = [
+                  { label: 'vs S&P 500', diff: last.sp500 ? r - last.sp500 : null },
+                  { label: 'vs NASDAQ', diff: last.nasdaq ? r - last.nasdaq : null },
+                  { label: 'vs Industrials', diff: last.industrials ? r - last.industrials : null },
+                ];
+                return (
+                  <div className="grid grid-cols-3 gap-4 mt-4 pt-4 border-t border-slate-800">
+                    {stats.map(s => (
+                      <div key={s.label}>
+                        <div className="text-xs text-slate-600">{s.label}</div>
+                        <div className={`text-sm font-mono ${s.diff != null && s.diff >= 0 ? 'text-emerald-500' : 'text-red-500'}`}>
+                          {s.diff != null ? `${s.diff >= 0 ? '+' : ''}${Math.round(s.diff)}%` : '—'}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                );
+              })()}
             </div>
             
             {!focusMode && (
@@ -904,8 +940,8 @@ export default function RoboticsDashboard() {
         {/* Footer */}
         <div className="mt-6 pt-3 border-t border-slate-800 text-center">
           <p className="text-slate-600 text-xs">
-            Company data: Yahoo Finance (Dec 18) · Indices & signals: Synthetic · 
-            Not investment advice
+            Company data: Yahoo Finance ({dataLastUpdated}) · Indices: {liveData ? 'Live' : 'Synthetic'} · Signals: Synthetic ·
+            Not investment advice · Updates daily via GitHub Actions
           </p>
         </div>
       </div>
