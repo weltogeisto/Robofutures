@@ -1,0 +1,42 @@
+[
+  {
+    "id": 1,
+    "type": "signal",
+    "priority": "high",
+    "title": "Humanoid momentum crossed 95",
+    "time": "2h ago",
+    "read": false
+  },
+  {
+    "id": 2,
+    "type": "earnings",
+    "priority": "medium",
+    "title": "ISRG earnings in 5 days",
+    "time": "1d ago",
+    "read": false
+  },
+  {
+    "id": 3,
+    "type": "supply",
+    "priority": "critical",
+    "title": "Harmonic drive lead time +2 weeks",
+    "time": "3d ago",
+    "read": true
+  },
+  {
+    "id": 4,
+    "type": "policy",
+    "priority": "medium",
+    "title": "EU robotics subsidy program announced",
+    "time": "5d ago",
+    "read": true
+  },
+  {
+    "id": 5,
+    "type": "price",
+    "priority": "low",
+    "title": "SYM up 8% on volume spike",
+    "time": "1w ago",
+    "read": true
+  }
+]

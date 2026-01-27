@@ -1,0 +1,122 @@
+[
+  {
+    "id": "ai-chips",
+    "name": "AI Chips",
+    "suppliers": [
+      "NVIDIA",
+      "AMD",
+      "Intel"
+    ],
+    "concentration": 84,
+    "leadTime": 14,
+    "criticality": 98,
+    "priceChange": 8,
+    "shortage": "Medium",
+    "region": "USA/Taiwan"
+  },
+  {
+    "id": "servo",
+    "name": "Servo Motors",
+    "suppliers": [
+      "Yaskawa",
+      "Fanuc",
+      "Siemens"
+    ],
+    "concentration": 71,
+    "leadTime": 11,
+    "criticality": 92,
+    "priceChange": 6,
+    "shortage": "Medium",
+    "region": "Japan/Germany"
+  },
+  {
+    "id": "lidar",
+    "name": "LiDAR Sensors",
+    "suppliers": [
+      "Hesai",
+      "Luminar",
+      "Velodyne"
+    ],
+    "concentration": 62,
+    "leadTime": 8,
+    "criticality": 84,
+    "priceChange": -18,
+    "shortage": "Low",
+    "region": "China/USA"
+  },
+  {
+    "id": "harmonic",
+    "name": "Harmonic Drives",
+    "suppliers": [
+      "Harmonic Drive",
+      "Nabtesco",
+      "Sumitomo"
+    ],
+    "concentration": 89,
+    "leadTime": 22,
+    "criticality": 96,
+    "priceChange": 22,
+    "shortage": "Critical",
+    "region": "Japan"
+  },
+  {
+    "id": "force",
+    "name": "Force Sensors",
+    "suppliers": [
+      "ATI",
+      "Robotiq",
+      "OnRobot"
+    ],
+    "concentration": 56,
+    "leadTime": 7,
+    "criticality": 78,
+    "priceChange": 4,
+    "shortage": "Low",
+    "region": "USA/Denmark"
+  },
+  {
+    "id": "vision",
+    "name": "Vision Systems",
+    "suppliers": [
+      "Cognex",
+      "Keyence",
+      "Basler"
+    ],
+    "concentration": 60,
+    "leadTime": 5,
+    "criticality": 82,
+    "priceChange": 2,
+    "shortage": "Low",
+    "region": "USA/Japan/Germany"
+  },
+  {
+    "id": "battery",
+    "name": "Batteries/Power",
+    "suppliers": [
+      "CATL",
+      "LG Energy",
+      "Panasonic"
+    ],
+    "concentration": 76,
+    "leadTime": 12,
+    "criticality": 88,
+    "priceChange": -12,
+    "shortage": "Low",
+    "region": "China/Korea/Japan"
+  },
+  {
+    "id": "plc",
+    "name": "Controllers/PLCs",
+    "suppliers": [
+      "Rockwell",
+      "Siemens",
+      "Mitsubishi"
+    ],
+    "concentration": 54,
+    "leadTime": 6,
+    "criticality": 75,
+    "priceChange": 1,
+    "shortage": "Low",
+    "region": "USA/Germany/Japan"
+  }
+]

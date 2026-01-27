@@ -1,0 +1,46 @@
+name: Update data
+
+on:
+  schedule:
+    - cron: "0 2 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  update-data:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Update data
+        run: node scripts/update-data.mjs
+
+      - name: Commit and push updates
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          if ls src/data/*.json >/dev/null 2>&1; then
+            git add src/data/*.json
+          else
+            echo "No data files found to add."
+          fi
+          if git diff --cached --quiet; then
+            echo "No data updates to commit."
+            exit 0
+          fi
+          git commit -m "Update data"
+          git push origin main

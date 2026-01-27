@@ -1,0 +1,26 @@
+{
+  "companyFinancials": {
+    "source": "Yahoo Finance, SEC EDGAR filings",
+    "asOf": "2026-01-27T16:15:30.813Z",
+    "definition": "Market cap: shares outstanding × price. Revenue: TTM unless noted.",
+    "revisionPolicy": "Updated daily; historical not restated"
+  },
+  "marketIndices": {
+    "source": "SYNTHETIC - Demo data",
+    "asOf": "2026-01-27T16:15:30.813Z",
+    "definition": "Normalized to 100 at start date. Not actual tradeable indices.",
+    "revisionPolicy": "N/A - synthetic series"
+  },
+  "leadingIndicators": {
+    "source": "SYNTHETIC - For real data use USPTO, PitchBook, LinkedIn",
+    "asOf": "2026-01-27T16:15:30.813Z",
+    "definition": "Illustrative trend patterns only",
+    "revisionPolicy": "N/A - synthetic series"
+  },
+  "supplyChain": {
+    "source": "SYNTHETIC - For real data use industry reports, customs data",
+    "asOf": "2026-01-27T16:15:30.813Z",
+    "definition": "Estimates based on public information",
+    "revisionPolicy": "N/A - synthetic estimates"
+  }
+}

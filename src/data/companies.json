@@ -1,0 +1,109 @@
+[
+  {
+    "ticker": "NVDA",
+    "name": "NVIDIA",
+    "marketCap": 4200,
+    "revenue": 187.1,
+    "revenueGrowth": 94,
+    "exposure": 38,
+    "momentum": 94,
+    "segments": [
+      "humanoid",
+      "warehouse",
+      "surgical"
+    ],
+    "tier": "Core"
+  },
+  {
+    "ticker": "ISRG",
+    "name": "Intuitive Surgical",
+    "marketCap": 200,
+    "revenue": 9.6,
+    "revenueGrowth": 16,
+    "exposure": 95,
+    "momentum": 86,
+    "segments": [
+      "surgical"
+    ],
+    "tier": "Core"
+  },
+  {
+    "ticker": "ABB",
+    "name": "ABB Ltd",
+    "marketCap": 134,
+    "revenue": 34.5,
+    "revenueGrowth": 10,
+    "exposure": 48,
+    "momentum": 70,
+    "segments": [
+      "cobot",
+      "industrial"
+    ],
+    "tier": "Satellite"
+  },
+  {
+    "ticker": "FANUY",
+    "name": "Fanuc Corp",
+    "marketCap": 34,
+    "revenue": 5.3,
+    "revenueGrowth": 6,
+    "exposure": 88,
+    "momentum": 62,
+    "segments": [
+      "cobot",
+      "industrial"
+    ],
+    "tier": "Satellite"
+  },
+  {
+    "ticker": "ROK",
+    "name": "Rockwell Automation",
+    "marketCap": 45,
+    "revenue": 8.3,
+    "revenueGrowth": 12,
+    "exposure": 58,
+    "momentum": 68,
+    "segments": [
+      "cobot",
+      "industrial"
+    ],
+    "tier": "Core"
+  },
+  {
+    "ticker": "SYM",
+    "name": "Symbotic",
+    "marketCap": 7,
+    "revenue": 2.4,
+    "revenueGrowth": 72,
+    "exposure": 100,
+    "momentum": 90,
+    "segments": [
+      "warehouse"
+    ],
+    "tier": "Speculative"
+  },
+  {
+    "ticker": "PATH",
+    "name": "UiPath",
+    "marketCap": 8.5,
+    "revenue": 1.4,
+    "revenueGrowth": 18,
+    "exposure": 72,
+    "momentum": 65,
+    "segments": [],
+    "tier": "Satellite"
+  },
+  {
+    "ticker": "TSLA",
+    "name": "Tesla (Optimus)",
+    "marketCap": 1600,
+    "revenue": 95.6,
+    "revenueGrowth": 22,
+    "exposure": 28,
+    "momentum": 82,
+    "segments": [
+      "humanoid"
+    ],
+    "tier": "Satellite"
+  }
+]
