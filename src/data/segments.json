@@ -2,9 +2,9 @@
   {
     "id": "humanoid",
     "name": "Humanoid Robots",
-    "growth": 298,
-    "marketSize": 3.2,
-    "momentum": 97,
+    "growth": 214,
+    "marketSize": 5.1,
+    "momentum": 95,
     "color": "#8b5cf6",
     "companies": [
       "TSLA",
@@ -21,9 +21,9 @@
   {
     "id": "surgical",
     "name": "Surgical Robotics",
-    "growth": 44,
-    "marketSize": 19.8,
-    "momentum": 86,
+    "growth": 36,
+    "marketSize": 21.4,
+    "momentum": 84,
     "color": "#ec4899",
     "companies": [
       "ISRG"
@@ -37,9 +37,9 @@
   {
     "id": "warehouse",
     "name": "Warehouse/Logistics",
-    "growth": 62,
-    "marketSize": 26.5,
-    "momentum": 93,
+    "growth": 48,
+    "marketSize": 29.2,
+    "momentum": 91,
     "color": "#3b82f6",
     "companies": [
       "SYM",
@@ -55,9 +55,9 @@
   {
     "id": "cobot",
     "name": "Collaborative Robots",
-    "growth": 52,
-    "marketSize": 14.2,
-    "momentum": 89,
+    "growth": 41,
+    "marketSize": 16.3,
+    "momentum": 87,
     "color": "#10b981",
     "companies": [
       "ABB",
@@ -73,9 +73,9 @@
   {
     "id": "agri",
     "name": "Agricultural Robots",
-    "growth": 42,
-    "marketSize": 9.8,
-    "momentum": 78,
+    "growth": 33,
+    "marketSize": 11.1,
+    "momentum": 74,
     "color": "#f59e0b",
     "companies": [],
     "components": [
@@ -87,9 +87,9 @@
   {
     "id": "industrial",
     "name": "Industrial Arms",
-    "growth": 16,
-    "marketSize": 54.8,
-    "momentum": 62,
+    "growth": 12,
+    "marketSize": 58.5,
+    "momentum": 60,
     "color": "#6366f1",
     "companies": [
       "ABB",
