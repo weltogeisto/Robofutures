@@ -7,5 +7,7 @@ import react from '@vitejs/plugin-react'
 // If your repo name is different, change it below.
 export default defineConfig({
   plugins: [react()],
-  base: '/Robofutures/'
+  base: process.env.GITHUB_REPOSITORY
+    ? `/${process.env.GITHUB_REPOSITORY.split('/')[1]}/`
+    : '/'
 })

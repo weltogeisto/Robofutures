@@ -14,8 +14,6 @@ npm run dev
 3. Push to `main` (or re-run the workflow)
 
 ## Important: base path
-For project pages, Vite needs the correct `base` in `vite.config.js`:
-
-`base: '/<REPO_NAME>/'`
-
-If your repo is not named `Robofutures`, change it.
+For project pages, Vite needs the correct `base` in `vite.config.js`.
+This repo derives it from the `GITHUB_REPOSITORY` environment variable during
+the GitHub Actions build so the deployed site matches the repo name.
