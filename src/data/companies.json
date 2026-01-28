@@ -2,11 +2,11 @@
   {
     "ticker": "NVDA",
     "name": "NVIDIA",
-    "marketCap": 4200,
-    "revenue": 187.1,
-    "revenueGrowth": 94,
-    "exposure": 38,
-    "momentum": 94,
+    "marketCap": 4650,
+    "revenue": 204.3,
+    "revenueGrowth": 41,
+    "exposure": 42,
+    "momentum": 93,
     "segments": [
       "humanoid",
       "warehouse",
@@ -17,11 +17,11 @@
   {
     "ticker": "ISRG",
     "name": "Intuitive Surgical",
-    "marketCap": 200,
-    "revenue": 9.6,
-    "revenueGrowth": 16,
+    "marketCap": 220,
+    "revenue": 10.4,
+    "revenueGrowth": 14,
     "exposure": 95,
-    "momentum": 86,
+    "momentum": 84,
     "segments": [
       "surgical"
     ],
@@ -30,11 +30,11 @@
   {
     "ticker": "ABB",
     "name": "ABB Ltd",
-    "marketCap": 134,
-    "revenue": 34.5,
-    "revenueGrowth": 10,
-    "exposure": 48,
-    "momentum": 70,
+    "marketCap": 148,
+    "revenue": 36.1,
+    "revenueGrowth": 9,
+    "exposure": 50,
+    "momentum": 73,
     "segments": [
       "cobot",
       "industrial"
@@ -44,11 +44,11 @@
   {
     "ticker": "FANUY",
     "name": "Fanuc Corp",
-    "marketCap": 34,
-    "revenue": 5.3,
-    "revenueGrowth": 6,
-    "exposure": 88,
-    "momentum": 62,
+    "marketCap": 38,
+    "revenue": 5.8,
+    "revenueGrowth": 7,
+    "exposure": 86,
+    "momentum": 64,
     "segments": [
       "cobot",
       "industrial"
@@ -58,11 +58,11 @@
   {
     "ticker": "ROK",
     "name": "Rockwell Automation",
-    "marketCap": 45,
-    "revenue": 8.3,
-    "revenueGrowth": 12,
-    "exposure": 58,
-    "momentum": 68,
+    "marketCap": 49,
+    "revenue": 8.9,
+    "revenueGrowth": 8,
+    "exposure": 61,
+    "momentum": 70,
     "segments": [
       "cobot",
       "industrial"
@@ -72,11 +72,11 @@
   {
     "ticker": "SYM",
     "name": "Symbotic",
-    "marketCap": 7,
-    "revenue": 2.4,
-    "revenueGrowth": 72,
+    "marketCap": 9.2,
+    "revenue": 3.1,
+    "revenueGrowth": 48,
     "exposure": 100,
-    "momentum": 90,
+    "momentum": 88,
     "segments": [
       "warehouse"
     ],
@@ -85,22 +85,22 @@
   {
     "ticker": "PATH",
     "name": "UiPath",
-    "marketCap": 8.5,
-    "revenue": 1.4,
-    "revenueGrowth": 18,
-    "exposure": 72,
-    "momentum": 65,
+    "marketCap": 10.1,
+    "revenue": 1.7,
+    "revenueGrowth": 12,
+    "exposure": 70,
+    "momentum": 67,
     "segments": [],
     "tier": "Satellite"
   },
   {
     "ticker": "TSLA",
     "name": "Tesla (Optimus)",
-    "marketCap": 1600,
-    "revenue": 95.6,
-    "revenueGrowth": 22,
-    "exposure": 28,
-    "momentum": 82,
+    "marketCap": 1750,
+    "revenue": 108.2,
+    "revenueGrowth": 16,
+    "exposure": 31,
+    "momentum": 80,
     "segments": [
       "humanoid"
     ],

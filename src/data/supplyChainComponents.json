@@ -7,10 +7,10 @@
       "AMD",
       "Intel"
     ],
-    "concentration": 84,
-    "leadTime": 14,
-    "criticality": 98,
-    "priceChange": 8,
+    "concentration": 82,
+    "leadTime": 11,
+    "criticality": 96,
+    "priceChange": 4,
     "shortage": "Medium",
     "region": "USA/Taiwan"
   },
@@ -22,10 +22,10 @@
       "Fanuc",
       "Siemens"
     ],
-    "concentration": 71,
-    "leadTime": 11,
-    "criticality": 92,
-    "priceChange": 6,
+    "concentration": 69,
+    "leadTime": 9,
+    "criticality": 90,
+    "priceChange": 3,
     "shortage": "Medium",
     "region": "Japan/Germany"
   },
@@ -37,10 +37,10 @@
       "Luminar",
       "Velodyne"
     ],
-    "concentration": 62,
-    "leadTime": 8,
-    "criticality": 84,
-    "priceChange": -18,
+    "concentration": 60,
+    "leadTime": 6,
+    "criticality": 82,
+    "priceChange": -9,
     "shortage": "Low",
     "region": "China/USA"
   },
@@ -52,11 +52,11 @@
       "Nabtesco",
       "Sumitomo"
     ],
-    "concentration": 89,
-    "leadTime": 22,
-    "criticality": 96,
-    "priceChange": 22,
-    "shortage": "Critical",
+    "concentration": 86,
+    "leadTime": 18,
+    "criticality": 95,
+    "priceChange": 10,
+    "shortage": "High",
     "region": "Japan"
   },
   {
@@ -67,10 +67,10 @@
       "Robotiq",
       "OnRobot"
     ],
-    "concentration": 56,
-    "leadTime": 7,
-    "criticality": 78,
-    "priceChange": 4,
+    "concentration": 55,
+    "leadTime": 6,
+    "criticality": 76,
+    "priceChange": 2,
     "shortage": "Low",
     "region": "USA/Denmark"
   },
@@ -82,10 +82,10 @@
       "Keyence",
       "Basler"
     ],
-    "concentration": 60,
-    "leadTime": 5,
-    "criticality": 82,
-    "priceChange": 2,
+    "concentration": 58,
+    "leadTime": 4,
+    "criticality": 80,
+    "priceChange": 1,
     "shortage": "Low",
     "region": "USA/Japan/Germany"
   },
@@ -97,10 +97,10 @@
       "LG Energy",
       "Panasonic"
     ],
-    "concentration": 76,
-    "leadTime": 12,
-    "criticality": 88,
-    "priceChange": -12,
+    "concentration": 72,
+    "leadTime": 10,
+    "criticality": 85,
+    "priceChange": -6,
     "shortage": "Low",
     "region": "China/Korea/Japan"
   },
@@ -112,10 +112,10 @@
       "Siemens",
       "Mitsubishi"
     ],
-    "concentration": 54,
-    "leadTime": 6,
-    "criticality": 75,
-    "priceChange": 1,
+    "concentration": 52,
+    "leadTime": 5,
+    "criticality": 73,
+    "priceChange": 0,
     "shortage": "Low",
     "region": "USA/Germany/Japan"
   }
