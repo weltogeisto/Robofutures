@@ -18,4 +18,4 @@ For project pages, Vite needs the correct `base` in `vite.config.js`:
 
 `base: '/<REPO_NAME>/'`
 
-If your repo is not named `Robofutures`, change it.
+If your repo is not named `Robofuture`, change it.
