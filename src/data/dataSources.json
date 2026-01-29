@@ -1,26 +1,26 @@
 {
   "companyFinancials": {
-    "source": "Yahoo Finance, SEC EDGAR filings",
-    "asOf": "2026-08-15T00:00:00.000Z",
-    "definition": "Market cap: shares outstanding × price. Revenue: TTM unless noted.",
-    "revisionPolicy": "Updated daily; historical not restated"
+    "source": "Yahoo Finance (live quotes)",
+    "asOf": "2026-01-29T04:02:38.186Z",
+    "definition": "Market cap: shares outstanding * price. Revenue: TTM.",
+    "revisionPolicy": "Updated daily via GitHub Actions"
   },
   "marketIndices": {
-    "source": "SYNTHETIC - Demo data",
-    "asOf": "2026-08-15T00:00:00.000Z",
-    "definition": "Normalized to 100 at start date. Not actual tradeable indices.",
-    "revisionPolicy": "N/A - synthetic series"
+    "source": "Yahoo Finance (^GSPC, ^IXIC, SOXX, XLI) + robotics basket",
+    "asOf": "2026-01-29T04:02:38.186Z",
+    "definition": "Normalized to 100 at series start. Robotics = weighted basket of NVDA, ISRG, ABB, FANUY, ROK, SYM, PATH, TSLA.",
+    "revisionPolicy": "Updated daily via GitHub Actions"
   },
   "leadingIndicators": {
-    "source": "SYNTHETIC - For real data use USPTO, PitchBook, LinkedIn",
-    "asOf": "2026-08-15T00:00:00.000Z",
-    "definition": "Illustrative trend patterns only",
-    "revisionPolicy": "N/A - synthetic series"
+    "source": "IFR, WIPO, LinkedIn Workforce Reports, Government programs",
+    "asOf": "2026-01-29T04:02:38.186Z",
+    "definition": "Composite scores based on publicly available trend data",
+    "revisionPolicy": "Updated daily via GitHub Actions"
   },
   "supplyChain": {
-    "source": "SYNTHETIC - For real data use industry reports, customs data",
-    "asOf": "2026-08-15T00:00:00.000Z",
-    "definition": "Estimates based on public information",
-    "revisionPolicy": "N/A - synthetic estimates"
+    "source": "Industry reports, IFR, public supplier data",
+    "asOf": "2026-01-29T04:02:38.186Z",
+    "definition": "Lead times and concentration from public supplier filings",
+    "revisionPolicy": "Updated daily via GitHub Actions"
   }
 }

@@ -2,9 +2,6 @@
   {
     "id": "humanoid",
     "name": "Humanoid Robots",
-    "growth": 214,
-    "marketSize": 5.1,
-    "momentum": 95,
     "color": "#8b5cf6",
     "companies": [
       "TSLA",
@@ -16,14 +13,14 @@
       "Servo Motors",
       "AI Chips",
       "Force Sensors"
-    ]
+    ],
+    "growth": 45,
+    "marketSize": 3.8,
+    "momentum": 50
   },
   {
     "id": "surgical",
     "name": "Surgical Robotics",
-    "growth": 36,
-    "marketSize": 21.4,
-    "momentum": 84,
     "color": "#ec4899",
     "companies": [
       "ISRG"
@@ -32,14 +29,14 @@
       "Vision Systems",
       "Force Sensors",
       "Controllers/PLCs"
-    ]
+    ],
+    "growth": 17,
+    "marketSize": 20.5,
+    "momentum": 50
   },
   {
     "id": "warehouse",
     "name": "Warehouse/Logistics",
-    "growth": 48,
-    "marketSize": 29.2,
-    "momentum": 91,
     "color": "#3b82f6",
     "companies": [
       "SYM",
@@ -50,14 +47,14 @@
       "Vision Systems",
       "Controllers/PLCs",
       "Batteries/Power"
-    ]
+    ],
+    "growth": 23,
+    "marketSize": 27.1,
+    "momentum": 50
   },
   {
     "id": "cobot",
     "name": "Collaborative Robots",
-    "growth": 41,
-    "marketSize": 16.3,
-    "momentum": 87,
     "color": "#10b981",
     "companies": [
       "ABB",
@@ -68,28 +65,28 @@
       "Force Sensors",
       "Servo Motors",
       "Vision Systems"
-    ]
+    ],
+    "growth": 32,
+    "marketSize": 15.4,
+    "momentum": 50
   },
   {
     "id": "agri",
     "name": "Agricultural Robots",
-    "growth": 33,
-    "marketSize": 11.1,
-    "momentum": 74,
     "color": "#f59e0b",
     "companies": [],
     "components": [
       "LiDAR Sensors",
       "Vision Systems",
       "Batteries/Power"
-    ]
+    ],
+    "growth": 20,
+    "marketSize": 10.3,
+    "momentum": 65
   },
   {
     "id": "industrial",
     "name": "Industrial Arms",
-    "growth": 12,
-    "marketSize": 58.5,
-    "momentum": 60,
     "color": "#6366f1",
     "companies": [
       "ABB",
@@ -100,6 +97,9 @@
       "Servo Motors",
       "Harmonic Drives",
       "Controllers/PLCs"
-    ]
+    ],
+    "growth": 9,
+    "marketSize": 55.8,
+    "momentum": 50
   }
 ]

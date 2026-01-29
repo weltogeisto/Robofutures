@@ -1,74 +1,74 @@
 [
   {
     "name": "Patent Momentum",
-    "value": 86,
-    "change": 9,
+    "value": 80,
+    "change": 10,
     "factors": {
-      "humanoid": 32,
-      "perception": 27,
-      "actuation": 21,
-      "safety": 12,
-      "other": 8
+      "humanoid": 35,
+      "perception": 25,
+      "actuation": 20,
+      "safety": 10,
+      "other": 10
     },
-    "description": "USPTO + WIPO robotics patent filings velocity"
+    "description": "USPTO + WIPO robotics patent filings velocity (15-20% YoY growth per WIPO 2024 report)"
   },
   {
     "name": "Hiring Velocity",
-    "value": 81,
+    "value": 75,
     "change": 6,
     "factors": {
-      "software": 38,
-      "controls": 27,
-      "perception": 22,
-      "safety": 13
+      "software": 40,
+      "controls": 25,
+      "perception": 20,
+      "safety": 15
     },
-    "description": "LinkedIn robotics job postings growth rate"
+    "description": "Robotics job postings growth rate (LinkedIn Workforce Report)"
   },
   {
     "name": "Order Book Strength",
-    "value": 74,
+    "value": 72,
     "change": 4,
     "factors": {
-      "warehouse": 33,
-      "industrial": 31,
-      "cobot": 22,
-      "other": 14
+      "warehouse": 35,
+      "industrial": 30,
+      "cobot": 20,
+      "other": 15
     },
-    "description": "Automation capex + robot orders proxy"
+    "description": "IFR robot installations +7% in 2023; strong 2024-2025 outlook"
   },
   {
     "name": "Policy Tailwinds",
-    "value": 88,
-    "change": 11,
+    "value": 84,
+    "change": 12,
     "factors": {
-      "subsidies": 42,
-      "reshoring": 32,
-      "defense": 16,
+      "subsidies": 45,
+      "reshoring": 30,
+      "defense": 15,
       "other": 10
     },
-    "description": "Government incentives + procurement"
+    "description": "CHIPS Act + EU robotics programs + Japan Society 5.0 + China \"Made in 2025\""
   },
   {
     "name": "Supply Chain Easing",
-    "value": 63,
-    "change": 3,
+    "value": 60,
+    "change": -3,
     "factors": {
-      "chips": 28,
-      "harmonic": -12,
-      "sensors": 18,
-      "other": 16
+      "chips": 30,
+      "harmonic": -20,
+      "sensors": 15,
+      "other": 15
     },
-    "description": "Component availability index"
+    "description": "Component availability index - harmonic drive constraints persist"
   },
   {
     "name": "Earnings Sentiment",
-    "value": 79,
+    "value": 76,
     "change": 5,
     "factors": {
-      "mentions": 38,
-      "tone": 34,
-      "guidance": 28
+      "mentions": 40,
+      "tone": 35,
+      "guidance": 25
     },
-    "description": "NLP analysis of robotics mentions in calls"
+    "description": "Robotics/automation mentions in S&P 500 earnings calls trending up"
   }
 ]
