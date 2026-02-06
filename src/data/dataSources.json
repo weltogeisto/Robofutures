@@ -24,9 +24,9 @@
     "revisionPolicy": "Updated daily via GitHub Actions"
   },
   "livePulse": {
-    "source": "CoinGecko Markets API (live)",
+    "source": "Yahoo Finance Quote API (live equities)",
     "asOf": "Realtime",
-    "definition": "Automation proxy basket using liquid AI/robotics-adjacent crypto assets.",
+    "definition": "Robotics equity basket (NVDA, ISRG, ABB, ROK, FANUY, SYM) with last price, % change, and market cap.",
     "revisionPolicy": "Fetched client-side on page load"
   },
   "liveNews": {
