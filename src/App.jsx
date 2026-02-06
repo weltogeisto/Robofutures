@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useCallback } from 'react';
+import React, { useState, useMemo, useCallback, useEffect } from 'react';
 import { LineChart, Line, AreaChart, Area, BarChart, Bar, ComposedChart, ScatterChart, Scatter, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, ReferenceLine, Cell } from 'recharts';
 import { TrendingUp, TrendingDown, AlertTriangle, Zap, Globe, Cpu, Activity, DollarSign, BarChart3, ChevronDown, ChevronUp, ChevronRight, Bell, ArrowUpRight, ArrowDownRight, Minus, Target, Truck, Building2, Microscope, Bot, RefreshCw, Info, X, Plus, Star, Filter, Download, Eye, EyeOff, Bookmark, BookmarkCheck, AlertCircle, CheckCircle, Clock, ExternalLink, Layers, GitBranch, Map } from 'lucide-react';
 import dataSources from './data/dataSources.json';
@@ -92,6 +92,36 @@ const CustomTooltip = ({ active, payload, label }) => {
     );
   }
   return null;
+};
+
+const formatLiveTimestamp = (timestamp) => {
+  if (!timestamp) return '—';
+  const date = new Date(timestamp);
+  if (Number.isNaN(date.getTime())) return '—';
+  return date.toLocaleString('en-US', {
+    month: 'short',
+    day: '2-digit',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+  });
+};
+
+const formatCurrency = (value) => {
+  if (value === null || value === undefined) return '—';
+  return new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+    maximumFractionDigits: value < 1 ? 4 : 2,
+  }).format(value);
+};
+
+const formatCompactNumber = (value) => {
+  if (value === null || value === undefined) return '—';
+  return new Intl.NumberFormat('en-US', {
+    notation: 'compact',
+    maximumFractionDigits: 1,
+  }).format(value);
 };
 
 // ============================================================================
@@ -302,6 +332,99 @@ export default function RoboticsDashboard() {
   const [alerts, setAlerts] = useState(initialAlerts);
   const [selectedSignal, setSelectedSignal] = useState(null);
   const [focusMode, setFocusMode] = useState(false);
+  const [liveMarketData, setLiveMarketData] = useState({
+    status: 'idle',
+    updatedAt: null,
+    assets: [],
+    error: null,
+  });
+  const [liveHeadlines, setLiveHeadlines] = useState({
+    status: 'idle',
+    updatedAt: null,
+    items: [],
+    error: null,
+  });
+
+  useEffect(() => {
+    let isActive = true;
+    const fetchLiveData = async () => {
+      setLiveMarketData(prev => ({ ...prev, status: 'loading', error: null }));
+      setLiveHeadlines(prev => ({ ...prev, status: 'loading', error: null }));
+
+      try {
+        const [marketResponse, newsResponse] = await Promise.all([
+          fetch(
+            'https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=bitcoin,ethereum,render-token,fetch-ai,ocean-protocol&price_change_percentage=24h'
+          ),
+          fetch('https://hn.algolia.com/api/v1/search_by_date?query=robotics&tags=story'),
+        ]);
+
+        if (!marketResponse.ok) {
+          throw new Error('Market feed unavailable');
+        }
+        if (!newsResponse.ok) {
+          throw new Error('News feed unavailable');
+        }
+
+        const marketData = await marketResponse.json();
+        const newsData = await newsResponse.json();
+
+        if (!isActive) return;
+
+        const formattedAssets = marketData.map(asset => ({
+          id: asset.id,
+          name: asset.name,
+          symbol: asset.symbol?.toUpperCase(),
+          price: asset.current_price,
+          change: asset.price_change_percentage_24h,
+          marketCap: asset.market_cap,
+          image: asset.image,
+        }));
+
+        const formattedNews = (newsData.hits || [])
+          .filter(item => item.title)
+          .slice(0, 6)
+          .map(item => ({
+            id: item.objectID,
+            title: item.title,
+            url: item.url || item.story_url || `https://news.ycombinator.com/item?id=${item.objectID}`,
+            createdAt: item.created_at,
+            author: item.author,
+          }));
+
+        setLiveMarketData({
+          status: 'ready',
+          updatedAt: new Date().toISOString(),
+          assets: formattedAssets,
+          error: null,
+        });
+        setLiveHeadlines({
+          status: 'ready',
+          updatedAt: new Date().toISOString(),
+          items: formattedNews,
+          error: null,
+        });
+      } catch (error) {
+        if (!isActive) return;
+        setLiveMarketData(prev => ({
+          ...prev,
+          status: 'error',
+          error: error instanceof Error ? error.message : 'Unable to load live market data',
+        }));
+        setLiveHeadlines(prev => ({
+          ...prev,
+          status: 'error',
+          error: error instanceof Error ? error.message : 'Unable to load live news',
+        }));
+      }
+    };
+
+    fetchLiveData();
+
+    return () => {
+      isActive = false;
+    };
+  }, []);
   
   // Cross-filtering logic
   const filteredCompanies = useMemo(() => {
@@ -349,6 +472,7 @@ export default function RoboticsDashboard() {
     { id: 'companies', label: 'Companies', icon: Building2 },
     { id: 'events', label: 'Events & Alerts', icon: Bell },
   ];
+  const liveAsOf = liveMarketData.updatedAt ? formatLiveTimestamp(liveMarketData.updatedAt) : 'Dec 18, 2025';
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-200 flex">
@@ -368,7 +492,7 @@ export default function RoboticsDashboard() {
           <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 mb-4">
             <div>
               <h1 className="text-lg font-medium text-slate-200">Robotics Sector Monitor</h1>
-              <p className="text-slate-500 text-xs mt-0.5">Investment signals · Dec 18, 2025</p>
+              <p className="text-slate-500 text-xs mt-0.5">Investment signals · Live as of {liveAsOf}</p>
             </div>
             
             <div className="flex items-center gap-3">
@@ -557,6 +681,124 @@ export default function RoboticsDashboard() {
                   <div className="text-xs text-slate-600">Sharpe</div>
                   <div className="text-sm font-mono text-slate-300">1.82</div>
                 </div>
+              </div>
+            </div>
+
+            {/* Live Market Pulse */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+              <div className="lg:col-span-2 bg-slate-900/50 border border-slate-800 rounded p-4">
+                <div className="flex items-center justify-between mb-4">
+                  <div className="flex items-center gap-2">
+                    <h3 className="text-sm font-medium text-slate-300">Live Market Pulse</h3>
+                    <InfoButton dataKey="livePulse" />
+                  </div>
+                  <div className="flex items-center gap-2 text-xs text-slate-500">
+                    <RefreshCw
+                      size={12}
+                      className={liveMarketData.status === 'loading' ? 'animate-spin' : ''}
+                    />
+                    <span>
+                      {liveMarketData.status === 'ready' && liveMarketData.updatedAt
+                        ? `Updated ${formatLiveTimestamp(liveMarketData.updatedAt)}`
+                        : liveMarketData.status === 'loading'
+                          ? 'Updating live feed'
+                          : 'Live feed unavailable'}
+                    </span>
+                  </div>
+                </div>
+
+                {liveMarketData.assets.length > 0 ? (
+                  <div className="overflow-x-auto">
+                    <table className="w-full">
+                      <thead className="text-xs text-slate-500 border-b border-slate-800">
+                        <tr>
+                          <th className="text-left pb-2 font-medium">Asset</th>
+                          <th className="text-right pb-2 font-medium">Price</th>
+                          <th className="text-right pb-2 font-medium">24h</th>
+                          <th className="text-right pb-2 font-medium">Market Cap</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-slate-800">
+                        {liveMarketData.assets.map(asset => (
+                          <tr key={asset.id} className="text-sm text-slate-300">
+                            <td className="py-2">
+                              <div className="flex items-center gap-2">
+                                {asset.image && (
+                                  <img src={asset.image} alt="" className="w-4 h-4 rounded-full" />
+                                )}
+                                <div>
+                                  <div className="text-slate-300">{asset.name}</div>
+                                  <div className="text-xs text-slate-500">{asset.symbol}</div>
+                                </div>
+                              </div>
+                            </td>
+                            <td className="py-2 text-right font-mono text-slate-300">
+                              {formatCurrency(asset.price)}
+                            </td>
+                            <td className="py-2 text-right">
+                              {Number.isFinite(asset.change) ? (
+                                <TrendIndicator value={Number(asset.change.toFixed(2))} />
+                              ) : (
+                                <span className="text-xs text-slate-500">—</span>
+                              )}
+                            </td>
+                            <td className="py-2 text-right text-xs text-slate-500 font-mono">
+                              {formatCompactNumber(asset.marketCap)}
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                ) : (
+                  <div className="text-sm text-slate-500">
+                    {liveMarketData.status === 'loading'
+                      ? 'Loading live market data…'
+                      : 'Live market data is temporarily unavailable.'}
+                  </div>
+                )}
+              </div>
+
+              <div className="bg-slate-900/50 border border-slate-800 rounded p-4">
+                <div className="flex items-center justify-between mb-3">
+                  <div className="flex items-center gap-2">
+                    <h3 className="text-sm font-medium text-slate-300">Live News Pulse</h3>
+                    <InfoButton dataKey="liveNews" />
+                  </div>
+                  <div className="text-xs text-slate-500">
+                    {liveHeadlines.updatedAt ? `Updated ${formatLiveTimestamp(liveHeadlines.updatedAt)}` : '—'}
+                  </div>
+                </div>
+
+                {liveHeadlines.items.length > 0 ? (
+                  <div className="space-y-3">
+                    {liveHeadlines.items.slice(0, 4).map(item => (
+                      <a
+                        key={item.id}
+                        href={item.url}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="block border border-slate-800 rounded p-3 hover:border-slate-700 transition-colors"
+                      >
+                        <div className="flex items-start justify-between gap-2">
+                          <div>
+                            <p className="text-xs text-slate-300">{item.title}</p>
+                            <p className="text-[11px] text-slate-500 mt-1">
+                              {item.author} · {formatLiveTimestamp(item.createdAt)}
+                            </p>
+                          </div>
+                          <ExternalLink size={12} className="text-slate-600" />
+                        </div>
+                      </a>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-sm text-slate-500">
+                    {liveHeadlines.status === 'loading'
+                      ? 'Loading live headlines…'
+                      : 'Live headlines are temporarily unavailable.'}
+                  </p>
+                )}
               </div>
             </div>
             
@@ -904,8 +1146,8 @@ export default function RoboticsDashboard() {
         {/* Footer */}
         <div className="mt-6 pt-3 border-t border-slate-800 text-center">
           <p className="text-slate-600 text-xs">
-            Company data: Yahoo Finance (Dec 18) · Indices & signals: Synthetic · 
-            Not investment advice
+            Company data: Yahoo Finance (Dec 18) · Live pulse: CoinGecko + Hacker News ·
+            Indices & signals: Synthetic · Not investment advice
           </p>
         </div>
       </div>

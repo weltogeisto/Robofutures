@@ -22,5 +22,17 @@
     "asOf": "2026-02-06T04:08:42.130Z",
     "definition": "Lead times and concentration from public supplier filings",
     "revisionPolicy": "Updated daily via GitHub Actions"
+  },
+  "livePulse": {
+    "source": "CoinGecko Markets API (live)",
+    "asOf": "Realtime",
+    "definition": "Automation proxy basket using liquid AI/robotics-adjacent crypto assets.",
+    "revisionPolicy": "Fetched client-side on page load"
+  },
+  "liveNews": {
+    "source": "Hacker News Algolia Search API (live)",
+    "asOf": "Realtime",
+    "definition": "Latest robotics-related headlines from the public HN index.",
+    "revisionPolicy": "Fetched client-side on page load"
   }
 }
