@@ -352,9 +352,10 @@ export default function RoboticsDashboard() {
       setLiveHeadlines(prev => ({ ...prev, status: 'loading', error: null }));
 
       try {
+        const symbols = ['NVDA', 'ISRG', 'ABB', 'ROK', 'FANUY', 'SYM'];
         const [marketResponse, newsResponse] = await Promise.all([
           fetch(
-            'https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=bitcoin,ethereum,render-token,fetch-ai,ocean-protocol&price_change_percentage=24h'
+            `https://query1.finance.yahoo.com/v7/finance/quote?symbols=${symbols.join(',')}`
           ),
           fetch('https://hn.algolia.com/api/v1/search_by_date?query=robotics&tags=story'),
         ]);
@@ -371,15 +372,26 @@ export default function RoboticsDashboard() {
 
         if (!isActive) return;
 
-        const formattedAssets = marketData.map(asset => ({
-          id: asset.id,
-          name: asset.name,
-          symbol: asset.symbol?.toUpperCase(),
-          price: asset.current_price,
-          change: asset.price_change_percentage_24h,
-          marketCap: asset.market_cap,
-          image: asset.image,
+        const quoteResults = marketData?.quoteResponse?.result ?? [];
+
+        if (!quoteResults.length) {
+          throw new Error('Market feed unavailable');
+        }
+
+        const formattedAssets = quoteResults.map(quote => ({
+          id: quote.symbol,
+          name: quote.shortName || quote.longName || quote.symbol,
+          symbol: quote.symbol,
+          price: quote.regularMarketPrice ?? quote.postMarketPrice ?? quote.preMarketPrice,
+          change: quote.regularMarketChangePercent ?? quote.postMarketChangePercent ?? quote.preMarketChangePercent,
+          marketCap: quote.marketCap,
+          image: null,
+          timestamp: quote.regularMarketTime ?? quote.postMarketTime ?? quote.preMarketTime,
         }));
+
+        const latestTimestamp = formattedAssets
+          .map(asset => (asset.timestamp ? asset.timestamp * 1000 : 0))
+          .reduce((max, value) => Math.max(max, value), 0);
 
         const formattedNews = (newsData.hits || [])
           .filter(item => item.title)
@@ -394,8 +406,8 @@ export default function RoboticsDashboard() {
 
         setLiveMarketData({
           status: 'ready',
-          updatedAt: new Date().toISOString(),
-          assets: formattedAssets,
+          updatedAt: latestTimestamp ? new Date(latestTimestamp).toISOString() : new Date().toISOString(),
+          assets: formattedAssets.map(({ timestamp, ...asset }) => asset),
           error: null,
         });
         setLiveHeadlines({
@@ -714,7 +726,7 @@ export default function RoboticsDashboard() {
                         <tr>
                           <th className="text-left pb-2 font-medium">Asset</th>
                           <th className="text-right pb-2 font-medium">Price</th>
-                          <th className="text-right pb-2 font-medium">24h</th>
+                          <th className="text-right pb-2 font-medium">% Change</th>
                           <th className="text-right pb-2 font-medium">Market Cap</th>
                         </tr>
                       </thead>
@@ -1146,7 +1158,7 @@ export default function RoboticsDashboard() {
         {/* Footer */}
         <div className="mt-6 pt-3 border-t border-slate-800 text-center">
           <p className="text-slate-600 text-xs">
-            Company data: Yahoo Finance (Dec 18) · Live pulse: CoinGecko + Hacker News ·
+            Company data: Yahoo Finance (Dec 18) · Live pulse: Yahoo Finance quotes + Hacker News ·
             Indices & signals: Synthetic · Not investment advice
           </p>
         </div>
