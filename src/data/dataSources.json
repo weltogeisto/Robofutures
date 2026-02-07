@@ -1,38 +1,26 @@
 {
   "companyFinancials": {
     "source": "Yahoo Finance (live quotes)",
-    "asOf": "2026-02-06T04:08:42.130Z",
+    "asOf": "2026-02-07T04:02:31.780Z",
     "definition": "Market cap: shares outstanding * price. Revenue: TTM.",
     "revisionPolicy": "Updated daily via GitHub Actions"
   },
   "marketIndices": {
     "source": "Yahoo Finance (^GSPC, ^IXIC, SOXX, XLI) + robotics basket",
-    "asOf": "2026-02-06T04:08:42.130Z",
+    "asOf": "2026-02-07T04:02:31.780Z",
     "definition": "Normalized to 100 at series start. Robotics = weighted basket of NVDA, ISRG, ABB, FANUY, ROK, SYM, PATH, TSLA.",
     "revisionPolicy": "Updated daily via GitHub Actions"
   },
   "leadingIndicators": {
     "source": "IFR, WIPO, LinkedIn Workforce Reports, Government programs",
-    "asOf": "2026-02-06T04:08:42.130Z",
+    "asOf": "2026-02-07T04:02:31.780Z",
     "definition": "Composite scores based on publicly available trend data",
     "revisionPolicy": "Updated daily via GitHub Actions"
   },
   "supplyChain": {
     "source": "Industry reports, IFR, public supplier data",
-    "asOf": "2026-02-06T04:08:42.130Z",
+    "asOf": "2026-02-07T04:02:31.780Z",
     "definition": "Lead times and concentration from public supplier filings",
     "revisionPolicy": "Updated daily via GitHub Actions"
-  },
-  "livePulse": {
-    "source": "Yahoo Finance Quote API (live equities)",
-    "asOf": "Realtime",
-    "definition": "Robotics equity basket (NVDA, ISRG, ABB, ROK, FANUY, SYM) with last price, % change, and market cap.",
-    "revisionPolicy": "Fetched client-side on page load"
-  },
-  "liveNews": {
-    "source": "Hacker News Algolia Search API (live)",
-    "asOf": "Realtime",
-    "definition": "Latest robotics-related headlines from the public HN index.",
-    "revisionPolicy": "Fetched client-side on page load"
   }
 }
