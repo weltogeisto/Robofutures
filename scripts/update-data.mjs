@@ -6,6 +6,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const projectRoot = path.resolve(__dirname, '..');
 const dataDir = path.join(projectRoot, 'src', 'data');
+const historyDir = path.join(dataDir, 'history');
 
 const asOf = new Date().toISOString();
 const today = new Date();
@@ -60,6 +61,13 @@ function normalize(prices) {
 
 function safeNum(v, fallback = 0) {
     return typeof v === 'number' && isFinite(v) ? v : fallback;
+}
+
+function formatDateStamp(date) {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
 }
 
 // ============================================================================
@@ -434,6 +442,32 @@ async function writeJson(filename, payload) {
     return filePath;
 }
 
+async function writeHistorySnapshot(payload) {
+    const historyFile = path.join(historyDir, 'snapshots.json');
+    await mkdir(historyDir, { recursive: true });
+    let history = [];
+    try {
+        const existing = await readFile(historyFile, 'utf-8');
+        history = JSON.parse(existing);
+        if (!Array.isArray(history)) history = [];
+    } catch (err) {
+        if (err.code !== 'ENOENT') throw err;
+    }
+
+    const date = formatDateStamp(today);
+    const entry = { date, asOf, data: payload };
+    const existingIndex = history.findIndex(item => item.date === date);
+    if (existingIndex >= 0) {
+        history[existingIndex] = entry;
+    } else {
+        history.push(entry);
+    }
+    history.sort((a, b) => a.date.localeCompare(b.date));
+
+    await writeFile(historyFile, `${JSON.stringify(history, null, 2)}\n`, 'utf-8');
+    console.log('  Wrote history snapshots');
+}
+
 // ============================================================================
 // MAIN
 // ============================================================================
@@ -488,8 +522,9 @@ async function main() {
   }
 
   // Write all JSON files
+  const dataSources = buildDataSources();
   await Promise.all([
-        writeJson('dataSources.json', buildDataSources()),
+        writeJson('dataSources.json', dataSources),
         writeJson('marketPerformance.json', marketPerformance),
         writeJson('segments.json', segmentList),
         writeJson('companies.json', companyList),
@@ -497,6 +532,16 @@ async function main() {
         writeJson('leadingIndicators.json', indicatorList),
         writeJson('alerts.json', alerts),
       ]);
+
+  await writeHistorySnapshot({
+        dataSources,
+        marketPerformance,
+        segments: segmentList,
+        companies: companyList,
+        supplyChainComponents: supplyChain,
+        leadingIndicators: indicatorList,
+        alerts,
+  });
 
   console.log(`\n=== Data refresh complete: ${asOf} ===\n`);
 }
