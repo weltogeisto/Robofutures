@@ -8,6 +8,8 @@ import companies from './data/companies.json';
 import supplyChainComponents from './data/supplyChainComponents.json';
 import leadingIndicators from './data/leadingIndicators.json';
 import initialAlerts from './data/alerts.json';
+import tickerHistory30d from './data/tickerHistory30d.json';
+import tickerHistory180d from './data/tickerHistory180d.json';
 
 // ============================================================================
 // DATA LAYER - All data with provenance metadata
@@ -78,6 +80,16 @@ const TrendIndicator = ({ value, suffix = '%' }) => {
   return <span className="text-slate-500 flex items-center gap-0.5 text-xs font-mono"><Minus size={10} />{value}{suffix}</span>;
 };
 
+const Sparkline = ({ data, color = '#94a3b8' }) => (
+  <div className="h-10 w-24">
+    <ResponsiveContainer width="100%" height="100%">
+      <LineChart data={data}>
+        <Line type="monotone" dataKey="price" stroke={color} strokeWidth={1.5} dot={false} />
+      </LineChart>
+    </ResponsiveContainer>
+  </div>
+);
+
 const CustomTooltip = ({ active, payload, label }) => {
   if (active && payload && payload.length) {
     return (
@@ -122,6 +134,14 @@ const formatCompactNumber = (value) => {
     notation: 'compact',
     maximumFractionDigits: 1,
   }).format(value);
+};
+
+const getPercentChange = (series, lookback) => {
+  if (!series || lookback <= 0 || series.length <= lookback) return null;
+  const latest = series[series.length - 1]?.price;
+  const past = series[series.length - 1 - lookback]?.price;
+  if (!Number.isFinite(latest) || !Number.isFinite(past) || past === 0) return null;
+  return Number((((latest - past) / past) * 100).toFixed(2));
 };
 
 // ============================================================================
@@ -195,6 +215,69 @@ const SignalDrawer = ({ signal, onClose }) => {
           <button className="flex-1 bg-slate-800 hover:bg-slate-700 text-slate-400 text-xs py-2 rounded transition-colors">
             Add to Report
           </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// ============================================================================
+// FOLLOWED TICKER HISTORY DRAWER
+// ============================================================================
+
+const TickerHistoryDrawer = ({ ticker, onClose, historyByRange }) => {
+  const [range, setRange] = useState('30d');
+
+  if (!ticker) return null;
+
+  const rangeOptions = [
+    { id: '30d', label: '30D' },
+    { id: '180d', label: '6M' },
+  ];
+
+  const series = historyByRange?.[range]?.[ticker] || [];
+
+  return (
+    <div className="fixed inset-y-0 right-0 w-96 bg-slate-950 border-l border-slate-800 shadow-2xl z-50 overflow-y-auto">
+      <div className="p-4 border-b border-slate-800 flex items-center justify-between">
+        <div>
+          <h3 className="text-sm font-medium text-slate-300">{ticker} history</h3>
+          <p className="text-xs text-slate-500">Multi-range price history</p>
+        </div>
+        <button onClick={onClose} className="text-slate-500 hover:text-slate-300"><X size={16} /></button>
+      </div>
+      <div className="p-4 space-y-4">
+        <div className="flex gap-2">
+          {rangeOptions.map(option => (
+            <button
+              key={option.id}
+              onClick={() => setRange(option.id)}
+              className={`px-2 py-1 text-xs rounded border transition-colors ${
+                range === option.id
+                  ? 'bg-slate-800 text-slate-200 border-slate-700'
+                  : 'text-slate-500 border-slate-800 hover:text-slate-300'
+              }`}
+            >
+              {option.label}
+            </button>
+          ))}
+        </div>
+        <div className="h-56 bg-slate-900/40 border border-slate-800 rounded p-2">
+          {series.length ? (
+            <ResponsiveContainer width="100%" height="100%">
+              <LineChart data={series}>
+                <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" />
+                <XAxis dataKey="date" stroke="#64748b" tick={{ fontSize: 10 }} />
+                <YAxis stroke="#64748b" tick={{ fontSize: 10 }} domain={['auto', 'auto']} />
+                <Tooltip content={<CustomTooltip />} />
+                <Line type="monotone" dataKey="price" stroke="#e2e8f0" strokeWidth={2} dot={false} />
+              </LineChart>
+            </ResponsiveContainer>
+          ) : (
+            <div className="h-full flex items-center justify-center text-xs text-slate-500">
+              History unavailable.
+            </div>
+          )}
         </div>
       </div>
     </div>
@@ -332,6 +415,7 @@ export default function RoboticsDashboard() {
   const [alerts, setAlerts] = useState(initialAlerts);
   const [selectedSignal, setSelectedSignal] = useState(null);
   const [focusMode, setFocusMode] = useState(false);
+  const [selectedTicker, setSelectedTicker] = useState(null);
   const [liveMarketData, setLiveMarketData] = useState({
     status: 'idle',
     updatedAt: null,
@@ -443,6 +527,30 @@ export default function RoboticsDashboard() {
     if (!selectedSegment) return companies;
     return companies.filter(c => c.segments.includes(selectedSegment));
   }, [selectedSegment]);
+
+  const historyByRange = useMemo(() => ({
+    '30d': tickerHistory30d,
+    '180d': tickerHistory180d,
+  }), []);
+
+  const followedTickers = useMemo(() => (
+    watchlist
+      .map(ticker => {
+        const company = companies.find(c => c.ticker === ticker);
+        const history = historyByRange['30d'][ticker] || [];
+        const latestPrice = history[history.length - 1]?.price ?? null;
+        const lookback30d = history.length > 1 ? Math.min(29, history.length - 1) : 0;
+        return {
+          ticker,
+          name: company?.name ?? ticker,
+          latestPrice,
+          change1d: getPercentChange(history, 1),
+          change7d: getPercentChange(history, 7),
+          change30d: getPercentChange(history, lookback30d),
+          sparkline: history,
+        };
+      })
+  ), [historyByRange, watchlist]);
   
   const filteredComponents = useMemo(() => {
     if (!selectedSegment) return supplyChainComponents;
@@ -813,6 +921,84 @@ export default function RoboticsDashboard() {
                 )}
               </div>
             </div>
+
+            {/* Followed Tickers */}
+            <div className="bg-slate-900/50 border border-slate-800 rounded overflow-hidden">
+              <div className="p-4 border-b border-slate-800 flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <h3 className="text-sm font-medium text-slate-300">Followed Tickers</h3>
+                  <InfoButton dataKey="companyFinancials" />
+                </div>
+                <span className="text-xs text-slate-500">{followedTickers.length} tracked</span>
+              </div>
+              <div className="overflow-x-auto">
+                <table className="w-full">
+                  <thead className="bg-slate-900">
+                    <tr>
+                      <th className="text-left p-3 text-slate-500 text-xs font-medium">Ticker</th>
+                      <th className="text-right p-3 text-slate-500 text-xs font-medium">Last</th>
+                      <th className="text-right p-3 text-slate-500 text-xs font-medium">1D</th>
+                      <th className="text-right p-3 text-slate-500 text-xs font-medium">7D</th>
+                      <th className="text-right p-3 text-slate-500 text-xs font-medium">30D</th>
+                      <th className="text-center p-3 text-slate-500 text-xs font-medium">30D Trend</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-800">
+                    {followedTickers.length === 0 ? (
+                      <tr>
+                        <td colSpan={6} className="p-4 text-xs text-slate-500 text-center">
+                          Star companies to track in your watchlist.
+                        </td>
+                      </tr>
+                    ) : (
+                      followedTickers.map(ticker => (
+                        <tr
+                          key={ticker.ticker}
+                          className="hover:bg-slate-900/50 cursor-pointer"
+                          onClick={() => setSelectedTicker(ticker.ticker)}
+                        >
+                          <td className="p-3">
+                            <div className="text-slate-300 text-sm">{ticker.ticker}</div>
+                            <div className="text-xs text-slate-600">{ticker.name}</div>
+                          </td>
+                          <td className="p-3 text-right text-sm text-slate-400 font-mono">
+                            {ticker.latestPrice ? formatCurrency(ticker.latestPrice) : '—'}
+                          </td>
+                          <td className="p-3 text-right">
+                            {ticker.change1d === null ? (
+                              <span className="text-xs text-slate-500">—</span>
+                            ) : (
+                              <TrendIndicator value={ticker.change1d} />
+                            )}
+                          </td>
+                          <td className="p-3 text-right">
+                            {ticker.change7d === null ? (
+                              <span className="text-xs text-slate-500">—</span>
+                            ) : (
+                              <TrendIndicator value={ticker.change7d} />
+                            )}
+                          </td>
+                          <td className="p-3 text-right">
+                            {ticker.change30d === null ? (
+                              <span className="text-xs text-slate-500">—</span>
+                            ) : (
+                              <TrendIndicator value={ticker.change30d} />
+                            )}
+                          </td>
+                          <td className="p-3 text-center">
+                            {ticker.sparkline.length ? (
+                              <Sparkline data={ticker.sparkline} />
+                            ) : (
+                              <span className="text-xs text-slate-500">—</span>
+                            )}
+                          </td>
+                        </tr>
+                      ))
+                    )}
+                  </tbody>
+                </table>
+              </div>
+            </div>
             
             {!focusMode && (
               <>
@@ -1167,6 +1353,14 @@ export default function RoboticsDashboard() {
       {/* Signal Decomposition Drawer */}
       {selectedSignal && (
         <SignalDrawer signal={selectedSignal} onClose={() => setSelectedSignal(null)} />
+      )}
+
+      {selectedTicker && (
+        <TickerHistoryDrawer
+          ticker={selectedTicker}
+          onClose={() => setSelectedTicker(null)}
+          historyByRange={historyByRange}
+        />
       )}
     </div>
   );
