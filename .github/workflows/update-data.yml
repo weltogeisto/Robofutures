@@ -33,8 +33,10 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          if ls src/data/*.json >/dev/null 2>&1; then
-            git add src/data/*.json
+          shopt -s globstar nullglob
+          data_files=(src/data/*.json src/data/**/*.json)
+          if ((${#data_files[@]})); then
+            git add "${data_files[@]}"
           else
             echo "No data files found to add."
           fi
