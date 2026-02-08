@@ -90,7 +90,9 @@
     "revenueGrowth": 0,
     "exposure": 72,
     "momentum": 50,
-    "segments": [],
+    "segments": [
+      "industrial"
+    ],
     "tier": "Satellite"
   },
   {
@@ -103,6 +105,163 @@
     "momentum": 50,
     "segments": [
       "humanoid"
+    ],
+    "tier": "Satellite"
+  },
+  {
+    "ticker": "AMZN",
+    "name": "AMZN",
+    "marketCap": 0,
+    "revenue": 0,
+    "revenueGrowth": 0,
+    "exposure": 44,
+    "momentum": 50,
+    "segments": [
+      "warehouse"
+    ],
+    "tier": "Satellite"
+  },
+  {
+    "ticker": "CGNX",
+    "name": "CGNX",
+    "marketCap": 0,
+    "revenue": 0,
+    "revenueGrowth": 0,
+    "exposure": 62,
+    "momentum": 50,
+    "segments": [
+      "industrial"
+    ],
+    "tier": "Satellite"
+  },
+  {
+    "ticker": "TER",
+    "name": "TER",
+    "marketCap": 0,
+    "revenue": 0,
+    "revenueGrowth": 0,
+    "exposure": 54,
+    "momentum": 50,
+    "segments": [
+      "industrial"
+    ],
+    "tier": "Satellite"
+  },
+  {
+    "ticker": "ZBRA",
+    "name": "ZBRA",
+    "marketCap": 0,
+    "revenue": 0,
+    "revenueGrowth": 0,
+    "exposure": 51,
+    "momentum": 50,
+    "segments": [
+      "warehouse",
+      "industrial"
+    ],
+    "tier": "Satellite"
+  },
+  {
+    "ticker": "YASKY",
+    "name": "YASKY",
+    "marketCap": 0,
+    "revenue": 0,
+    "revenueGrowth": 0,
+    "exposure": 70,
+    "momentum": 50,
+    "segments": [
+      "industrial"
+    ],
+    "tier": "Satellite"
+  },
+  {
+    "ticker": "KUKAF",
+    "name": "KUKAF",
+    "marketCap": 0,
+    "revenue": 0,
+    "revenueGrowth": 0,
+    "exposure": 66,
+    "momentum": 50,
+    "segments": [
+      "industrial"
+    ],
+    "tier": "Satellite"
+  },
+  {
+    "ticker": "SIEGY",
+    "name": "SIEGY",
+    "marketCap": 0,
+    "revenue": 0,
+    "revenueGrowth": 0,
+    "exposure": 55,
+    "momentum": 50,
+    "segments": [
+      "industrial"
+    ],
+    "tier": "Satellite"
+  },
+  {
+    "ticker": "HON",
+    "name": "HON",
+    "marketCap": 0,
+    "revenue": 0,
+    "revenueGrowth": 0,
+    "exposure": 40,
+    "momentum": 50,
+    "segments": [
+      "industrial"
+    ],
+    "tier": "Satellite"
+  },
+  {
+    "ticker": "DE",
+    "name": "DE",
+    "marketCap": 0,
+    "revenue": 0,
+    "revenueGrowth": 0,
+    "exposure": 46,
+    "momentum": 50,
+    "segments": [
+      "agri"
+    ],
+    "tier": "Satellite"
+  },
+  {
+    "ticker": "IRBT",
+    "name": "IRBT",
+    "marketCap": 0,
+    "revenue": 0,
+    "revenueGrowth": 0,
+    "exposure": 31,
+    "momentum": 50,
+    "segments": [
+      "warehouse"
+    ],
+    "tier": "Speculative"
+  },
+  {
+    "ticker": "AUR",
+    "name": "AUR",
+    "marketCap": 0,
+    "revenue": 0,
+    "revenueGrowth": 0,
+    "exposure": 36,
+    "momentum": 50,
+    "segments": [
+      "industrial"
+    ],
+    "tier": "Speculative"
+  },
+  {
+    "ticker": "AVAV",
+    "name": "AVAV",
+    "marketCap": 0,
+    "revenue": 0,
+    "revenueGrowth": 0,
+    "exposure": 34,
+    "momentum": 50,
+    "segments": [
+      "industrial"
     ],
     "tier": "Satellite"
   }
