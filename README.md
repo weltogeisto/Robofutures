@@ -2,6 +2,11 @@
 
 This repo is set up to deploy automatically to **GitHub Pages** on every push to `main`.
 
+## Live site
+[![Deploy to GitHub Pages](https://github.com/weltopeisto/Robofutures/actions/workflows/deploy.yml/badge.svg)](https://github.com/weltopeisto/Robofutures/actions/workflows/deploy.yml)
+
+Visit the latest deployment: https://weltopeisto.github.io/Robofutures/
+
 ## Local run
 ```bash
 npm install
