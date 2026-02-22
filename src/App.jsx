@@ -435,84 +435,83 @@ export default function RoboticsDashboard() {
       setLiveMarketData(prev => ({ ...prev, status: 'loading', error: null }));
       setLiveHeadlines(prev => ({ ...prev, status: 'loading', error: null }));
 
-      try {
-        const symbols = ['NVDA', 'ISRG', 'ABB', 'ROK', 'FANUY', 'SYM'];
-        const [marketResponse, newsResponse] = await Promise.all([
-          fetch(
-            `https://query1.finance.yahoo.com/v7/finance/quote?symbols=${symbols.join(',')}`
-          ),
-          fetch('https://hn.algolia.com/api/v1/search_by_date?query=robotics&tags=story'),
-        ]);
+      const symbols = ['NVDA', 'ISRG', 'ABB', 'ROK', 'FANUY', 'SYM'];
 
-        if (!marketResponse.ok) {
-          throw new Error('Market feed unavailable');
-        }
-        if (!newsResponse.ok) {
-          throw new Error('News feed unavailable');
-        }
+      // Fetch News (CORS Friendly Algolia API)
+      fetch('https://hn.algolia.com/api/v1/search_by_date?query=robotics&tags=story')
+        .then(res => res.json())
+        .then(newsData => {
+          if (!isActive) return;
+          const formattedNews = (newsData.hits || [])
+            .filter(item => item.title)
+            .slice(0, 6)
+            .map(item => ({
+              id: item.objectID,
+              title: item.title,
+              url: item.url || item.story_url || `https://news.ycombinator.com/item?id=${item.objectID}`,
+              createdAt: item.created_at,
+              author: item.author,
+            }));
+          setLiveHeadlines({
+            status: 'ready',
+            updatedAt: new Date().toISOString(),
+            items: formattedNews,
+            error: null,
+          });
+        })
+        .catch(error => {
+          if (!isActive) return;
+          setLiveHeadlines(prev => ({
+            ...prev,
+            status: 'error',
+            error: 'Unable to load live news',
+          }));
+        });
 
-        const marketData = await marketResponse.json();
-        const newsData = await newsResponse.json();
+      // Fetch Market Data (Requires CORS proxy since YF blocks browser requests)
+      const targetUrl = `https://query1.finance.yahoo.com/v7/finance/quote?symbols=${symbols.join(',')}`;
+      const proxyUrl = `https://corsproxy.io/?${encodeURIComponent(targetUrl)}`;
+      
+      fetch(proxyUrl)
+        .then(res => {
+          if (!res.ok) throw new Error('Proxy failed');
+          return res.json();
+        })
+        .then(marketData => {
+          if (!isActive) return;
+          const quoteResults = marketData?.quoteResponse?.result ?? [];
+          if (!quoteResults.length) throw new Error('No data');
 
-        if (!isActive) return;
-
-        const quoteResults = marketData?.quoteResponse?.result ?? [];
-
-        if (!quoteResults.length) {
-          throw new Error('Market feed unavailable');
-        }
-
-        const formattedAssets = quoteResults.map(quote => ({
-          id: quote.symbol,
-          name: quote.shortName || quote.longName || quote.symbol,
-          symbol: quote.symbol,
-          price: quote.regularMarketPrice ?? quote.postMarketPrice ?? quote.preMarketPrice,
-          change: quote.regularMarketChangePercent ?? quote.postMarketChangePercent ?? quote.preMarketChangePercent,
-          marketCap: quote.marketCap,
-          image: null,
-          timestamp: quote.regularMarketTime ?? quote.postMarketTime ?? quote.preMarketTime,
-        }));
-
-        const latestTimestamp = formattedAssets
-          .map(asset => (asset.timestamp ? asset.timestamp * 1000 : 0))
-          .reduce((max, value) => Math.max(max, value), 0);
-
-        const formattedNews = (newsData.hits || [])
-          .filter(item => item.title)
-          .slice(0, 6)
-          .map(item => ({
-            id: item.objectID,
-            title: item.title,
-            url: item.url || item.story_url || `https://news.ycombinator.com/item?id=${item.objectID}`,
-            createdAt: item.created_at,
-            author: item.author,
+          const formattedAssets = quoteResults.map(quote => ({
+            id: quote.symbol,
+            name: quote.shortName || quote.longName || quote.symbol,
+            symbol: quote.symbol,
+            price: quote.regularMarketPrice ?? quote.postMarketPrice ?? quote.preMarketPrice,
+            change: quote.regularMarketChangePercent ?? quote.postMarketChangePercent ?? quote.preMarketChangePercent,
+            marketCap: quote.marketCap,
+            image: null,
+            timestamp: quote.regularMarketTime ?? quote.postMarketTime ?? quote.preMarketTime,
           }));
 
-        setLiveMarketData({
-          status: 'ready',
-          updatedAt: latestTimestamp ? new Date(latestTimestamp).toISOString() : new Date().toISOString(),
-          assets: formattedAssets.map(({ timestamp, ...asset }) => asset),
-          error: null,
+          const latestTimestamp = formattedAssets
+            .map(asset => (asset.timestamp ? asset.timestamp * 1000 : 0))
+            .reduce((max, value) => Math.max(max, value), 0);
+
+          setLiveMarketData({
+            status: 'ready',
+            updatedAt: latestTimestamp ? new Date(latestTimestamp).toISOString() : new Date().toISOString(),
+            assets: formattedAssets.map(({ timestamp, ...asset }) => asset),
+            error: null,
+          });
+        })
+        .catch(error => {
+          if (!isActive) return;
+          setLiveMarketData(prev => ({
+            ...prev,
+            status: 'error',
+            error: 'Unable to load live market data',
+          }));
         });
-        setLiveHeadlines({
-          status: 'ready',
-          updatedAt: new Date().toISOString(),
-          items: formattedNews,
-          error: null,
-        });
-      } catch (error) {
-        if (!isActive) return;
-        setLiveMarketData(prev => ({
-          ...prev,
-          status: 'error',
-          error: error instanceof Error ? error.message : 'Unable to load live market data',
-        }));
-        setLiveHeadlines(prev => ({
-          ...prev,
-          status: 'error',
-          error: error instanceof Error ? error.message : 'Unable to load live news',
-        }));
-      }
     };
 
     fetchLiveData();
