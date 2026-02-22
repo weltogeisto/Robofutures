@@ -592,7 +592,10 @@ export default function RoboticsDashboard() {
     { id: 'companies', label: 'Companies', icon: Building2 },
     { id: 'events', label: 'Events & Alerts', icon: Bell },
   ];
-  const liveAsOf = liveMarketData.updatedAt ? formatLiveTimestamp(liveMarketData.updatedAt) : 'Dec 18, 2025';
+  
+  // Get current date for fallback display
+  const currentDateFormatted = new Date().toLocaleString('en-US', { month: 'short', day: '2-digit', year: 'numeric' });
+  const liveAsOf = liveMarketData.updatedAt ? formatLiveTimestamp(liveMarketData.updatedAt) : currentDateFormatted;
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-200 flex">
