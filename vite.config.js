@@ -1,9 +1,10 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 
-const repoName = process.env.GITHUB_REPOSITORY?.split('/')[1]
-
+// Hardcoded base path for GitHub Pages
+// Since the repo is at github.com/weltogeisto/Robofutures, 
+// the base must be '/Robofutures/'
 export default defineConfig({
   plugins: [react()],
-  base: repoName ? `/${repoName}/` : '/'
+  base: '/Robofutures/'
 })
