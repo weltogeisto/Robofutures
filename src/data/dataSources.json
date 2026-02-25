@@ -1,25 +1,25 @@
 {
   "companyFinancials": {
     "source": "Yahoo Finance (live quotes)",
-    "asOf": "2026-02-24T04:12:11.726Z",
+    "asOf": "2026-02-25T04:13:53.197Z",
     "definition": "Market cap: shares outstanding * price. Revenue: TTM.",
     "revisionPolicy": "Updated daily via GitHub Actions"
   },
   "marketIndices": {
     "source": "Yahoo Finance (^GSPC, ^IXIC, SOXX, XLI) + robotics basket",
-    "asOf": "2026-02-24T04:12:11.726Z",
+    "asOf": "2026-02-25T04:13:53.197Z",
     "definition": "Normalized to 100 at series start. Robotics = weighted basket of NVDA, ISRG, ABB, FANUY, ROK, SYM, PATH, TSLA.",
     "revisionPolicy": "Updated daily via GitHub Actions"
   },
   "leadingIndicators": {
     "source": "IFR, WIPO, LinkedIn Workforce Reports, Government programs",
-    "asOf": "2026-02-24T04:12:11.726Z",
+    "asOf": "2026-02-25T04:13:53.197Z",
     "definition": "Composite scores based on publicly available trend data",
     "revisionPolicy": "Updated daily via GitHub Actions"
   },
   "supplyChain": {
     "source": "Industry reports, IFR, public supplier data",
-    "asOf": "2026-02-24T04:12:11.726Z",
+    "asOf": "2026-02-25T04:13:53.197Z",
     "definition": "Lead times and concentration from public supplier filings",
     "revisionPolicy": "Updated daily via GitHub Actions"
   }
