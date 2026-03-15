@@ -23468,5 +23468,700 @@
         }
       ]
     }
+  },
+  {
+    "date": "2026-03-15",
+    "asOf": "2026-03-15T04:27:28.929Z",
+    "data": {
+      "dataSources": {
+        "companyFinancials": {
+          "source": "Yahoo Finance (live quotes)",
+          "asOf": "2026-03-15T04:27:28.929Z",
+          "definition": "Market cap: shares outstanding * price. Revenue: TTM.",
+          "revisionPolicy": "Updated daily via GitHub Actions"
+        },
+        "marketIndices": {
+          "source": "Yahoo Finance (^GSPC, ^IXIC, SOXX, XLI) + robotics basket",
+          "asOf": "2026-03-15T04:27:28.929Z",
+          "definition": "Normalized to 100 at series start. Robotics = weighted basket of NVDA, ISRG, ABB, FANUY, ROK, SYM, PATH, TSLA.",
+          "revisionPolicy": "Updated daily via GitHub Actions"
+        },
+        "leadingIndicators": {
+          "source": "IFR, WIPO, LinkedIn Workforce Reports, Government programs",
+          "asOf": "2026-03-15T04:27:28.929Z",
+          "definition": "Composite scores based on publicly available trend data",
+          "revisionPolicy": "Updated daily via GitHub Actions"
+        },
+        "supplyChain": {
+          "source": "Industry reports, IFR, public supplier data",
+          "asOf": "2026-03-15T04:27:28.929Z",
+          "definition": "Lead times and concentration from public supplier filings",
+          "revisionPolicy": "Updated daily via GitHub Actions"
+        }
+      },
+      "marketPerformance": [
+        {
+          "month": "Apr 24",
+          "date": "2024-04",
+          "robotics": 100,
+          "sp500": 100,
+          "nasdaq": 100,
+          "soxx": 100,
+          "industrials": 100
+        },
+        {
+          "month": "May 24",
+          "date": "2024-05",
+          "robotics": 104,
+          "sp500": 105,
+          "nasdaq": 107,
+          "soxx": 109,
+          "industrials": 102
+        },
+        {
+          "month": "Jun 24",
+          "date": "2024-06",
+          "robotics": 112,
+          "sp500": 108,
+          "nasdaq": 113,
+          "soxx": 115,
+          "industrials": 100
+        },
+        {
+          "month": "Jul 24",
+          "date": "2024-07",
+          "robotics": 115,
+          "sp500": 110,
+          "nasdaq": 112,
+          "soxx": 110,
+          "industrials": 105
+        },
+        {
+          "month": "Aug 24",
+          "date": "2024-08",
+          "robotics": 113,
+          "sp500": 112,
+          "nasdaq": 113,
+          "soxx": 108,
+          "industrials": 108
+        },
+        {
+          "month": "Sep 24",
+          "date": "2024-09",
+          "robotics": 122,
+          "sp500": 114,
+          "nasdaq": 116,
+          "soxx": 108,
+          "industrials": 111
+        },
+        {
+          "month": "Oct 24",
+          "date": "2024-10",
+          "robotics": 123,
+          "sp500": 113,
+          "nasdaq": 116,
+          "soxx": 102,
+          "industrials": 110
+        },
+        {
+          "month": "Nov 24",
+          "date": "2024-11",
+          "robotics": 142,
+          "sp500": 120,
+          "nasdaq": 123,
+          "soxx": 101,
+          "industrials": 118
+        },
+        {
+          "month": "Dec 24",
+          "date": "2024-12",
+          "robotics": 147,
+          "sp500": 117,
+          "nasdaq": 123,
+          "soxx": 101,
+          "industrials": 108
+        },
+        {
+          "month": "Jan 25",
+          "date": "2025-01",
+          "robotics": 149,
+          "sp500": 120,
+          "nasdaq": 125,
+          "soxx": 102,
+          "industrials": 114
+        },
+        {
+          "month": "Feb 25",
+          "date": "2025-02",
+          "robotics": 131,
+          "sp500": 118,
+          "nasdaq": 120,
+          "soxx": 97,
+          "industrials": 112
+        },
+        {
+          "month": "Mar 25",
+          "date": "2025-03",
+          "robotics": 115,
+          "sp500": 111,
+          "nasdaq": 110,
+          "soxx": 88,
+          "industrials": 108
+        },
+        {
+          "month": "Apr 25",
+          "date": "2025-04",
+          "robotics": 120,
+          "sp500": 111,
+          "nasdaq": 111,
+          "soxx": 86,
+          "industrials": 108
+        },
+        {
+          "month": "May 25",
+          "date": "2025-05",
+          "robotics": 143,
+          "sp500": 117,
+          "nasdaq": 122,
+          "soxx": 96,
+          "industrials": 118
+        },
+        {
+          "month": "Jun 25",
+          "date": "2025-06",
+          "robotics": 147,
+          "sp500": 123,
+          "nasdaq": 130,
+          "soxx": 112,
+          "industrials": 121
+        },
+        {
+          "month": "Jul 25",
+          "date": "2025-07",
+          "robotics": 151,
+          "sp500": 126,
+          "nasdaq": 135,
+          "soxx": 112,
+          "industrials": 125
+        },
+        {
+          "month": "Aug 25",
+          "date": "2025-08",
+          "robotics": 152,
+          "sp500": 128,
+          "nasdaq": 137,
+          "soxx": 115,
+          "industrials": 125
+        },
+        {
+          "month": "Sep 25",
+          "date": "2025-09",
+          "robotics": 173,
+          "sp500": 133,
+          "nasdaq": 145,
+          "soxx": 127,
+          "industrials": 127
+        },
+        {
+          "month": "Oct 25",
+          "date": "2025-10",
+          "robotics": 191,
+          "sp500": 136,
+          "nasdaq": 152,
+          "soxx": 143,
+          "industrials": 128
+        },
+        {
+          "month": "Nov 25",
+          "date": "2025-11",
+          "robotics": 183,
+          "sp500": 136,
+          "nasdaq": 149,
+          "soxx": 139,
+          "industrials": 126
+        },
+        {
+          "month": "Dec 25",
+          "date": "2025-12",
+          "robotics": 186,
+          "sp500": 136,
+          "nasdaq": 148,
+          "soxx": 141,
+          "industrials": 128
+        },
+        {
+          "month": "Jan 26",
+          "date": "2026-01",
+          "robotics": 181,
+          "sp500": 138,
+          "nasdaq": 150,
+          "soxx": 162,
+          "industrials": 136
+        },
+        {
+          "month": "Feb 26",
+          "date": "2026-02",
+          "robotics": 174,
+          "sp500": 137,
+          "nasdaq": 145,
+          "soxx": 165,
+          "industrials": 146
+        },
+        {
+          "month": "Mar 26",
+          "date": "2026-03",
+          "robotics": 167,
+          "sp500": 132,
+          "nasdaq": 141,
+          "soxx": 155,
+          "industrials": 135
+        },
+        {
+          "month": "Mar 26",
+          "date": "2026-03",
+          "robotics": 167,
+          "sp500": 132,
+          "nasdaq": 141,
+          "soxx": 155,
+          "industrials": 135
+        }
+      ],
+      "segments": [
+        {
+          "id": "humanoid",
+          "name": "Humanoid Robots",
+          "color": "#8b5cf6",
+          "companies": [
+            "TSLA",
+            "Figure AI",
+            "Boston Dynamics"
+          ],
+          "components": [
+            "Harmonic Drives",
+            "Servo Motors",
+            "AI Chips",
+            "Force Sensors"
+          ],
+          "growth": 45,
+          "marketSize": 3.8,
+          "momentum": 50
+        },
+        {
+          "id": "surgical",
+          "name": "Surgical Robotics",
+          "color": "#ec4899",
+          "companies": [
+            "ISRG"
+          ],
+          "components": [
+            "Vision Systems",
+            "Force Sensors",
+            "Controllers/PLCs"
+          ],
+          "growth": 17,
+          "marketSize": 20.5,
+          "momentum": 50
+        },
+        {
+          "id": "warehouse",
+          "name": "Warehouse/Logistics",
+          "color": "#3b82f6",
+          "companies": [
+            "SYM",
+            "AMZN"
+          ],
+          "components": [
+            "LiDAR Sensors",
+            "Vision Systems",
+            "Controllers/PLCs",
+            "Batteries/Power"
+          ],
+          "growth": 23,
+          "marketSize": 27.1,
+          "momentum": 50
+        },
+        {
+          "id": "cobot",
+          "name": "Collaborative Robots",
+          "color": "#10b981",
+          "companies": [
+            "ABB",
+            "FANUY",
+            "ROK"
+          ],
+          "components": [
+            "Force Sensors",
+            "Servo Motors",
+            "Vision Systems"
+          ],
+          "growth": 32,
+          "marketSize": 15.4,
+          "momentum": 50
+        },
+        {
+          "id": "agri",
+          "name": "Agricultural Robots",
+          "color": "#f59e0b",
+          "companies": [],
+          "components": [
+            "LiDAR Sensors",
+            "Vision Systems",
+            "Batteries/Power"
+          ],
+          "growth": 20,
+          "marketSize": 10.3,
+          "momentum": 65
+        },
+        {
+          "id": "industrial",
+          "name": "Industrial Arms",
+          "color": "#6366f1",
+          "companies": [
+            "ABB",
+            "FANUY",
+            "ROK"
+          ],
+          "components": [
+            "Servo Motors",
+            "Harmonic Drives",
+            "Controllers/PLCs"
+          ],
+          "growth": 9,
+          "marketSize": 55.8,
+          "momentum": 50
+        }
+      ],
+      "companies": [
+        {
+          "ticker": "NVDA",
+          "name": "NVDA",
+          "marketCap": 0,
+          "revenue": 0,
+          "revenueGrowth": 0,
+          "exposure": 38,
+          "momentum": 50,
+          "segments": [
+            "humanoid",
+            "warehouse",
+            "surgical"
+          ],
+          "tier": "Core"
+        },
+        {
+          "ticker": "ISRG",
+          "name": "ISRG",
+          "marketCap": 0,
+          "revenue": 0,
+          "revenueGrowth": 0,
+          "exposure": 95,
+          "momentum": 50,
+          "segments": [
+            "surgical"
+          ],
+          "tier": "Core"
+        },
+        {
+          "ticker": "ABB",
+          "name": "ABB",
+          "marketCap": 0,
+          "revenue": 0,
+          "revenueGrowth": 0,
+          "exposure": 48,
+          "momentum": 50,
+          "segments": [
+            "cobot",
+            "industrial"
+          ],
+          "tier": "Satellite"
+        },
+        {
+          "ticker": "FANUY",
+          "name": "FANUY",
+          "marketCap": 0,
+          "revenue": 0,
+          "revenueGrowth": 0,
+          "exposure": 88,
+          "momentum": 50,
+          "segments": [
+            "cobot",
+            "industrial"
+          ],
+          "tier": "Satellite"
+        },
+        {
+          "ticker": "ROK",
+          "name": "ROK",
+          "marketCap": 0,
+          "revenue": 0,
+          "revenueGrowth": 0,
+          "exposure": 58,
+          "momentum": 50,
+          "segments": [
+            "cobot",
+            "industrial"
+          ],
+          "tier": "Core"
+        },
+        {
+          "ticker": "SYM",
+          "name": "SYM",
+          "marketCap": 0,
+          "revenue": 0,
+          "revenueGrowth": 0,
+          "exposure": 100,
+          "momentum": 50,
+          "segments": [
+            "warehouse"
+          ],
+          "tier": "Speculative"
+        },
+        {
+          "ticker": "PATH",
+          "name": "PATH",
+          "marketCap": 0,
+          "revenue": 0,
+          "revenueGrowth": 0,
+          "exposure": 72,
+          "momentum": 50,
+          "segments": [],
+          "tier": "Satellite"
+        },
+        {
+          "ticker": "TSLA",
+          "name": "TSLA",
+          "marketCap": 0,
+          "revenue": 0,
+          "revenueGrowth": 0,
+          "exposure": 28,
+          "momentum": 50,
+          "segments": [
+            "humanoid"
+          ],
+          "tier": "Satellite"
+        }
+      ],
+      "supplyChainComponents": [
+        {
+          "id": "ai-chips",
+          "name": "AI Chips",
+          "suppliers": [
+            "NVIDIA",
+            "AMD",
+            "Intel"
+          ],
+          "concentration": 84,
+          "leadTime": 14,
+          "criticality": 98,
+          "priceChange": 8,
+          "shortage": "Medium",
+          "region": "USA/Taiwan"
+        },
+        {
+          "id": "servo",
+          "name": "Servo Motors",
+          "suppliers": [
+            "Yaskawa",
+            "Fanuc",
+            "Siemens"
+          ],
+          "concentration": 71,
+          "leadTime": 11,
+          "criticality": 92,
+          "priceChange": 3,
+          "shortage": "Low",
+          "region": "Japan/Germany"
+        },
+        {
+          "id": "lidar",
+          "name": "LiDAR Sensors",
+          "suppliers": [
+            "Hesai",
+            "Luminar",
+            "Velodyne"
+          ],
+          "concentration": 62,
+          "leadTime": 8,
+          "criticality": 84,
+          "priceChange": -15,
+          "shortage": "Low",
+          "region": "China/USA"
+        },
+        {
+          "id": "harmonic",
+          "name": "Harmonic Drives",
+          "suppliers": [
+            "Harmonic Drive",
+            "Nabtesco",
+            "Sumitomo"
+          ],
+          "concentration": 89,
+          "leadTime": 20,
+          "criticality": 96,
+          "priceChange": 18,
+          "shortage": "Critical",
+          "region": "Japan"
+        },
+        {
+          "id": "force",
+          "name": "Force Sensors",
+          "suppliers": [
+            "ATI",
+            "Robotiq",
+            "OnRobot"
+          ],
+          "concentration": 56,
+          "leadTime": 7,
+          "criticality": 78,
+          "priceChange": 2,
+          "shortage": "Low",
+          "region": "USA/Denmark"
+        },
+        {
+          "id": "vision",
+          "name": "Vision Systems",
+          "suppliers": [
+            "Cognex",
+            "Keyence",
+            "Basler"
+          ],
+          "concentration": 60,
+          "leadTime": 5,
+          "criticality": 82,
+          "priceChange": 1,
+          "shortage": "Low",
+          "region": "USA/Japan/Germany"
+        },
+        {
+          "id": "battery",
+          "name": "Batteries/Power",
+          "suppliers": [
+            "CATL",
+            "LG Energy",
+            "Panasonic"
+          ],
+          "concentration": 76,
+          "leadTime": 12,
+          "criticality": 88,
+          "priceChange": -10,
+          "shortage": "Low",
+          "region": "China/Korea/Japan"
+        },
+        {
+          "id": "plc",
+          "name": "Controllers/PLCs",
+          "suppliers": [
+            "Rockwell",
+            "Siemens",
+            "Mitsubishi"
+          ],
+          "concentration": 54,
+          "leadTime": 6,
+          "criticality": 75,
+          "priceChange": 1,
+          "shortage": "Low",
+          "region": "USA/Germany/Japan"
+        }
+      ],
+      "leadingIndicators": [
+        {
+          "name": "Patent Momentum",
+          "value": 80,
+          "change": 10,
+          "factors": {
+            "humanoid": 35,
+            "perception": 25,
+            "actuation": 20,
+            "safety": 10,
+            "other": 10
+          },
+          "description": "USPTO + WIPO robotics patent filings velocity (15-20% YoY growth per WIPO 2024 report)"
+        },
+        {
+          "name": "Hiring Velocity",
+          "value": 75,
+          "change": 6,
+          "factors": {
+            "software": 40,
+            "controls": 25,
+            "perception": 20,
+            "safety": 15
+          },
+          "description": "Robotics job postings growth rate (LinkedIn Workforce Report)"
+        },
+        {
+          "name": "Order Book Strength",
+          "value": 72,
+          "change": 4,
+          "factors": {
+            "warehouse": 35,
+            "industrial": 30,
+            "cobot": 20,
+            "other": 15
+          },
+          "description": "IFR robot installations +7% in 2023; strong 2024-2025 outlook"
+        },
+        {
+          "name": "Policy Tailwinds",
+          "value": 84,
+          "change": 12,
+          "factors": {
+            "subsidies": 45,
+            "reshoring": 30,
+            "defense": 15,
+            "other": 10
+          },
+          "description": "CHIPS Act + EU robotics programs + Japan Society 5.0 + China \"Made in 2025\""
+        },
+        {
+          "name": "Supply Chain Easing",
+          "value": 60,
+          "change": -3,
+          "factors": {
+            "chips": 30,
+            "harmonic": -20,
+            "sensors": 15,
+            "other": 15
+          },
+          "description": "Component availability index - harmonic drive constraints persist"
+        },
+        {
+          "name": "Earnings Sentiment",
+          "value": 76,
+          "change": 5,
+          "factors": {
+            "mentions": 40,
+            "tone": 35,
+            "guidance": 25
+          },
+          "description": "Robotics/automation mentions in S&P 500 earnings calls trending up"
+        }
+      ],
+      "alerts": [
+        {
+          "id": 1,
+          "type": "earnings",
+          "priority": "medium",
+          "title": "ISRG earnings approaching (~30 days)",
+          "time": "1d ago",
+          "read": false
+        },
+        {
+          "id": 2,
+          "type": "supply",
+          "priority": "critical",
+          "title": "Harmonic drive lead time remains elevated (20+ weeks)",
+          "time": "2d ago",
+          "read": false
+        },
+        {
+          "id": 3,
+          "type": "policy",
+          "priority": "medium",
+          "title": "CHIPS Act funding disbursements ongoing",
+          "time": "1w ago",
+          "read": true
+        }
+      ]
+    }
   }
 ]
