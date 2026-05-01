@@ -1,14 +1,6 @@
 [
   {
     "id": 1,
-    "type": "earnings",
-    "priority": "medium",
-    "title": "ISRG earnings approaching (~1 days)",
-    "time": "1d ago",
-    "read": false
-  },
-  {
-    "id": 2,
     "type": "supply",
     "priority": "critical",
     "title": "Harmonic drive lead time remains elevated (20+ weeks)",
@@ -16,7 +8,7 @@
     "read": false
   },
   {
-    "id": 3,
+    "id": 2,
     "type": "policy",
     "priority": "medium",
     "title": "CHIPS Act funding disbursements ongoing",
