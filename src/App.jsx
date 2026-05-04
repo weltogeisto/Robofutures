@@ -262,7 +262,21 @@ export default function App() {
         </h1>
         </div>
         <div className="header-actions">
-          <span className="header-time">Updated {timeStr}</span>
+          <span className="header-time">
+            {liveQuotes && (
+              <span style={{
+                display: 'inline-flex', alignItems: 'center', gap: 4,
+                background: 'var(--green-bg)', color: 'var(--green)',
+                borderRadius: 9999, padding: '1px 6px', fontSize: 10,
+                fontWeight: 600, marginRight: 6,
+                border: '1px solid rgba(16,185,129,0.2)'
+              }}>
+                <span style={{ width: 5, height: 5, borderRadius: '50%', background: 'var(--green)' }} />
+                LIVE
+              </span>
+            )}
+            Updated {timeStr}
+          </span>
           <button className="tab-btn" onClick={() => setShowAlerts(!showAlerts)} style={{ padding: '3px 8px' }}>
             <Bot size={14} />
             {unreadAlerts > 0 && <span className="badge badge-red" style={{ marginLeft: 4, fontSize: 9 }}>{unreadAlerts}</span>}
