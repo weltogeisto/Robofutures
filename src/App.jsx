@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts';
-import { Activity, Layers, Map, TrendingUp, TrendingDown, Bot, Star, Zap } from 'lucide-react';
+import { Activity, Layers, Map, TrendingUp, TrendingDown, Bot, Star, Zap, Menu, X } from 'lucide-react';
 
 // DATA
 const LAYERS = [
@@ -71,9 +71,15 @@ export default function App() {
   const [watchlist, setWatchlist] = useState(['ON', '6324.T', '6954.T', 'ALGM', '3037.TW']);
   const [expandedLayer, setExpandedLayer] = useState(null);
   const [showAlerts, setShowAlerts] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const toggleWl = (t) => {
     setWatchlist(w => w.includes(t) ? w.filter(x => x !== t) : [...w, t]);
+  };
+
+  const switchTab = (id) => {
+    setTab(id);
+    setSidebarOpen(false);
   };
 
   const tickersByLayer = {};
@@ -89,8 +95,11 @@ export default function App() {
 
   return (
     <div className="app-layout">
+      {/* SIDEBAR OVERLAY (mobile) */}
+      {sidebarOpen && <div className="sidebar-overlay open" onClick={() => setSidebarOpen(false)} />}
+
       {/* SIDEBAR */}
-      <aside className="sidebar">
+      <aside className={'sidebar' + (sidebarOpen ? ' open' : '')}>
         <div className="sidebar-brand">
           <Bot size={20} />
           <span>Robofutures</span>
@@ -99,7 +108,7 @@ export default function App() {
           <div className="nav-section">
             <div className="nav-section-title">Navigation</div>
             {NAV.map(item => (
-              <button key={item.id} className={'nav-item' + (tab === item.id ? ' active' : '')} onClick={() => setTab(item.id)}>
+              <button key={item.id} className={'nav-item' + (tab === item.id ? ' active' : '')} onClick={() => switchTab(item.id)}>
                 <item.icon size={14} />
                 {item.label}
                 {item.id === 'signals' && unreadAlerts > 0 && (
@@ -129,12 +138,17 @@ export default function App() {
 
       {/* HEADER */}
       <header className="app-header">
-        <h1>
+        <div style={{ display: 'flex', alignItems: 'center' }}>
+          <button className="mobile-menu-btn" onClick={() => setSidebarOpen(true)} aria-label="Menu">
+            <Menu size={20} />
+          </button>
+          <h1>
           {tab === 'overview' && 'Overview'}
           {tab === 'thesis' && 'Thesis'}
           {tab === 'valuechain' && 'Value Chain'}
           {tab === 'signals' && 'Signals'}
         </h1>
+        </div>
         <div className="header-actions">
           <span className="header-time">Updated {timeStr}</span>
           <button className="tab-btn" onClick={() => setShowAlerts(!showAlerts)} style={{ padding: '3px 8px' }}>
@@ -381,6 +395,21 @@ export default function App() {
           </div>
         )}
       </main>
+
+      {/* MOBILE BOTTOM NAV */}
+      <nav className="mobile-nav">
+        <div className="mobile-nav-inner">
+          {NAV.map(item => (
+            <button key={item.id} className={'mobile-nav-btn' + (tab === item.id ? ' active' : '')} onClick={() => switchTab(item.id)}>
+              <item.icon size={20} />
+              <span>{item.label}</span>
+              {item.id === 'signals' && unreadAlerts > 0 && (
+                <span className="badge-count">{unreadAlerts}</span>
+              )}
+            </button>
+          ))}
+        </div>
+      </nav>
     </div>
   );
 }

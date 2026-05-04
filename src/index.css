@@ -505,12 +505,235 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--bg-surface);
+  background: rgba(255,255,255,0.08);
   border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--bg-hover);
+  background: rgba(255,255,255,0.14);
+}
+
+/* ==========================================================================
+   MOBILE RESPONSIVE
+   ========================================================================== */
+
+/* --- Bottom Tab Bar (mobile) --- */
+.mobile-nav {
+  display: none;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: var(--bg-deepest);
+  border-top: 1px solid var(--border-subtle);
+  padding: 0;
+  z-index: 50;
+}
+
+.mobile-nav-inner {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  height: 56px;
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+.mobile-nav-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  padding: 8px 4px;
+  background: none;
+  border: none;
+  color: var(--text-quaternary);
+  font-size: 10px;
+  font-family: var(--font-sans);
+  cursor: pointer;
+  transition: color 0.15s;
+  -webkit-tap-highlight-color: transparent;
+  position: relative;
+}
+
+.mobile-nav-btn.active {
+  color: var(--accent);
+}
+
+.mobile-nav-btn .badge-count {
+  position: absolute;
+  top: 4px;
+  right: 10px;
+  background: #ef4444;
+  color: white;
+  font-size: 9px;
+  font-weight: 600;
+  min-width: 14px;
+  height: 14px;
+  border-radius: 9999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 3px;
+}
+
+/* --- Mobile Sidebar Overlay --- */
+.sidebar-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  z-index: 40;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+
+.sidebar-overlay.open {
+  display: block;
+}
+
+/* --- Mobile Only --- */
+.mobile-menu-btn {
+  display: none;
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+  padding: 4px;
+  -webkit-tap-highlight-color: transparent;
+}
+
+@media (max-width: 768px) {
+  /* Hide desktop sidebar */
+  .sidebar {
+    position: fixed;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 280px;
+    transform: translateX(-100%);
+    transition: transform 0.2s ease;
+    z-index: 50;
+    box-shadow: 4px 0 20px rgba(0,0,0,0.5);
+  }
+
+  .sidebar.open {
+    transform: translateX(0);
+  }
+
+  /* Layout: full width, no sidebar column */
+  .app-layout {
+    grid-template-columns: 1fr;
+    grid-template-rows: var(--header-h) 1fr auto;
+  }
+
+  .app-header {
+    grid-column: 1 / -1;
+    padding: 0 12px;
+  }
+
+  .mobile-menu-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 8px;
+  }
+
+  .mobile-nav {
+    display: block;
+  }
+
+  /* Main content padded for bottom nav */
+  .main-content {
+    padding: 12px;
+    padding-bottom: 72px; /* 56px nav + 16px extra */
+  }
+
+  /* Grids collapse */
+  .grid-4 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .grid-3 {
+    grid-template-columns: 1fr;
+  }
+
+  .grid-2 {
+    grid-template-columns: 1fr;
+  }
+
+  /* Table: horizontal scroll */
+  .data-table-wrap {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    margin: 0 -12px;
+    padding: 0 12px;
+  }
+
+  .data-table {
+    min-width: 800px;
+  }
+
+  /* Cards */
+  .card {
+    padding: 12px;
+  }
+
+  .card-value {
+    font-size: 22px;
+  }
+
+  .card-title {
+    font-size: 11px;
+  }
+
+  /* Chart heights smaller */
+  .chart-wrap {
+    height: 160px !important;
+  }
+
+  /* Signals grid-3 full width */
+  .signals-grid .card {
+    grid-column: span 1 !important;
+  }
+
+  /* Header title smaller */
+  .app-header h1 {
+    font-size: 14px;
+  }
+
+  .header-time {
+    display: none;
+  }
+
+  /* Layer cards */
+  .layer-card .layer-ticker {
+    font-size: 12px;
+  }
+
+  /* Tab header scroll */
+  .tab-header {
+    overflow-x: auto;
+    white-space: nowrap;
+    -webkit-overflow-scrolling: touch;
+    width: 100%;
+    margin-bottom: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .grid-4 {
+    grid-template-columns: 1fr;
+  }
+
+  .main-content {
+    padding: 8px;
+    padding-bottom: 64px;
+  }
+
+  .card {
+    padding: 10px;
+  }
 }
 
 /* ==========================================================================
