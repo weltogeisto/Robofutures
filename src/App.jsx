@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts';
 import { Activity, Layers, Map, TrendingUp, TrendingDown, Bot, Star, Zap, Menu, X } from 'lucide-react';
 
@@ -14,7 +14,7 @@ const ALL_TICKERS = {
   'TXN':     { n: 'Texas Instruments', l: 1, p: 280.95, c: 'USD', h: 287.83, w: 152.73, ch: 67.0, rb: 94.9, ex: 20, ti: 'Core', se: 'Analog/Power' },
   'ON':      { n: 'onsemi',            l: 1, p: 103.03, c: 'USD', h: 103.32, w: 37.19, ch: 105.1, rb: 99.6, ex: 35, ti: 'Core', se: 'Power/Analog' },
   'MCHP':    { n: 'Microchip',         l: 1, p: 93.95,  c: 'USD', h: 94.56,  w: 46.68, ch: 75.3, rb: 98.7, ex: 25, ti: 'Sat', se: 'Analog MCU' },
-  'IFX':     { n: 'Infineon',          l: 1, p: 57.95,  c: 'EUR', h: 58.32,  w: 29.07, ch: 53.6, rb: 98.7, ex: 30, ti: 'Core', se: 'Power Semi' },
+  'IFX.DE':   { n: 'Infineon',          l: 1, p: 57.95,  c: 'EUR', h: 58.32,  w: 29.07, ch: 53.6, rb: 98.7, ex: 30, ti: 'Core', se: 'Power Semi' },
   'ALGM':    { n: 'Allegro Micro',     l: 1, p: 48.98,  c: 'USD', h: 49.19,  w: 18.17, ch: 83.5, rb: 99.3, ex: 45, ti: 'Sat', se: 'Position Sensing' },
   'RRX':     { n: 'Regal Rexnord',     l: 1, p: 213.02, c: 'USD', h: 229.30, w: 109.50, ch: 45.9, rb: 86.4, ex: 15, ti: 'Sat', se: 'Industrial' },
   '6324.T':  { n: 'Harmonic Drive',    l: 2, p: 5150,   c: 'JPY', h: 5310,   w: 2316,  ch: 66.7, rb: 94.7, ex: 80, ti: 'Core', se: 'Harmonic Gears' },
@@ -92,7 +92,17 @@ const filterTimeScale = (data, scale) => {
   const days = map[scale] || 180;
   const cutoff = new Date(now);
   cutoff.setDate(cutoff.getDate() - days);
-  return data.filter(d => new Date(d.d) >= cutoff);
+  const filtered = data.filter(d => new Date(d.d + 'T23:59:59') >= cutoff);
+  if (filtered.length === 0) return data;
+
+  // Rebase all series to 100 at start of selected period
+  const base = filtered[0];
+  return filtered.map(d => ({
+    ...d,
+    r:  Math.round((d.r  / base.r)  * 10000) / 100,
+    sp: Math.round((d.sp / base.sp) * 10000) / 100,
+    nd: Math.round((d.nd / base.nd) * 10000) / 100,
+  }));
 };
 
 const formatXAxis = (dateStr, scale) => {
@@ -131,12 +141,53 @@ export default function App() {
   const [watchlist, setWatchlist] = useState(['ON', '6324.T', '6954.T', 'ALGM', '3037.TW']);
   const [expandedLayer, setExpandedLayer] = useState(null);
   const [showAlerts, setShowAlerts] = useState(false);
+  const [liveQuotes, setLiveQuotes] = useState(null);
+  const [liveHistory, setLiveHistory] = useState(null);
   const [timeScale, setTimeScale] = useState('6m');
   const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  // Fetch live data from public/data/ on mount
+  useEffect(() => {
+    const base = '/Robofutures';
+    Promise.all([
+      fetch(`${base}/data/quotes.json`).then(r => r.ok ? r.json() : null),
+      fetch(`${base}/data/history.json`).then(r => r.ok ? r.json() : null),
+    ]).then(([quotes, history]) => {
+      if (quotes)  setLiveQuotes(quotes);
+      if (history) setLiveHistory(history);
+    }).catch(() => {});
+  }, []);
 
   const toggleWl = (t) => {
     setWatchlist(w => w.includes(t) ? w.filter(x => x !== t) : [...w, t]);
   };
+
+  // Merge live quotes into hardcoded ticker structure
+  const mergedTickers = useMemo(() => {
+    if (!liveQuotes?.quotes) return ALL_TICKERS;
+    const merged = { ...ALL_TICKERS };
+    for (const [sym, q] of Object.entries(liveQuotes.quotes)) {
+      if (merged[sym] && q.price) {
+        merged[sym] = { ...merged[sym], p: q.price, ch: q.change_pct ?? merged[sym].ch, live: true };
+      }
+    }
+    return merged;
+  }, [liveQuotes]);
+
+  // Build chart data array from live history or fall back to synthetic
+  const chartDataRaw = useMemo(() => {
+    if (!liveHistory?.dates) return ALL_DAILY;
+    return liveHistory.dates.map((d, i) => ({
+      d,
+      r:  liveHistory.r[i]  ?? 100,
+      sp: liveHistory.sp[i] ?? 100,
+      nd: liveHistory.nd[i] ?? 100,
+    }));
+  }, [liveHistory]);
+
+  const dataUpdated = liveQuotes?.updated
+    ? new Date(liveQuotes.updated).toLocaleString('de-DE', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })
+    : null;
 
   const switchTab = (id) => {
     setTab(id);
@@ -144,14 +195,14 @@ export default function App() {
   };
 
   const tickersByLayer = {};
-  for (const k in ALL_TICKERS) {
-    const t = ALL_TICKERS[k];
+  for (const k in mergedTickers) {
+    const t = mergedTickers[k];
     if (!tickersByLayer[t.l]) tickersByLayer[t.l] = [];
     tickersByLayer[t.l].push(k);
   }
 
   const now = new Date();
-  const timeStr = now.toLocaleString('de-DE', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
+  const timeStr = dataUpdated || now.toLocaleString('de-DE', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
   const unreadAlerts = ALERTS.filter(a => !a.read).length;
 
   return (
@@ -181,7 +232,7 @@ export default function App() {
           <div className="nav-section" style={{ marginTop: 24 }}>
             <div className="nav-section-title">Watchlist</div>
             {watchlist.map(tk => {
-              const d = ALL_TICKERS[tk];
+              const d = mergedTickers[tk];
               if (!d) return null;
               return (
                 <button key={tk} className="nav-item" onClick={() => toggleWl(tk)} style={{ fontSize: 12 }}>
@@ -239,8 +290,8 @@ export default function App() {
           <>
             <div className="grid-4" style={{ marginBottom: 16 }}>
               {[{ l: 'Layer Score', v: '4.2/5', sub: 'Composite' },
-                { l: 'Tickers Tracked', v: Object.keys(ALL_TICKERS).length, sub: 'Across 4 layers' },
-                { l: 'Avg Rebound', v: Math.round(Object.values(ALL_TICKERS).reduce((s, t) => s + t.rb, 0) / Object.keys(ALL_TICKERS).length) + '%', sub: 'From 52w low' },
+                { l: 'Tickers Tracked', v: Object.keys(mergedTickers).length, sub: 'Across 4 layers' },
+                { l: 'Avg Rebound', v: Math.round(Object.values(mergedTickers).reduce((s, t) => s + t.rb, 0) / Object.keys(mergedTickers).length) + '%', sub: 'From 52w low' },
                 { l: 'Watchlist', v: watchlist.length, sub: 'Selected positions' },
               ].map(kpi => (
                 <div key={kpi.l} className="card">
@@ -269,7 +320,7 @@ export default function App() {
             <div className="card" style={{ marginBottom: 16 }}>
               <div className="card-title">Robotics Index vs Benchmarks (Normalized)</div>
               <ResponsiveContainer width="100%" height={220}>
-                <LineChart data={filterTimeScale(ALL_DAILY, timeScale)}>
+                <LineChart data={filterTimeScale(chartDataRaw, timeScale)}>
                   <CartesianGrid strokeDasharray="2 2" stroke="rgba(255,255,255,0.05)" />
                   <XAxis dataKey="d" tick={{ fill: '#62666d', fontSize: 11 }} tickFormatter={(v) => formatXAxis(v, timeScale)} />
                   <YAxis tick={{ fill: '#62666d', fontSize: 11 }} />
@@ -304,7 +355,7 @@ export default function App() {
                 <div className="card-title">Watchlist Momentum</div>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
                   {watchlist.map(tk => {
-                    const d = ALL_TICKERS[tk];
+                    const d = mergedTickers[tk];
                     if (!d) return null;
                     const isUp = d.ch >= 0;
                     return (
@@ -355,7 +406,7 @@ export default function App() {
                         </div>
                         <div style={{ marginTop: 8 }}>
                           {tickers.map(tk => {
-                            const d = ALL_TICKERS[tk];
+                            const d = mergedTickers[tk];
                             if (!d) return null;
                             const isUp = d.ch >= 0;
                             return (
@@ -402,7 +453,7 @@ export default function App() {
                         </td>
                       </tr>
                       {tickers.map(tk => {
-                        const d = ALL_TICKERS[tk];
+                        const d = mergedTickers[tk];
                         if (!d) return null;
                         const isUp = d.ch >= 0;
                         return (
