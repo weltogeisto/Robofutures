@@ -1,0 +1,105 @@
+[
+  {
+    "id": "humanoid",
+    "name": "Humanoid Robots",
+    "color": "#8b5cf6",
+    "companies": [
+      "TSLA",
+      "Figure AI",
+      "Boston Dynamics"
+    ],
+    "components": [
+      "Harmonic Drives",
+      "Servo Motors",
+      "AI Chips",
+      "Force Sensors"
+    ],
+    "growth": 45,
+    "marketSize": 3.8,
+    "momentum": 50
+  },
+  {
+    "id": "surgical",
+    "name": "Surgical Robotics",
+    "color": "#ec4899",
+    "companies": [
+      "ISRG"
+    ],
+    "components": [
+      "Vision Systems",
+      "Force Sensors",
+      "Controllers/PLCs"
+    ],
+    "growth": 17,
+    "marketSize": 20.5,
+    "momentum": 50
+  },
+  {
+    "id": "warehouse",
+    "name": "Warehouse/Logistics",
+    "color": "#3b82f6",
+    "companies": [
+      "SYM",
+      "AMZN"
+    ],
+    "components": [
+      "LiDAR Sensors",
+      "Vision Systems",
+      "Controllers/PLCs",
+      "Batteries/Power"
+    ],
+    "growth": 23,
+    "marketSize": 27.1,
+    "momentum": 50
+  },
+  {
+    "id": "cobot",
+    "name": "Collaborative Robots",
+    "color": "#10b981",
+    "companies": [
+      "ABB",
+      "FANUY",
+      "ROK"
+    ],
+    "components": [
+      "Force Sensors",
+      "Servo Motors",
+      "Vision Systems"
+    ],
+    "growth": 32,
+    "marketSize": 15.4,
+    "momentum": 50
+  },
+  {
+    "id": "agri",
+    "name": "Agricultural Robots",
+    "color": "#f59e0b",
+    "companies": [],
+    "components": [
+      "LiDAR Sensors",
+      "Vision Systems",
+      "Batteries/Power"
+    ],
+    "growth": 20,
+    "marketSize": 10.3,
+    "momentum": 65
+  },
+  {
+    "id": "industrial",
+    "name": "Industrial Arms",
+    "color": "#6366f1",
+    "companies": [
+      "ABB",
+      "FANUY",
+      "ROK"
+    ],
+    "components": [
+      "Servo Motors",
+      "Harmonic Drives",
+      "Controllers/PLCs"
+    ],
+    "growth": 9,
+    "marketSize": 55.8,
+    "momentum": 50
+  }
+]

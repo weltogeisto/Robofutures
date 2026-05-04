@@ -1,0 +1,18 @@
+[
+  {
+    "id": 1,
+    "type": "supply",
+    "priority": "critical",
+    "title": "Harmonic drive lead time remains elevated (20+ weeks)",
+    "time": "2d ago",
+    "read": false
+  },
+  {
+    "id": 2,
+    "type": "policy",
+    "priority": "medium",
+    "title": "CHIPS Act funding disbursements ongoing",
+    "time": "1w ago",
+    "read": true
+  }
+]

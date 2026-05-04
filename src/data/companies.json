@@ -1,0 +1,109 @@
+[
+  {
+    "ticker": "NVDA",
+    "name": "NVDA",
+    "marketCap": 0,
+    "revenue": 0,
+    "revenueGrowth": 0,
+    "exposure": 38,
+    "momentum": 50,
+    "segments": [
+      "humanoid",
+      "warehouse",
+      "surgical"
+    ],
+    "tier": "Core"
+  },
+  {
+    "ticker": "ISRG",
+    "name": "ISRG",
+    "marketCap": 0,
+    "revenue": 0,
+    "revenueGrowth": 0,
+    "exposure": 95,
+    "momentum": 50,
+    "segments": [
+      "surgical"
+    ],
+    "tier": "Core"
+  },
+  {
+    "ticker": "ABB",
+    "name": "ABB",
+    "marketCap": 0,
+    "revenue": 0,
+    "revenueGrowth": 0,
+    "exposure": 48,
+    "momentum": 50,
+    "segments": [
+      "cobot",
+      "industrial"
+    ],
+    "tier": "Satellite"
+  },
+  {
+    "ticker": "FANUY",
+    "name": "FANUY",
+    "marketCap": 0,
+    "revenue": 0,
+    "revenueGrowth": 0,
+    "exposure": 88,
+    "momentum": 50,
+    "segments": [
+      "cobot",
+      "industrial"
+    ],
+    "tier": "Satellite"
+  },
+  {
+    "ticker": "ROK",
+    "name": "ROK",
+    "marketCap": 0,
+    "revenue": 0,
+    "revenueGrowth": 0,
+    "exposure": 58,
+    "momentum": 50,
+    "segments": [
+      "cobot",
+      "industrial"
+    ],
+    "tier": "Core"
+  },
+  {
+    "ticker": "SYM",
+    "name": "SYM",
+    "marketCap": 0,
+    "revenue": 0,
+    "revenueGrowth": 0,
+    "exposure": 100,
+    "momentum": 50,
+    "segments": [
+      "warehouse"
+    ],
+    "tier": "Speculative"
+  },
+  {
+    "ticker": "PATH",
+    "name": "PATH",
+    "marketCap": 0,
+    "revenue": 0,
+    "revenueGrowth": 0,
+    "exposure": 72,
+    "momentum": 50,
+    "segments": [],
+    "tier": "Satellite"
+  },
+  {
+    "ticker": "TSLA",
+    "name": "TSLA",
+    "marketCap": 0,
+    "revenue": 0,
+    "revenueGrowth": 0,
+    "exposure": 28,
+    "momentum": 50,
+    "segments": [
+      "humanoid"
+    ],
+    "tier": "Satellite"
+  }
+]
