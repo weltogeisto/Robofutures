@@ -1,5 +1,5 @@
 {
-  "updated": "2026-05-04T20:21:05.920792+00:00",
+  "updated": "2026-05-04T21:37:15.088578+00:00",
   "quotes": {
     "TXN": {
       "price": 280.89,
@@ -9,7 +9,7 @@
       "high_52w": 287.83,
       "low_52w": 152.73,
       "market_cap_bn": 255.64,
-      "volume": 5522383
+      "volume": 5524091
     },
     "ON": {
       "price": 102.04,
@@ -19,7 +19,7 @@
       "high_52w": 103.32,
       "low_52w": 37.19,
       "market_cap_bn": 40.14,
-      "volume": 15297046
+      "volume": 16611629
     },
     "MCHP": {
       "price": 95.3,
@@ -43,9 +43,9 @@
     },
     "ALGM": {
       "price": 49.48,
-      "change": 0.3,
-      "change_pct": 0.61,
-      "prev_close": 49.18,
+      "change": 0.98,
+      "change_pct": 2.02,
+      "prev_close": 48.5,
       "high_52w": 49.19,
       "low_52w": 18.17,
       "market_cap_bn": 9.17,
@@ -129,7 +129,7 @@
       "high_52w": 78.82,
       "low_52w": 44.2,
       "market_cap_bn": 142.38,
-      "volume": 2624464
+      "volume": 2624692
     },
     "3037.TW": {
       "price": 911.0,
