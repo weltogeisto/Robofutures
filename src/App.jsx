@@ -44,6 +44,66 @@ const MARKET = [
   { m: 'May 26', r: 195, sp: 124, nd: 138 },
 ];
 
+const TIME_SCALES = [
+  { id: '1d', label: '1D' },
+  { id: '3d', label: '3D' },
+  { id: '1w', label: '1W' },
+  { id: '1m', label: '1M' },
+  { id: '3m', label: '3M' },
+  { id: '6m', label: '6M' },
+  { id: '1y', label: '1Y' },
+  { id: '3y', label: '3Y' },
+];
+
+// Generate ~3 years of synthetic daily data for time-scale chart
+const ALL_DAILY = (() => {
+  const data = [];
+  const now = new Date();
+  const DAYS = 756;
+  let r = 48, sp = 82, nd = 72;
+
+  for (let i = DAYS; i >= 0; i--) {
+    const d = new Date(now);
+    d.setDate(d.getDate() - i);
+    // skip weekends
+    if (d.getDay() === 0 || d.getDay() === 6) continue;
+
+    const rr = (Math.random() - 0.478) * 2.2;
+    const sr = (Math.random() - 0.49) * 0.9;
+    const nr = (Math.random() - 0.485) * 1.1;
+
+    r = r * (1 + rr / 100);
+    sp = sp * (1 + sr / 100);
+    nd = nd * (1 + nr / 100);
+
+    data.push({
+      d: d.toISOString().substring(0, 10),
+      r: Math.round(r * 100) / 100,
+      sp: Math.round(sp * 100) / 100,
+      nd: Math.round(nd * 100) / 100,
+    });
+  }
+  return data;
+})();
+
+const filterTimeScale = (data, scale) => {
+  const now = new Date();
+  const map = { '1d': 1, '3d': 3, '1w': 7, '1m': 30, '3m': 90, '6m': 180, '1y': 365, '3y': 1095 };
+  const days = map[scale] || 180;
+  const cutoff = new Date(now);
+  cutoff.setDate(cutoff.getDate() - days);
+  return data.filter(d => new Date(d.d) >= cutoff);
+};
+
+const formatXAxis = (dateStr, scale) => {
+  const d = new Date(dateStr + 'T12:00:00');
+  if (scale === '1d' || scale === '3d') return d.toLocaleDateString('de-DE', { weekday: 'short', day: 'numeric' });
+  if (scale === '1w') return d.toLocaleDateString('de-DE', { weekday: 'short' });
+  if (scale === '1m') return d.toLocaleDateString('de-DE', { day: 'numeric', month: 'short' });
+  if (scale === '3m' || scale === '6m') return d.toLocaleDateString('de-DE', { month: 'short' });
+  return d.toLocaleDateString('de-DE', { month: 'short', year: '2-digit' });
+};
+
 const ALERTS = [
   { id: 1, ty: 'momentum', p: 'high', t: 'ON Semi +105% in 6M', tm: 'Today', read: false },
   { id: 2, ty: 'momentum', p: 'high', t: 'Unimicron +314% in 6M', tm: 'Today', read: false },
@@ -71,6 +131,7 @@ export default function App() {
   const [watchlist, setWatchlist] = useState(['ON', '6324.T', '6954.T', 'ALGM', '3037.TW']);
   const [expandedLayer, setExpandedLayer] = useState(null);
   const [showAlerts, setShowAlerts] = useState(false);
+  const [timeScale, setTimeScale] = useState('6m');
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const toggleWl = (t) => {
@@ -190,14 +251,32 @@ export default function App() {
               ))}
             </div>
 
+            {/* TIME SCALE SELECTOR */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 12, overflowX: 'auto', paddingBottom: 4 }}>
+              <span style={{ fontSize: 11, color: 'var(--text-quaternary)', fontWeight: 500, whiteSpace: 'nowrap', letterSpacing: '0.3px' }}>TIMEFRAME</span>
+              {TIME_SCALES.map(ts => (
+                <button
+                  key={ts.id}
+                  className={'tab-btn' + (timeScale === ts.id ? ' active' : '')}
+                  onClick={() => setTimeScale(ts.id)}
+                  style={{ padding: '3px 10px', fontSize: 11, whiteSpace: 'nowrap' }}
+                >
+                  {ts.label}
+                </button>
+              ))}
+            </div>
+
             <div className="card" style={{ marginBottom: 16 }}>
               <div className="card-title">Robotics Index vs Benchmarks (Normalized)</div>
               <ResponsiveContainer width="100%" height={220}>
-                <LineChart data={MARKET}>
+                <LineChart data={filterTimeScale(ALL_DAILY, timeScale)}>
                   <CartesianGrid strokeDasharray="2 2" stroke="rgba(255,255,255,0.05)" />
-                  <XAxis dataKey="m" tick={{ fill: '#62666d', fontSize: 11 }} />
+                  <XAxis dataKey="d" tick={{ fill: '#62666d', fontSize: 11 }} tickFormatter={(v) => formatXAxis(v, timeScale)} />
                   <YAxis tick={{ fill: '#62666d', fontSize: 11 }} />
-                  <Tooltip contentStyle={{ background: '#191a1b', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 6 }} />
+                  <Tooltip
+                    contentStyle={{ background: '#191a1b', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 6 }}
+                    labelFormatter={(v) => new Date(v + 'T12:00:00').toLocaleDateString('de-DE', { day: 'numeric', month: 'short', year: 'numeric' })}
+                  />
                   <Line type="monotone" dataKey="r" stroke="#7170ff" strokeWidth={2} dot={false} name="Robotics Index" />
                   <Line type="monotone" dataKey="sp" stroke="#8a8f98" strokeWidth={1.5} dot={false} name="S&P 500" />
                   <Line type="monotone" dataKey="nd" stroke="#f59e0b" strokeWidth={1.5} dot={false} name="NASDAQ" />
