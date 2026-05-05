@@ -191,7 +191,38 @@ export default function App() {
     ? new Date(liveQuotes.updated).toLocaleString('de-DE', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })
     : null;
 
-  const cockpit = useMemo(() => computeSignalCockpit(mergedTickers), [mergedTickers]);
+  // ── Timeframe-aware enrichment ──────────────────────────────────────────
+  const TF_DAYS = { '1d': 1, '3d': 3, '1w': 5, '1m': 21, '3m': 63, '6m': 126, '1y': 252, '3y': 756 };
+
+  const timeframeTickers = useMemo(() => {
+    if (!liveHistory?.tickers) return mergedTickers; // fallback → static ch/rb
+
+    const nDays = TF_DAYS[timeScale] || 126;
+    const enriched = {};
+    for (const [sym, data] of Object.entries(mergedTickers)) {
+      const hist = liveHistory.tickers[sym];
+      let ch = data.ch;
+      let rb = data.rb;
+
+      if (hist?.close?.length >= nDays + 1) {
+        const closes = hist.close;
+        const latest = closes[closes.length - 1];
+        const prior  = closes[closes.length - 1 - nDays];
+        if (latest && prior && prior > 0) {
+          ch = Math.round((latest - prior) / prior * 1000) / 10;
+          const periodSlice = closes.slice(closes.length - 1 - nDays);
+          const lo = Math.min(...periodSlice);
+          const hi = Math.max(...periodSlice);
+          rb = hi > lo ? Math.round((latest - lo) / (hi - lo) * 100) : data.rb;
+        }
+      }
+      enriched[sym] = { ...data, ch, rb };
+    }
+    return enriched;
+  }, [mergedTickers, liveHistory, timeScale]);
+
+  const cockpit = useMemo(() => computeSignalCockpit(timeframeTickers), [timeframeTickers]);
+
 
   const switchTab = (id) => {
     setTab(id);
@@ -236,7 +267,7 @@ export default function App() {
           <div className="nav-section" style={{ marginTop: 24 }}>
             <div className="nav-section-title">Watchlist</div>
             {watchlist.map(tk => {
-              const d = mergedTickers[tk];
+              const d = timeframeTickers[tk];
               if (!d) return null;
               return (
                 <button key={tk} className="nav-item" onClick={() => toggleWl(tk)} style={{ fontSize: 12 }}>
@@ -308,8 +339,8 @@ export default function App() {
           <>
             <div className="grid-4" style={{ marginBottom: 16 }}>
               {[{ l: 'Layer Score', v: '4.2/5', sub: 'Composite' },
-                { l: 'Tickers Tracked', v: Object.keys(mergedTickers).length, sub: 'Across 4 layers' },
-                { l: 'Avg Rebound', v: Math.round(Object.values(mergedTickers).reduce((s, t) => s + t.rb, 0) / Object.keys(mergedTickers).length) + '%', sub: 'From 52w low' },
+                { l: 'Tickers Tracked', v: Object.keys(timeframeTickers).length, sub: 'Across 4 layers' },
+                { l: 'Avg Rebound', v: Math.round(Object.values(timeframeTickers).reduce((s, t) => s + t.rb, 0) / Object.keys(timeframeTickers).length) + '%', sub: 'From 52w low' },
                 { l: 'Watchlist', v: watchlist.length, sub: 'Selected positions' },
               ].map(kpi => (
                 <div key={kpi.l} className="card">
@@ -424,7 +455,7 @@ export default function App() {
                 <div className="card-title">Watchlist Momentum</div>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
                   {watchlist.map(tk => {
-                    const d = mergedTickers[tk];
+                    const d = timeframeTickers[tk];
                     if (!d) return null;
                     const isUp = d.ch >= 0;
                     return (
@@ -475,7 +506,7 @@ export default function App() {
                         </div>
                         <div style={{ marginTop: 8 }}>
                           {tickers.map(tk => {
-                            const d = mergedTickers[tk];
+                            const d = timeframeTickers[tk];
                             if (!d) return null;
                             const isUp = d.ch >= 0;
                             return (
@@ -522,7 +553,7 @@ export default function App() {
                         </td>
                       </tr>
                       {tickers.map(tk => {
-                        const d = mergedTickers[tk];
+                        const d = timeframeTickers[tk];
                         if (!d) return null;
                         const isUp = d.ch >= 0;
                         return (
