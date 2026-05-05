@@ -1,5 +1,5 @@
 {
-  "updated": "2026-05-05T06:01:54.683246+00:00",
+  "updated": "2026-05-05T08:00:13.456931+00:00",
   "quotes": {
     "TXN": {
       "price": 280.89,
@@ -32,14 +32,14 @@
       "volume": 8361200
     },
     "IFX.DE": {
-      "price": 56.81,
-      "change": -0.32,
-      "change_pct": -0.56,
-      "prev_close": 57.13,
+      "price": 57.69,
+      "change": 0.6,
+      "change_pct": 1.05,
+      "prev_close": 57.09,
       "high_52w": 58.32,
       "low_52w": 29.07,
-      "market_cap_bn": 73.97,
-      "volume": 6027534
+      "market_cap_bn": 75.12,
+      "volume": 504751
     },
     "ALGM": {
       "price": 49.48,
@@ -122,14 +122,14 @@
       "volume": 3308100
     },
     "ABBN.SW": {
-      "price": 78.42,
-      "change": -0.1,
-      "change_pct": -0.13,
-      "prev_close": 78.52,
+      "price": 78.88,
+      "change": 0.26,
+      "change_pct": 0.33,
+      "prev_close": 78.62,
       "high_52w": 79.72,
       "low_52w": 44.2,
-      "market_cap_bn": 142.38,
-      "volume": 2624692
+      "market_cap_bn": 143.21,
+      "volume": 113310
     },
     "3037.TW": {
       "price": 903.0,
