@@ -1,35 +1,37 @@
 {
-  "updated": "2026-05-05T18:00:20.964374+00:00",
+  "updated": "2026-05-05T18:03:37.015437+00:00",
+  "source": "Yahoo Finance via yfinance (free/no API key)",
+  "cost": "No paid API/service used",
   "quotes": {
     "TXN": {
-      "price": 281.2,
-      "change": 0.77,
-      "change_pct": 0.27,
+      "price": 281.11,
+      "change": 0.68,
+      "change_pct": 0.24,
       "prev_close": 280.43,
       "high_52w": 287.83,
       "low_52w": 152.73,
-      "market_cap_bn": 255.92,
-      "volume": 3206778
+      "market_cap_bn": 255.83,
+      "volume": 3233139
     },
     "ON": {
-      "price": 101.36,
-      "change": 3.24,
-      "change_pct": 3.3,
+      "price": 101.13,
+      "change": 3.01,
+      "change_pct": 3.07,
       "prev_close": 98.12,
       "high_52w": 105.0,
       "low_52w": 37.19,
-      "market_cap_bn": 39.87,
-      "volume": 12324170
+      "market_cap_bn": 39.78,
+      "volume": 12404389
     },
     "MCHP": {
-      "price": 98.81,
-      "change": 3.82,
-      "change_pct": 4.02,
+      "price": 98.88,
+      "change": 3.89,
+      "change_pct": 4.1,
       "prev_close": 94.99,
       "high_52w": 96.22,
       "low_52w": 46.68,
-      "market_cap_bn": 53.47,
-      "volume": 4497863
+      "market_cap_bn": 53.51,
+      "volume": 4541490
     },
     "IFX.DE": {
       "price": 60.5,
@@ -42,24 +44,24 @@
       "volume": 9238597
     },
     "ALGM": {
-      "price": 49.38,
-      "change": -0.1,
-      "change_pct": -0.2,
+      "price": 49.4,
+      "change": -0.08,
+      "change_pct": -0.16,
       "prev_close": 49.48,
       "high_52w": 50.19,
       "low_52w": 18.17,
       "market_cap_bn": 9.15,
-      "volume": 1556374
+      "volume": 1569326
     },
     "RRX": {
-      "price": 222.13,
-      "change": 10.13,
-      "change_pct": 4.78,
+      "price": 222.24,
+      "change": 10.24,
+      "change_pct": 4.83,
       "prev_close": 212.0,
       "high_52w": 229.3,
       "low_52w": 121.44,
       "market_cap_bn": 14.79,
-      "volume": 682225
+      "volume": 685816
     },
     "6324.T": {
       "price": 5150.0,
