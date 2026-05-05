@@ -89,6 +89,8 @@ def fetch_history(period="3y"):
     # Build output
     out = {
         "updated": datetime.now(timezone.utc).isoformat(),
+        "source": "Yahoo Finance via yfinance (free/no API key)",
+        "cost": "No paid API/service used",
         "failed": failed,
         "dates": [d.strftime("%Y-%m-%d") for d in norm_df.index],
         "r": [round(v, 2) for v in norm_df["BOTZ"].tolist()] if "BOTZ" in norm_df.columns else [],
@@ -142,6 +144,8 @@ def fetch_quotes():
 
     return {
         "updated": datetime.now(timezone.utc).isoformat(),
+        "source": "Yahoo Finance via yfinance (free/no API key)",
+        "cost": "No paid API/service used",
         "quotes": quotes,
     }
 
