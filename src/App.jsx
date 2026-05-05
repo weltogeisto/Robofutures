@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts';
 import { Activity, Layers, Map, TrendingUp, TrendingDown, Bot, Star, Zap, Menu, X } from 'lucide-react';
+import { computeSignalCockpit } from './lib/signalCockpit.js';
 
 // DATA
 const LAYERS = [
@@ -87,10 +88,11 @@ const ALL_DAILY = (() => {
 })();
 
 const filterTimeScale = (data, scale) => {
-  const now = new Date();
+  if (!data?.length) return [];
   const map = { '1d': 1, '3d': 3, '1w': 7, '1m': 30, '3m': 90, '6m': 180, '1y': 365, '3y': 1095 };
   const days = map[scale] || 180;
-  const cutoff = new Date(now);
+  const last = new Date((data.at(-1)?.d || new Date().toISOString().slice(0, 10)) + 'T23:59:59');
+  const cutoff = new Date(last);
   cutoff.setDate(cutoff.getDate() - days);
   const filtered = data.filter(d => new Date(d.d + 'T23:59:59') >= cutoff);
   if (filtered.length === 0) return data;
@@ -188,6 +190,8 @@ export default function App() {
   const dataUpdated = liveQuotes?.updated
     ? new Date(liveQuotes.updated).toLocaleString('de-DE', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })
     : null;
+
+  const cockpit = useMemo(() => computeSignalCockpit(mergedTickers), [mergedTickers]);
 
   const switchTab = (id) => {
     setTab(id);
@@ -314,6 +318,57 @@ export default function App() {
                   <div className="card-label">{kpi.sub}</div>
                 </div>
               ))}
+            </div>
+
+            <div className="grid-3" style={{ marginBottom: 16 }}>
+              <div className="card" style={{ gridColumn: 'span 1' }}>
+                <div className="card-title">Cycle Clock</div>
+                <div className="card-value" style={{ fontSize: 28 }}>P{cockpit.cycleClock.phase}</div>
+                <div style={{ fontWeight: 510, fontSize: 14, marginTop: 4 }}>{cockpit.cycleClock.stage}</div>
+                <div className="card-label" style={{ marginTop: 8 }}>{cockpit.cycleClock.implication}</div>
+                <div style={{ marginTop: 10, fontSize: 11, color: 'var(--text-quaternary)' }}>
+                  Confidence {cockpit.cycleClock.confidence}%
+                </div>
+              </div>
+
+              <div className="card" style={{ gridColumn: 'span 1' }}>
+                <div className="card-title">Momentum Ticker Radar</div>
+                {cockpit.topMomentumTickers.slice(0, 5).map(t => (
+                  <div key={t.ticker} style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '4px 0', borderBottom: '1px solid rgba(255,255,255,0.05)', fontSize: 12 }}>
+                    <span style={{ fontWeight: 600, width: 62 }}>{t.ticker}</span>
+                    <span style={{ flex: 1, color: 'var(--text-tertiary)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{t.name}</span>
+                    <span style={{ fontFamily: 'JetBrains Mono, monospace', color: t.status.startsWith('Early') ? 'var(--green)' : 'var(--text-quaternary)' }}>{t.earlyness}</span>
+                  </div>
+                ))}
+              </div>
+
+              <div className="card" style={{ gridColumn: 'span 1' }}>
+                <div className="card-title">Action Queue</div>
+                {cockpit.actionQueue.slice(0, 3).map(item => (
+                  <div key={item.entity} style={{ padding: '5px 0', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+                    <div style={{ fontSize: 12, fontWeight: 510 }}>{item.action}</div>
+                    <div className="card-label">{item.rationale}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="card" style={{ marginBottom: 16 }}>
+              <div className="card-title">Upstream / Downstream Layer Map</div>
+              <div className="grid-4" style={{ marginTop: 10 }}>
+                {cockpit.ecosystemLayers.map(layer => (
+                  <div key={layer.id} style={{ padding: 10, border: '1px solid rgba(255,255,255,0.06)', borderRadius: 8, background: 'rgba(255,255,255,0.02)' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 6 }}>
+                      <LayerBadge id={layer.id} />
+                      <span style={{ fontSize: 12, fontWeight: 510 }}>{layer.name}</span>
+                    </div>
+                    <div style={{ height: 4, background: 'rgba(255,255,255,0.06)', borderRadius: 2, overflow: 'hidden', marginBottom: 6 }}>
+                      <div style={{ width: `${layer.bottleneckScore}%`, height: '100%', background: layer.signal === 'bottleneck' ? '#ef4444' : layer.signal === 'watch' ? '#f59e0b' : '#7170ff' }} />
+                    </div>
+                    <div className="card-label">Bottleneck {layer.bottleneckScore} · {layer.tickers.slice(0, 3).map(t => t.ticker).join(', ')}</div>
+                  </div>
+                ))}
+              </div>
             </div>
 
             {/* TIME SCALE SELECTOR */}
