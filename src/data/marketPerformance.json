@@ -1,7 +1,7 @@
 [
   {
-    "month": "May 24",
-    "date": "2024-05",
+    "month": "Jun 24",
+    "date": "2024-06",
     "robotics": 100,
     "sp500": 100,
     "nasdaq": 100,
@@ -9,219 +9,219 @@
     "industrials": 100
   },
   {
-    "month": "Jun 24",
-    "date": "2024-06",
-    "robotics": 108,
-    "sp500": 103,
-    "nasdaq": 106,
-    "soxx": 105,
-    "industrials": 99
-  },
-  {
     "month": "Jul 24",
     "date": "2024-07",
-    "robotics": 111,
-    "sp500": 105,
-    "nasdaq": 105,
-    "soxx": 101,
-    "industrials": 104
+    "robotics": 102,
+    "sp500": 101,
+    "nasdaq": 99,
+    "soxx": 95,
+    "industrials": 105
   },
   {
     "month": "Aug 24",
     "date": "2024-08",
-    "robotics": 109,
-    "sp500": 107,
-    "nasdaq": 106,
-    "soxx": 99,
-    "industrials": 106
+    "robotics": 100,
+    "sp500": 103,
+    "nasdaq": 100,
+    "soxx": 94,
+    "industrials": 108
   },
   {
     "month": "Sep 24",
     "date": "2024-09",
-    "robotics": 117,
-    "sp500": 109,
-    "nasdaq": 109,
-    "soxx": 99,
-    "industrials": 110
+    "robotics": 108,
+    "sp500": 106,
+    "nasdaq": 103,
+    "soxx": 93,
+    "industrials": 111
   },
   {
     "month": "Oct 24",
     "date": "2024-10",
-    "robotics": 118,
-    "sp500": 108,
-    "nasdaq": 108,
-    "soxx": 93,
-    "industrials": 108
+    "robotics": 109,
+    "sp500": 104,
+    "nasdaq": 102,
+    "soxx": 88,
+    "industrials": 110
   },
   {
     "month": "Nov 24",
     "date": "2024-11",
-    "robotics": 137,
-    "sp500": 114,
-    "nasdaq": 115,
-    "soxx": 92,
-    "industrials": 117
+    "robotics": 126,
+    "sp500": 110,
+    "nasdaq": 108,
+    "soxx": 87,
+    "industrials": 118
   },
   {
     "month": "Dec 24",
     "date": "2024-12",
-    "robotics": 143,
-    "sp500": 111,
-    "nasdaq": 115,
-    "soxx": 92,
-    "industrials": 107
+    "robotics": 131,
+    "sp500": 108,
+    "nasdaq": 109,
+    "soxx": 87,
+    "industrials": 108
   },
   {
     "month": "Jan 25",
     "date": "2025-01",
-    "robotics": 145,
-    "sp500": 114,
-    "nasdaq": 117,
-    "soxx": 93,
-    "industrials": 112
+    "robotics": 133,
+    "sp500": 111,
+    "nasdaq": 111,
+    "soxx": 88,
+    "industrials": 114
   },
   {
     "month": "Feb 25",
     "date": "2025-02",
-    "robotics": 126,
-    "sp500": 113,
-    "nasdaq": 113,
-    "soxx": 89,
-    "industrials": 110
+    "robotics": 116,
+    "sp500": 109,
+    "nasdaq": 106,
+    "soxx": 85,
+    "industrials": 112
   },
   {
     "month": "Mar 25",
     "date": "2025-03",
-    "robotics": 111,
-    "sp500": 106,
-    "nasdaq": 103,
-    "soxx": 80,
-    "industrials": 106
+    "robotics": 103,
+    "sp500": 103,
+    "nasdaq": 98,
+    "soxx": 76,
+    "industrials": 108
   },
   {
     "month": "Apr 25",
     "date": "2025-04",
-    "robotics": 116,
-    "sp500": 106,
-    "nasdaq": 104,
-    "soxx": 79,
-    "industrials": 106
+    "robotics": 107,
+    "sp500": 102,
+    "nasdaq": 98,
+    "soxx": 75,
+    "industrials": 108
   },
   {
     "month": "May 25",
     "date": "2025-05",
-    "robotics": 138,
-    "sp500": 112,
-    "nasdaq": 114,
-    "soxx": 88,
-    "industrials": 116
+    "robotics": 127,
+    "sp500": 108,
+    "nasdaq": 108,
+    "soxx": 83,
+    "industrials": 117
   },
   {
     "month": "Jun 25",
     "date": "2025-06",
-    "robotics": 141,
-    "sp500": 118,
-    "nasdaq": 122,
-    "soxx": 102,
-    "industrials": 119
+    "robotics": 130,
+    "sp500": 114,
+    "nasdaq": 115,
+    "soxx": 97,
+    "industrials": 121
   },
   {
     "month": "Jul 25",
     "date": "2025-07",
-    "robotics": 144,
-    "sp500": 120,
-    "nasdaq": 126,
-    "soxx": 103,
-    "industrials": 123
+    "robotics": 134,
+    "sp500": 116,
+    "nasdaq": 119,
+    "soxx": 97,
+    "industrials": 125
   },
   {
     "month": "Aug 25",
     "date": "2025-08",
-    "robotics": 145,
-    "sp500": 122,
-    "nasdaq": 128,
-    "soxx": 105,
-    "industrials": 123
+    "robotics": 134,
+    "sp500": 118,
+    "nasdaq": 121,
+    "soxx": 99,
+    "industrials": 125
   },
   {
     "month": "Sep 25",
     "date": "2025-09",
-    "robotics": 167,
-    "sp500": 127,
-    "nasdaq": 135,
-    "soxx": 116,
-    "industrials": 125
+    "robotics": 154,
+    "sp500": 122,
+    "nasdaq": 128,
+    "soxx": 110,
+    "industrials": 127
   },
   {
     "month": "Oct 25",
     "date": "2025-10",
-    "robotics": 184,
-    "sp500": 130,
-    "nasdaq": 142,
-    "soxx": 131,
-    "industrials": 126
+    "robotics": 171,
+    "sp500": 125,
+    "nasdaq": 134,
+    "soxx": 124,
+    "industrials": 127
   },
   {
     "month": "Nov 25",
     "date": "2025-11",
-    "robotics": 177,
-    "sp500": 130,
-    "nasdaq": 140,
-    "soxx": 127,
-    "industrials": 124
+    "robotics": 165,
+    "sp500": 125,
+    "nasdaq": 132,
+    "soxx": 120,
+    "industrials": 126
   },
   {
     "month": "Dec 25",
     "date": "2025-12",
-    "robotics": 180,
-    "sp500": 130,
-    "nasdaq": 139,
-    "soxx": 129,
-    "industrials": 126
+    "robotics": 167,
+    "sp500": 125,
+    "nasdaq": 131,
+    "soxx": 122,
+    "industrials": 127
   },
   {
     "month": "Jan 26",
     "date": "2026-01",
-    "robotics": 174,
-    "sp500": 131,
-    "nasdaq": 140,
-    "soxx": 148,
-    "industrials": 134
+    "robotics": 161,
+    "sp500": 127,
+    "nasdaq": 132,
+    "soxx": 140,
+    "industrials": 136
   },
   {
     "month": "Feb 26",
     "date": "2026-02",
-    "robotics": 167,
-    "sp500": 130,
-    "nasdaq": 135,
-    "soxx": 151,
-    "industrials": 143
+    "robotics": 155,
+    "sp500": 126,
+    "nasdaq": 128,
+    "soxx": 143,
+    "industrials": 145
   },
   {
     "month": "Mar 26",
     "date": "2026-03",
-    "robotics": 154,
-    "sp500": 124,
-    "nasdaq": 129,
-    "soxx": 140,
-    "industrials": 131
+    "robotics": 143,
+    "sp500": 120,
+    "nasdaq": 122,
+    "soxx": 133,
+    "industrials": 133
   },
   {
     "month": "Apr 26",
     "date": "2026-04",
-    "robotics": 167,
-    "sp500": 137,
-    "nasdaq": 149,
-    "soxx": 197,
-    "industrials": 141
+    "robotics": 155,
+    "sp500": 132,
+    "nasdaq": 140,
+    "soxx": 187,
+    "industrials": 143
   },
   {
     "month": "May 26",
     "date": "2026-05",
-    "robotics": 168,
-    "sp500": 137,
-    "nasdaq": 150,
-    "soxx": 199,
+    "robotics": 155,
+    "sp500": 132,
+    "nasdaq": 141,
+    "soxx": 187,
+    "industrials": 140
+  },
+  {
+    "month": "May 26",
+    "date": "2026-05",
+    "robotics": 155,
+    "sp500": 132,
+    "nasdaq": 141,
+    "soxx": 187,
     "industrials": 140
   }
 ]
