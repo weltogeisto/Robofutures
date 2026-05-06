@@ -1,5 +1,5 @@
 {
-  "updated": "2026-05-06T20:53:51.894238+00:00",
+  "updated": "2026-05-06T21:52:57.751664+00:00",
   "source": "Yahoo Finance via yfinance (free/no API key)",
   "cost": "No paid API/service used",
   "quotes": {
@@ -11,7 +11,7 @@
       "high_52w": 287.83,
       "low_52w": 152.73,
       "market_cap_bn": 263.42,
-      "volume": 6404893
+      "volume": 10056556
     },
     "ON": {
       "price": 105.77,
@@ -51,7 +51,7 @@
       "high_52w": 50.31,
       "low_52w": 18.17,
       "market_cap_bn": 9.52,
-      "volume": 3567447
+      "volume": 3568218
     },
     "RRX": {
       "price": 231.37,
