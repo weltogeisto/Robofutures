@@ -1,5 +1,5 @@
 {
-  "updated": "2026-05-07T10:00:48.979268+00:00",
+  "updated": "2026-05-07T12:01:16.461295+00:00",
   "source": "Yahoo Finance via yfinance (free/no API key)",
   "cost": "No paid API/service used",
   "quotes": {
@@ -34,14 +34,14 @@
       "volume": 13747500
     },
     "IFX.DE": {
-      "price": 61.3,
-      "change": 1.77,
-      "change_pct": 2.97,
+      "price": 61.22,
+      "change": 1.69,
+      "change_pct": 2.84,
       "prev_close": 59.53,
       "high_52w": 61.95,
       "low_52w": 30.22,
-      "market_cap_bn": 79.82,
-      "volume": 1310852
+      "market_cap_bn": 79.72,
+      "volume": 1639196
     },
     "ALGM": {
       "price": 51.37,
@@ -124,14 +124,14 @@
       "volume": 5212500
     },
     "ABBN.SW": {
-      "price": 82.76,
-      "change": 0.32,
-      "change_pct": 0.39,
+      "price": 82.64,
+      "change": 0.2,
+      "change_pct": 0.24,
       "prev_close": 82.44,
       "high_52w": 83.06,
       "low_52w": 44.69,
-      "market_cap_bn": 150.26,
-      "volume": 472433
+      "market_cap_bn": 150.04,
+      "volume": 556287
     },
     "3037.TW": {
       "price": 896.0,
