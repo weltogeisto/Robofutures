@@ -1,5 +1,5 @@
 {
-  "updated": "2026-05-08T20:54:07.692304+00:00",
+  "updated": "2026-05-08T21:55:55.164000+00:00",
   "source": "Yahoo Finance via yfinance (free/no API key)",
   "cost": "No paid API/service used",
   "quotes": {
@@ -11,7 +11,7 @@
       "high_52w": 292.64,
       "low_52w": 152.73,
       "market_cap_bn": 261.92,
-      "volume": 7094458
+      "volume": 8509761
     },
     "ON": {
       "price": 103.2,
@@ -131,7 +131,7 @@
       "high_52w": 83.48,
       "low_52w": 44.69,
       "market_cap_bn": 148.91,
-      "volume": 1759576
+      "volume": 1759613
     },
     "3037.TW": {
       "price": 818.0,
