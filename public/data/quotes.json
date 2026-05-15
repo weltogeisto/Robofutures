@@ -1,5 +1,5 @@
 {
-  "updated": "2026-05-15T20:56:18.847972+00:00",
+  "updated": "2026-05-15T21:57:09.805816+00:00",
   "source": "Yahoo Finance via yfinance (free/no API key)",
   "cost": "No paid API/service used",
   "quotes": {
@@ -11,7 +11,7 @@
       "high_52w": 310.29,
       "low_52w": 152.73,
       "market_cap_bn": 275.51,
-      "volume": 6570094
+      "volume": 6571726
     },
     "ON": {
       "price": 113.11,
@@ -21,7 +21,7 @@
       "high_52w": 119.1,
       "low_52w": 40.62,
       "market_cap_bn": 43.98,
-      "volume": 10931978
+      "volume": 10935299
     },
     "MCHP": {
       "price": 93.85,
@@ -31,7 +31,7 @@
       "high_52w": 105.91,
       "low_52w": 48.52,
       "market_cap_bn": 50.79,
-      "volume": 9440398
+      "volume": 9443247
     },
     "IFX.DE": {
       "price": 65.19,
@@ -51,7 +51,7 @@
       "high_52w": 51.4,
       "low_52w": 22.41,
       "market_cap_bn": 7.99,
-      "volume": 3478034
+      "volume": 3525787
     },
     "RRX": {
       "price": 197.16,
