@@ -106,6 +106,9 @@ function priorityLabel(priority) {
   return priority === 'high' ? 'high' : priority === 'med' ? 'med' : 'low';
 }
 
+/**
+ * @param {{ dataHealth?: ReturnType<typeof getDataHealth>, tickers?: Record<string, any> }} [options]
+ */
 export function deriveDashboardAlerts({ dataHealth, tickers = {} } = {}) {
   const alerts = [];
   const health = dataHealth ?? getDataHealth(null, null);
@@ -159,6 +162,21 @@ export function deriveDashboardAlerts({ dataHealth, tickers = {} } = {}) {
         read: false,
       });
     });
+
+  if (health.failed.length > 0) {
+    const symbols = health.failed.slice(0, 4).join(', ');
+    const more = health.failed.length > 4 ? ` +${health.failed.length - 4} more` : '';
+    alerts.push({
+      id: 'failed-symbols',
+      type: 'failed-symbols',
+      ty: 'failed-symbols',
+      p: 'med',
+      priority: 'med',
+      t: `${health.failed.length} symbol${health.failed.length === 1 ? '' : 's'} failed to fetch: ${symbols}${more}`,
+      tm: 'Data',
+      read: false,
+    });
+  }
 
   return alerts.slice(0, 6).map(alert => ({
     ...alert,
@@ -239,9 +257,15 @@ export function mapEcosystemLayers(tickers = {}) {
 
 export function classifyCycleStage(tickers = {}) {
   const ranked = rankMomentumTickers(tickers);
-  const avgSemis = ranked.filter(t => t.l === 1).reduce((s, t, _, arr) => s + t.momentum / arr.length, 0);
-  const actuation = ranked.filter(t => t.l === 2).reduce((s, t, _, arr) => s + t.earlyness / arr.length, 0);
-  const integrators = ranked.filter(t => t.l === 3).reduce((s, t, _, arr) => s + t.momentum / arr.length, 0);
+  /** @type {(t: ReturnType<typeof scoreTicker>) => boolean} */
+  const isL1 = (t) => /** @type {any} */ (t).l === 1;
+  /** @type {(t: ReturnType<typeof scoreTicker>) => boolean} */
+  const isL2 = (t) => /** @type {any} */ (t).l === 2;
+  /** @type {(t: ReturnType<typeof scoreTicker>) => boolean} */
+  const isL3 = (t) => /** @type {any} */ (t).l === 3;
+  const avgSemis = ranked.filter(isL1).reduce((s, t, _, arr) => s + t.momentum / arr.length, 0);
+  const actuation = ranked.filter(isL2).reduce((s, t, _, arr) => s + t.earlyness / arr.length, 0);
+  const integrators = ranked.filter(isL3).reduce((s, t, _, arr) => s + t.momentum / arr.length, 0);
 
   let phase = 2;
   let stage = 'Early public-market positioning';
