@@ -158,6 +158,7 @@ export default function App() {
         <nav className="sidebar-nav" aria-label="Dashboard navigation">
           <div className="nav-section">
             <div className="nav-section-title">Navigation</div>
+            <div role="tablist" aria-label="Dashboard tabs">
             {NAV.map((item) => (
               <button
                 key={item.id}
@@ -177,6 +178,7 @@ export default function App() {
                 )}
               </button>
             ))}
+            </div>
           </div>
           <div className="nav-section" style={{ marginTop: 24 }}>
             <div className="nav-section-title">Watchlist</div>
