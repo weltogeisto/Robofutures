@@ -2,6 +2,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { Activity, Layers, Map, TrendingUp, Bot, Star, Menu } from 'lucide-react';
 import { computeSignalCockpit, deriveDashboardAlerts, getDataHealth } from './lib/signalCockpit.js';
+import { fetchWithRetry } from './lib/fetchJson.js';
 
 // DATA
 const LAYERS = [
@@ -133,17 +134,18 @@ export default function App() {
   const [liveHistory, setLiveHistory] = useState(null);
   const [timeScale, setTimeScale] = useState('6m');
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [fetchError, setFetchError] = useState(null);
 
   // Fetch live data from public/data/ on mount
   useEffect(() => {
     const base = import.meta.env.BASE_URL.replace(/\/$/, '');
     Promise.all([
-      fetch(`${base}/data/quotes.json`).then(r => r.ok ? r.json() : null),
-      fetch(`${base}/data/history.json`).then(r => r.ok ? r.json() : null),
+      fetchWithRetry(`${base}/data/quotes.json`).catch((err) => { setFetchError(err.message); return null; }),
+      fetchWithRetry(`${base}/data/history.json`).catch((err) => { setFetchError(err.message); return null; }),
     ]).then(([quotes, history]) => {
-      if (quotes)  setLiveQuotes(quotes);
+      if (quotes) setLiveQuotes(quotes);
       if (history) setLiveHistory(history);
-    }).catch(() => {});
+    });
   }, []);
 
   const toggleWl = (t) => {
@@ -208,7 +210,23 @@ export default function App() {
   }, [mergedTickers, liveHistory, timeScale]);
 
   const cockpit = useMemo(() => computeSignalCockpit(timeframeTickers), [timeframeTickers]);
-  const alerts = useMemo(() => deriveDashboardAlerts({ dataHealth, tickers: timeframeTickers }), [dataHealth, timeframeTickers]);
+  const alerts = useMemo(() => {
+    const base = deriveDashboardAlerts({ dataHealth, tickers: timeframeTickers });
+    if (fetchError) {
+      const fetchAlert = {
+        id: 'fetch-error',
+        type: 'fetch-error',
+        ty: 'fetch-error',
+        p: 'high',
+        priority: 'high',
+        t: `Fetch failed: ${fetchError}`,
+        tm: 'Now',
+        read: false,
+      };
+      return [fetchAlert, ...base].slice(0, 6);
+    }
+    return base;
+  }, [dataHealth, timeframeTickers, fetchError]);
 
 
   const switchTab = (id) => {
