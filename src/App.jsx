@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts';
-import { Activity, Layers, Map, TrendingUp, TrendingDown, Bot, Star, Zap, Menu, X } from 'lucide-react';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { Activity, Layers, Map, TrendingUp, Bot, Star, Menu } from 'lucide-react';
 import { computeSignalCockpit, deriveDashboardAlerts, getDataHealth } from './lib/signalCockpit.js';
 
 // DATA
@@ -33,16 +33,6 @@ const SEG = [
   { id: 'warehouse', n: 'Warehouse', g: 62, m: 93, c: '#3b82f6' },
   { id: 'cobot', n: 'Collaborative', g: 52, m: 89, c: '#10b981' },
   { id: 'surgical', n: 'Surgical', g: 44, m: 86, c: '#ec4899' },
-];
-
-const MARKET = [
-  { m: 'Nov 25', r: 100, sp: 100, nd: 100 },
-  { m: 'Dec 25', r: 112, sp: 104, nd: 106 },
-  { m: 'Jan 26', r: 128, sp: 108, nd: 112 },
-  { m: 'Feb 26', r: 145, sp: 112, nd: 118 },
-  { m: 'Mar 26', r: 160, sp: 116, nd: 125 },
-  { m: 'Apr 26', r: 178, sp: 120, nd: 132 },
-  { m: 'May 26', r: 195, sp: 124, nd: 138 },
 ];
 
 const TIME_SCALES = [
@@ -123,6 +113,8 @@ const NAV = [
   { id: 'signals', icon: TrendingUp, label: 'Signals' },
 ];
 
+const TF_DAYS = { '1d': 1, '3d': 3, '1w': 5, '1m': 21, '3m': 63, '6m': 126, '1y': 252, '3y': 756 };
+
 const LayerBadge = ({ id }) => {
   const colors = ['', '#5e6ad2', '#7170ff', '#828fff', '#8b5cf6'];
   return (
@@ -188,8 +180,6 @@ export default function App() {
   const dataHealth = useMemo(() => getDataHealth(liveQuotes, liveHistory), [liveQuotes, liveHistory]);
 
   // ── Timeframe-aware enrichment ──────────────────────────────────────────
-  const TF_DAYS = { '1d': 1, '3d': 3, '1w': 5, '1m': 21, '3m': 63, '6m': 126, '1y': 252, '3y': 756 };
-
   const timeframeTickers = useMemo(() => {
     if (!liveHistory?.tickers) return mergedTickers; // fallback → static ch/rb
 
@@ -245,7 +235,16 @@ export default function App() {
   return (
     <div className="app-layout">
       {/* SIDEBAR OVERLAY (mobile) */}
-      {sidebarOpen && <div className="sidebar-overlay open" onClick={() => setSidebarOpen(false)} />}
+      {sidebarOpen && (
+        <div
+          className="sidebar-overlay open"
+          role="button"
+          tabIndex={0}
+          aria-label="Close sidebar"
+          onClick={() => setSidebarOpen(false)}
+          onKeyDown={(e) => e.key === 'Enter' || e.key === ' ' ? setSidebarOpen(false) : null}
+        />
+      )}
 
       {/* SIDEBAR */}
       <aside className={'sidebar' + (sidebarOpen ? ' open' : '')}>
@@ -486,7 +485,16 @@ export default function App() {
                 const tickers = tickersByLayer[layer.id] || [];
                 const isExpanded = expandedLayer === layer.id;
                 return (
-                  <div key={layer.id} className="card" style={{ cursor: 'pointer' }} onClick={() => setExpandedLayer(isExpanded ? null : layer.id)}>
+                  <div
+                    key={layer.id}
+                    className="card"
+                    style={{ cursor: 'pointer' }}
+                    role="button"
+                    tabIndex={0}
+                    aria-expanded={isExpanded}
+                    onClick={() => setExpandedLayer(isExpanded ? null : layer.id)}
+                    onKeyDown={(e) => e.key === 'Enter' || e.key === ' ' ? setExpandedLayer(isExpanded ? null : layer.id) : null}
+                  >
                     <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: isExpanded ? 12 : 0 }}>
                       <div style={{ width: 32, height: 32, borderRadius: 6, background: layer.color, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontWeight: 600, fontSize: 14 }}>
                         {layer.rank}
