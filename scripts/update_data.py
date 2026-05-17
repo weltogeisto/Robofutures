@@ -91,6 +91,8 @@ def fetch_history(period="3y"):
         "updated": datetime.now(timezone.utc).isoformat(),
         "source": "Yahoo Finance via yfinance (free/no API key)",
         "cost": "No paid API/service used",
+        "symbol_count": len(ALL_SYMBOLS),
+        "successful_symbol_count": len(frames),
         "failed": failed,
         "dates": [d.strftime("%Y-%m-%d") for d in norm_df.index],
         "r": [round(v, 2) for v in norm_df["BOTZ"].tolist()] if "BOTZ" in norm_df.columns else [],

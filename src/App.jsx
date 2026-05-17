@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts';
 import { Activity, Layers, Map, TrendingUp, TrendingDown, Bot, Star, Zap, Menu, X } from 'lucide-react';
-import { computeSignalCockpit } from './lib/signalCockpit.js';
+import { computeSignalCockpit, deriveDashboardAlerts, getDataHealth } from './lib/signalCockpit.js';
 
 // DATA
 const LAYERS = [
@@ -116,12 +116,6 @@ const formatXAxis = (dateStr, scale) => {
   return d.toLocaleDateString('de-DE', { month: 'short', year: '2-digit' });
 };
 
-const ALERTS = [
-  { id: 1, ty: 'momentum', p: 'high', t: 'ON Semi +105% in 6M', tm: 'Today', read: false },
-  { id: 2, ty: 'momentum', p: 'high', t: 'Unimicron +314% in 6M', tm: 'Today', read: false },
-  { id: 3, ty: 'thesis', p: 'med', t: 'Layer 1 near 52w high', tm: 'Yesterday', read: false },
-];
-
 const NAV = [
   { id: 'overview', icon: Activity, label: 'Overview' },
   { id: 'thesis', icon: Layers, label: 'Thesis' },
@@ -150,7 +144,7 @@ export default function App() {
 
   // Fetch live data from public/data/ on mount
   useEffect(() => {
-    const base = '/Robofutures';
+    const base = import.meta.env.BASE_URL.replace(/\/$/, '');
     Promise.all([
       fetch(`${base}/data/quotes.json`).then(r => r.ok ? r.json() : null),
       fetch(`${base}/data/history.json`).then(r => r.ok ? r.json() : null),
@@ -191,6 +185,8 @@ export default function App() {
     ? new Date(liveQuotes.updated).toLocaleString('de-DE', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })
     : null;
 
+  const dataHealth = useMemo(() => getDataHealth(liveQuotes, liveHistory), [liveQuotes, liveHistory]);
+
   // ── Timeframe-aware enrichment ──────────────────────────────────────────
   const TF_DAYS = { '1d': 1, '3d': 3, '1w': 5, '1m': 21, '3m': 63, '6m': 126, '1y': 252, '3y': 756 };
 
@@ -222,6 +218,7 @@ export default function App() {
   }, [mergedTickers, liveHistory, timeScale]);
 
   const cockpit = useMemo(() => computeSignalCockpit(timeframeTickers), [timeframeTickers]);
+  const alerts = useMemo(() => deriveDashboardAlerts({ dataHealth, tickers: timeframeTickers }), [dataHealth, timeframeTickers]);
 
 
   const switchTab = (id) => {
@@ -238,7 +235,12 @@ export default function App() {
 
   const now = new Date();
   const timeStr = dataUpdated || now.toLocaleString('de-DE', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
-  const unreadAlerts = ALERTS.filter(a => !a.read).length;
+  const unreadAlerts = alerts.filter(a => !a.read).length;
+  const dataStatusTone = dataHealth.status === 'fresh'
+    ? { color: 'var(--green)', bg: 'var(--green-bg)' }
+    : dataHealth.status === 'degraded'
+      ? { color: 'var(--amber)', bg: 'var(--amber-bg)' }
+      : { color: 'var(--red)', bg: 'var(--red-bg)' };
 
   return (
     <div className="app-layout">
@@ -298,18 +300,16 @@ export default function App() {
         </div>
         <div className="header-actions">
           <span className="header-time">
-            {liveQuotes && (
-              <span style={{
-                display: 'inline-flex', alignItems: 'center', gap: 4,
-                background: 'var(--green-bg)', color: 'var(--green)',
-                borderRadius: 9999, padding: '1px 6px', fontSize: 10,
-                fontWeight: 600, marginRight: 6,
-                border: '1px solid rgba(16,185,129,0.2)'
-              }}>
-                <span style={{ width: 5, height: 5, borderRadius: '50%', background: 'var(--green)' }} />
-                LIVE
-              </span>
-            )}
+            <span style={{
+              display: 'inline-flex', alignItems: 'center', gap: 4,
+              background: dataStatusTone.bg, color: dataStatusTone.color,
+              borderRadius: 9999, padding: '1px 6px', fontSize: 10,
+              fontWeight: 600, marginRight: 6,
+              border: `1px solid ${dataStatusTone.color}`
+            }}>
+              <span style={{ width: 5, height: 5, borderRadius: '50%', background: dataStatusTone.color }} />
+              {dataHealth.label}
+            </span>
             Updated {timeStr}
           </span>
           <button className="tab-btn" onClick={() => setShowAlerts(!showAlerts)} style={{ padding: '3px 8px' }}>
@@ -324,7 +324,7 @@ export default function App() {
         {showAlerts && (
           <div className="card" style={{ marginBottom: 16, padding: 12 }}>
             <div className="card-title" style={{ marginBottom: 8 }}>Alerts</div>
-            {ALERTS.map(a => (
+            {alerts.map(a => (
               <div key={a.id} style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '4px 0', fontSize: 13, color: a.read ? 'var(--text-tertiary)' : 'var(--text-primary)' }}>
                 <span className={'level-dot level-' + (a.p === 'high' ? 'high' : 'ok')} />
                 {a.t}
@@ -536,7 +536,8 @@ export default function App() {
         {tab === 'valuechain' && (
           <div className="card">
             <div className="card-title">Full Ticker Universe — 4-Layer Humanoid Robotics Value Chain</div>
-            <table className="data-table">
+            <div className="data-table-wrap">
+              <table className="data-table">
               <thead>
                 <tr>
                   <th>Ticker</th><th>Name</th><th>Layer</th><th>Price</th><th>6M Chg</th><th>Rebound</th><th>Exposure</th><th>Tier</th><th>Segment</th>
@@ -583,7 +584,8 @@ export default function App() {
                   );
                 })}
               </tbody>
-            </table>
+              </table>
+            </div>
           </div>
         )}
 
@@ -613,7 +615,7 @@ export default function App() {
             ))}
             <div className="card" style={{ gridColumn: 'span 3' }}>
               <div className="card-title">Recent Signals</div>
-              {ALERTS.map(a => (
+              {alerts.map(a => (
                 <div key={a.id} style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '6px 0', borderBottom: '1px solid rgba(255,255,255,0.05)', fontSize: 13 }}>
                   <span className={'level-dot level-' + (a.p === 'high' ? 'high' : a.p === 'med' ? 'ok' : 'low')} />
                   <span>{a.t}</span>

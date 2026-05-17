@@ -3,11 +3,18 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches: ["main"]
+    paths-ignore:
+      - 'public/data/**'
+  workflow_dispatch: {}
 
 permissions:
   contents: read
   pages: write
   id-token: write
+
+concurrency:
+  group: pages-deploy
+  cancel-in-progress: true
 
 jobs:
   deploy:
@@ -22,6 +29,7 @@ jobs:
           node-version: 20
           cache: 'npm'
       - run: npm ci
+      - run: npm run test
       - run: npm run build
       - uses: actions/configure-pages@v4
       - uses: actions/upload-pages-artifact@v3

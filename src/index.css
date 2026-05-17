@@ -744,11 +744,3 @@ body {
   .grid-4 { grid-template-columns: repeat(2, 1fr); }
   .grid-3 { grid-template-columns: repeat(2, 1fr); }
 }
-
-@media (max-width: 768px) {
-  .app-layout {
-    grid-template-columns: 1fr;
-    grid-template-rows: var(--header-h) 1fr;
-  }
-  .sidebar { display: none; }
-}

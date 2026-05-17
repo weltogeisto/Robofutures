@@ -1,67 +1,71 @@
-<<<<<<< HEAD
-# Robofuture Dashboard (Vite + React + Tailwind)
+# 🤖 Robofutures — Robotics Supercycle Monitor
 
-This repo is set up to deploy automatically to **GitHub Pages** on every push to `main`.
+**Live dashboard:** https://weltogeisto.github.io/Robofutures/
 
-## Local run
-```bash
-npm install
-npm run dev
-```
+Robofutures is a static React dashboard for tracking the Robotics / Physical AI investment cycle: market momentum, upstream bottlenecks, value-chain layers, ticker watchlists, and alert-style research prompts.
 
-## Deploy (GitHub Pages)
-1. Go to **Settings → Pages**
-2. Under **Build and deployment**, set **Source** to **GitHub Actions**
-3. Push to `main` (or re-run the workflow)
+## What it tracks
 
-## Important: base path
-For project pages, Vite needs the correct `base` in `vite.config.js`:
+- Robotics and Physical AI ticker momentum
+- Upstream / downstream value-chain layers
+- Cycle phase and bottleneck pressure
+- Watchlist performance versus benchmarks
+- Data freshness and dashboard health
+- Action-oriented signals for follow-up research
 
-`base: '/<REPO_NAME>/'`
+## Tech stack
 
-If your repo is not named `Robofutures`, change it.
-=======
-# 🤖 Robotics Supercycle Monitor
-
-**Real-time dashboard tracking the Robotics & Physical AI supercycle**
-
-**[Live Dashboard →](https://weltogeisto.github.io/Robofutures/)**
-
-[![Deploy to GitHub Pages](https://github.com/weltogeisto/Robofutures/actions/workflows/deploy.yml/badge.svg)](https://github.com/weltogeisto/Robofutures/actions/workflows/deploy.yml)
-
----
-
-## What is this?
-
-Live monitoring of the **$25T+ Robotics Supercycle** — humanoid robots, physical AI, automation stocks, sector trends, and breaking news.
-
-Built as a responsive dashboard with live data, charts, and news feed.
-
-## Features
-- Live robotics/AI stock trackers
-- Performance charts (Recharts)
-- Sector heatmaps & supercycle indicators
-- Aggregated news feed
-- Dark/light mode
-
-## Tech Stack
 - React 18 + Vite
-- Tailwind CSS + Lucide icons
-- Recharts
-- Auto-deploy via GitHub Actions (GitHub Pages)
+- Recharts for charting
+- Lucide icons
+- Custom Linear-inspired CSS
+- GitHub Pages for hosting
+- GitHub Actions + Python/yfinance for data refresh
 
-## Run locally
+## Local development
+
 ```bash
 npm install
 npm run dev
 ```
 
-## Deploy (GitHub Pages)
-1. Go to **Settings → Pages**
-2. Under **Build and deployment**, set **Source** to **GitHub Actions**
-3. Push to `main` — the workflow handles the rest
+The Vite dev server uses the configured base path from `vite.config.js`.
 
----
+## Quality checks
 
-**For the Physical AI revolution** 🚀
->>>>>>> origin/main
+```bash
+npm run test
+npm run build
+```
+
+`npm run test` runs the signal-cockpit checks plus repository/data-shape checks.
+
+## Data pipeline
+
+The canonical live data path is:
+
+```text
+scripts/update_data.py → public/data/quotes.json + public/data/history.json → Vite build → GitHub Pages
+```
+
+The scheduled workflow `.github/workflows/data-update.yml` refreshes market data, runs tests, builds the site, deploys the current artifact to GitHub Pages, and then commits changed `public/data/*.json` files back to `main` for auditability.
+
+Data source: Yahoo Finance via `yfinance` (free/no API key). Treat it as best-effort market data; the UI surfaces stale or partial data states instead of silently pretending everything is live.
+
+## Deployment
+
+GitHub Pages must be configured as:
+
+- **Settings → Pages → Source:** GitHub Actions
+
+The regular deploy workflow `.github/workflows/deploy.yml` still deploys on source pushes to `main`. The market-data workflow also deploys directly after refreshing data so scheduled data commits do not rely on a second push-triggered workflow.
+
+## Important: Vite base path
+
+For GitHub Pages project sites, Vite needs the repository path:
+
+```js
+base: '/Robofutures/'
+```
+
+If the repository is renamed, update `vite.config.js` and verify the live dashboard path.
