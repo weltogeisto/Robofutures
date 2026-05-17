@@ -12,8 +12,158 @@ const LAYER_PRESSURE = {
   4: 83,
 };
 
+const MS_PER_HOUR = 60 * 60 * 1000;
+// Allow normal weekend/holiday gaps while still flagging genuinely stale dashboards.
+const STALE_AFTER_HOURS = 72;
+
 export function clamp(value, min = 0, max = 100) {
   return Math.max(min, Math.min(max, Math.round(value)));
+}
+
+function payloadAgeHours(updatedRaw, now) {
+  if (!updatedRaw) {
+    return { updatedRaw: null, updatedAt: null, valid: false, ageHours: null };
+  }
+  const updatedAt = new Date(updatedRaw);
+  if (Number.isNaN(updatedAt.getTime())) {
+    return { updatedRaw, updatedAt: null, valid: false, ageHours: null };
+  }
+  return {
+    updatedRaw,
+    updatedAt,
+    valid: true,
+    ageHours: Math.max(0, (now.getTime() - updatedAt.getTime()) / MS_PER_HOUR),
+  };
+}
+
+export function getDataHealth(quotesPayload, historyPayload, now = new Date()) {
+  const quoteEntries = quotesPayload?.quotes && typeof quotesPayload.quotes === 'object'
+    ? Object.entries(quotesPayload.quotes)
+    : [];
+  const historyDates = Array.isArray(historyPayload?.dates) ? historyPayload.dates : [];
+  const explicitFailures = [
+    ...(Array.isArray(quotesPayload?.failed) ? quotesPayload.failed : []),
+    ...(Array.isArray(historyPayload?.failed) ? historyPayload.failed : []),
+  ];
+  const quoteFailures = quoteEntries
+    .filter(([, quote]) => quote?.error || quote?.price == null || Number.isNaN(Number(quote.price)))
+    .map(([symbol]) => symbol);
+  const failed = [...new Set([...explicitFailures, ...quoteFailures])].sort();
+
+  const quoteAge = payloadAgeHours(quotesPayload?.updated, now);
+  const historyAge = payloadAgeHours(historyPayload?.updated, now);
+  const validAges = [quoteAge.ageHours, historyAge.ageHours].filter(age => age != null);
+  const ageHours = validAges.length ? Math.max(...validAges) : null;
+  const updatedRaw = [quoteAge, historyAge]
+    .filter(item => item.valid)
+    .sort((a, b) => b.updatedAt.getTime() - a.updatedAt.getTime())[0]?.updatedRaw ?? null;
+
+  const warnings = [];
+  if (!quoteEntries.length) warnings.push('No quote payload loaded');
+  if (!historyDates.length) warnings.push('No history payload loaded');
+  if (quoteEntries.length && !quoteAge.valid) warnings.push('Quote timestamp missing or invalid');
+  if (historyDates.length && !historyAge.valid) warnings.push('History timestamp missing or invalid');
+  if (failed.length) warnings.push(`${failed.length} symbol${failed.length === 1 ? '' : 's'} failed`);
+  if (ageHours != null && ageHours > STALE_AFTER_HOURS) warnings.push(`Data is ${Math.round(ageHours)}h old`);
+
+  let status = 'fresh';
+  if (!quoteEntries.length || !historyDates.length || !quoteAge.valid || !historyAge.valid) {
+    status = 'missing';
+  } else if (ageHours > STALE_AFTER_HOURS) {
+    status = 'stale';
+  } else if (failed.length) {
+    status = 'degraded';
+  }
+
+  const labels = {
+    fresh: 'LIVE',
+    degraded: 'DEGRADED',
+    stale: 'STALE',
+    missing: 'NO DATA',
+  };
+
+  return {
+    status,
+    label: labels[status],
+    updated: updatedRaw,
+    ageHours: ageHours == null ? null : Math.round(ageHours * 10) / 10,
+    ages: {
+      quotes: quoteAge.ageHours == null ? null : Math.round(quoteAge.ageHours * 10) / 10,
+      history: historyAge.ageHours == null ? null : Math.round(historyAge.ageHours * 10) / 10,
+    },
+    failed,
+    warnings,
+  };
+}
+
+function alertPriorityFromStatus(status) {
+  if (status === 'missing' || status === 'stale') return 'high';
+  if (status === 'degraded') return 'med';
+  return 'low';
+}
+
+function priorityLabel(priority) {
+  return priority === 'high' ? 'high' : priority === 'med' ? 'med' : 'low';
+}
+
+export function deriveDashboardAlerts({ dataHealth, tickers = {} } = {}) {
+  const alerts = [];
+  const health = dataHealth ?? getDataHealth(null, null);
+
+  if (health.status !== 'fresh') {
+    const priority = alertPriorityFromStatus(health.status);
+    alerts.push({
+      id: 'data-health',
+      type: 'data-health',
+      ty: 'data-health',
+      p: priority,
+      priority,
+      t: health.warnings[0] ?? 'Dashboard data needs attention',
+      tm: health.updated ? 'Data health' : 'Now',
+      read: false,
+    });
+  }
+
+  const ranked = Object.entries(tickers)
+    .map(([symbol, data]) => ({ symbol, ...data }))
+    .sort((a, b) => Math.abs(b.ch ?? 0) - Math.abs(a.ch ?? 0));
+
+  ranked
+    .filter(ticker => (ticker.ch ?? 0) >= 75)
+    .slice(0, 2)
+    .forEach(ticker => {
+      alerts.push({
+        id: `momentum-${ticker.symbol}`,
+        type: 'momentum',
+        ty: 'momentum',
+        p: 'high',
+        priority: 'high',
+        t: `${ticker.symbol} momentum +${Math.round(ticker.ch)}% on selected timeframe`,
+        tm: 'Momentum',
+        read: false,
+      });
+    });
+
+  ranked
+    .filter(ticker => (ticker.rb ?? 0) >= 98)
+    .slice(0, 2)
+    .forEach(ticker => {
+      alerts.push({
+        id: `crowding-${ticker.symbol}`,
+        type: 'crowding',
+        ty: 'crowding',
+        p: 'med',
+        priority: 'med',
+        t: `${ticker.symbol} near range high; wait for pullback / confirm volume`,
+        tm: 'Crowding',
+        read: false,
+      });
+    });
+
+  return alerts.slice(0, 6).map(alert => ({
+    ...alert,
+    p: priorityLabel(alert.p),
+  }));
 }
 
 export function scoreTicker(ticker, data = {}) {

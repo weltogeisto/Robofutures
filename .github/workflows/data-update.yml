@@ -1,4 +1,4 @@
-name: Refresh Market Data
+name: Refresh Market Data and Deploy
 
 on:
   schedule:
@@ -8,9 +8,18 @@ on:
 
 permissions:
   contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages-deploy
+  cancel-in-progress: false
 
 jobs:
-  fetch-data:
+  refresh-build-deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -19,13 +28,24 @@ jobs:
         with:
           python-version: '3.12'
 
-      - name: Install yfinance
-        run: pip install yfinance
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Install data dependencies
+        run: pip install -r requirements-data.txt
 
       - name: Fetch latest data
         run: python scripts/update_data.py
 
-      - name: Commit & push if changed
+      - name: Install frontend dependencies
+        run: npm ci
+
+      - name: Run tests
+        run: npm run test
+
+      - name: Commit refreshed data if changed
         run: |
           git config user.name "Robofutures Bot"
           git config user.email "bot@robofutures.github.io"
@@ -36,3 +56,15 @@ jobs:
           else
             echo "No changes to commit"
           fi
+
+      - name: Build static site
+        run: npm run build
+
+      - uses: actions/configure-pages@v4
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: './dist'
+
+      - id: deployment
+        uses: actions/deploy-pages@v4
