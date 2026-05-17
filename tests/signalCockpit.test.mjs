@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { computeSignalCockpit, rankMomentumTickers, mapEcosystemLayers } from '../src/lib/signalCockpit.js';
+import { computeSignalCockpit, rankMomentumTickers, mapEcosystemLayers, deriveDashboardAlerts, getDataHealth } from '../src/lib/signalCockpit.js';
 
 const tickers = {
   ON: { n: 'onsemi', l: 1, ch: 105, rb: 99, ex: 35, ti: 'Core', se: 'Power/Analog' },
@@ -31,5 +31,35 @@ describe('computeSignalCockpit', () => {
     expect(cockpit.cycleClock.stage).toBeTruthy();
     expect(cockpit.topMomentumTickers.length).toBeGreaterThanOrEqual(3);
     expect(cockpit.actionQueue.length).toBeGreaterThanOrEqual(1);
+  });
+});
+
+describe('deriveDashboardAlerts — failed symbols', () => {
+  it('emits failed-symbols alert when data has failed symbols', () => {
+    const now = new Date('2026-05-15T12:00:00Z');
+    const freshUpdated = '2026-05-15T11:00:00Z';
+    const health = getDataHealth(
+      { updated: freshUpdated, quotes: { ON: { price: 10 }, MCHP: { error: true, price: null } }, failed: ['MCHP', 'IFX.DE'] },
+      { updated: freshUpdated, dates: ['2026-01-01'], r: [100], sp: [100], nd: [100] },
+      now,
+    );
+    expect(health.failed.length).toBeGreaterThan(0);
+
+    const alerts = deriveDashboardAlerts({ dataHealth: health, tickers });
+    const failedAlert = alerts.find((a) => a.type === 'failed-symbols');
+    expect(failedAlert).toBeTruthy();
+    expect(failedAlert?.t).toContain('MCHP');
+  });
+
+  it('does not emit failed-symbols alert when no failures', () => {
+    const now = new Date('2026-05-15T12:00:00Z');
+    const freshUpdated = '2026-05-15T11:00:00Z';
+    const health = getDataHealth(
+      { updated: freshUpdated, quotes: { ON: { price: 10 } } },
+      { updated: freshUpdated, dates: ['2026-01-01'], r: [100], sp: [100], nd: [100] },
+      now,
+    );
+    const alerts = deriveDashboardAlerts({ dataHealth: health, tickers });
+    expect(alerts.find((a) => a.type === 'failed-symbols')).toBeUndefined();
   });
 });

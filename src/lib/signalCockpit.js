@@ -163,6 +163,21 @@ export function deriveDashboardAlerts({ dataHealth, tickers = {} } = {}) {
       });
     });
 
+  if (health.failed.length > 0) {
+    const symbols = health.failed.slice(0, 4).join(', ');
+    const more = health.failed.length > 4 ? ` +${health.failed.length - 4} more` : '';
+    alerts.push({
+      id: 'failed-symbols',
+      type: 'failed-symbols',
+      ty: 'failed-symbols',
+      p: 'med',
+      priority: 'med',
+      t: `${health.failed.length} symbol${health.failed.length === 1 ? '' : 's'} failed to fetch: ${symbols}${more}`,
+      tm: 'Data',
+      read: false,
+    });
+  }
+
   return alerts.slice(0, 6).map(alert => ({
     ...alert,
     p: priorityLabel(alert.p),
