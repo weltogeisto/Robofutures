@@ -29,6 +29,8 @@ jobs:
           node-version: 20
           cache: 'npm'
       - run: npm ci
+      - run: npm run lint
+      - run: npm run typecheck
       - run: npm run test
       - run: npm run build
       - uses: actions/configure-pages@v4
