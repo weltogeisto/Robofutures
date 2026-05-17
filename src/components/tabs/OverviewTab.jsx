@@ -1,16 +1,17 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import LayerBadge from '../LayerBadge.jsx';
+import { computeSegmentMomentum } from '../../lib/segmentMomentum.js';
 
 // Import types for JSDoc only — no runtime cost
 /** @typedef {import('../../types.js').Ticker} Ticker */
 /** @typedef {import('../../types.js').CockpitData} CockpitData */
 
-const SEG = [
-  { id: 'humanoid', n: 'Humanoid', g: 298, m: 97, c: '#8b5cf6' },
-  { id: 'warehouse', n: 'Warehouse', g: 62, m: 93, c: '#3b82f6' },
-  { id: 'cobot', n: 'Collaborative', g: 52, m: 89, c: '#10b981' },
-  { id: 'surgical', n: 'Surgical', g: 44, m: 86, c: '#ec4899' },
+const SEG_DEFS = [
+  { id: 'humanoid', n: 'Humanoid', c: '#8b5cf6' },
+  { id: 'warehouse', n: 'Warehouse', c: '#3b82f6' },
+  { id: 'cobot', n: 'Collaborative', c: '#10b981' },
+  { id: 'surgical', n: 'Surgical', c: '#ec4899' },
 ];
 
 const TIME_SCALES = [
@@ -70,6 +71,7 @@ const formatXAxis = (dateStr, scale) => {
  */
 const OverviewTab = ({ cockpit, tickers, watchlist, timeScale, setTimeScale, chartDataRaw }) => {
   const chartData = filterTimeScale(chartDataRaw, timeScale);
+  const segMomentum = useMemo(() => computeSegmentMomentum(tickers), [tickers]);
 
   return (
     <>
@@ -283,18 +285,21 @@ const OverviewTab = ({ cockpit, tickers, watchlist, timeScale, setTimeScale, cha
         <div className="card">
           <div className="card-title">Segment Momentum</div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
-            {SEG.map((s) => (
-              <div key={s.id} style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 13 }}>
-                <div style={{ width: 8, height: 8, borderRadius: '50%', background: s.c }} />
-                <span style={{ flex: 1, color: 'var(--text-secondary)' }}>{s.n}</span>
-                <span style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: 11, color: 'var(--text-primary)' }}>
-                  {s.m}%
-                </span>
-                <div style={{ width: 60, height: 4, background: 'rgba(255,255,255,0.05)', borderRadius: 2 }}>
-                  <div style={{ width: s.m + '%', height: '100%', background: s.c, borderRadius: 2 }} />
+            {SEG_DEFS.map((s) => {
+              const m = segMomentum[s.id] ?? 50;
+              return (
+                <div key={s.id} style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 13 }}>
+                  <div style={{ width: 8, height: 8, borderRadius: '50%', background: s.c }} />
+                  <span style={{ flex: 1, color: 'var(--text-secondary)' }}>{s.n}</span>
+                  <span style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: 11, color: 'var(--text-primary)' }}>
+                    {m}%
+                  </span>
+                  <div style={{ width: 60, height: 4, background: 'rgba(255,255,255,0.05)', borderRadius: 2 }}>
+                    <div style={{ width: m + '%', height: '100%', background: s.c, borderRadius: 2 }} />
+                  </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
         <div className="card">
