@@ -101,12 +101,42 @@ def fetch_history(period="3y"):
         "tickers": {}
     }
 
-    # Per-ticker raw close (not normalized) for individual chart views later
+    # Per-ticker raw close (not normalized) for individual chart views + sparklines
     for sym in TICKERS:
         if sym in all_df.columns:
             out["tickers"][sym] = {
                 "close": [round(v, 2) for v in all_df[sym].tolist()],
             }
+
+    # Per-ticker OHLC for candlestick drawer (1Y, daily)
+    print("[history] Fetching 1Y OHLC data for candlestick charts...")
+    for sym in TICKERS:
+        try:
+            tk = yf.Ticker(sym)
+            ohlc_df = tk.history(period="1y", interval="1d", auto_adjust=True)
+            if ohlc_df.empty:
+                print(f"  ⚠  {sym}: empty OHLC response")
+                continue
+            ohlc_df.index = ohlc_df.index.tz_localize(None).normalize()
+            ohlc_df = ohlc_df[~ohlc_df.index.duplicated(keep='last')].sort_index()
+            ohlc_bars = [
+                {
+                    "t": row.name.strftime("%Y-%m-%d"),
+                    "o": round(float(row["Open"]), 4),
+                    "h": round(float(row["High"]), 4),
+                    "l": round(float(row["Low"]), 4),
+                    "c": round(float(row["Close"]), 4),
+                    "v": int(row["Volume"]) if pd.notna(row["Volume"]) else 0,
+                }
+                for _, row in ohlc_df.iterrows()
+            ]
+            if sym in out["tickers"]:
+                out["tickers"][sym]["ohlc"] = ohlc_bars
+            else:
+                out["tickers"][sym] = {"ohlc": ohlc_bars}
+            print(f"  ✓  {sym}: {len(ohlc_bars)} OHLC bars")
+        except Exception as e:
+            print(f"  ✗  {sym} OHLC: {e}")
 
     return out
 

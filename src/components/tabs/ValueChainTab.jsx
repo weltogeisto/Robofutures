@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import LayerBadge from '../LayerBadge.jsx';
 import Sparkline from '../Sparkline.jsx';
+import TickerDetailDrawer from '../TickerDetailDrawer.jsx';
 
 /** @typedef {import('../../types.js').Ticker} Ticker */
 
@@ -21,7 +22,11 @@ const LAYERS = [
  *   liveHistory: any,
  * }} props
  */
-const ValueChainTab = ({ tickers, tickersByLayer, timeScale, liveHistory }) => (
+const ValueChainTab = ({ tickers, tickersByLayer, timeScale, liveHistory }) => {
+  const [drawerTicker, setDrawerTicker] = useState(null);
+
+  return (
+  <>
   <div className="card">
     <div className="card-title">Full Ticker Universe — 4-Layer Humanoid Robotics Value Chain</div>
     <div className="data-table-wrap">
@@ -58,7 +63,13 @@ const ValueChainTab = ({ tickers, tickersByLayer, timeScale, liveHistory }) => (
                   if (!d) return null;
                   const isUp = d.ch >= 0;
                   return (
-                    <tr key={tk}>
+                    <tr
+                      key={tk}
+                      style={{ cursor: 'pointer' }}
+                      onClick={() => setDrawerTicker(tk)}
+                      onKeyDown={(e) => (e.key === 'Enter' ? setDrawerTicker(tk) : null)}
+                      tabIndex={0}
+                    >
                       <td style={{ fontWeight: 500 }}>{tk}</td>
                       <td style={{ color: 'var(--text-secondary)' }}>{d.n}</td>
                       <td>
@@ -113,6 +124,15 @@ const ValueChainTab = ({ tickers, tickersByLayer, timeScale, liveHistory }) => (
       </table>
     </div>
   </div>
-);
+  <TickerDetailDrawer
+    ticker={drawerTicker}
+    data={drawerTicker ? tickers[drawerTicker] : null}
+    ohlc={drawerTicker ? liveHistory?.tickers?.[drawerTicker]?.ohlc ?? null : null}
+    closes30={drawerTicker ? liveHistory?.tickers?.[drawerTicker]?.close?.slice(-30) ?? null : null}
+    onClose={() => setDrawerTicker(null)}
+  />
+  </>
+  );
+};
 
 export default ValueChainTab;
