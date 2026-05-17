@@ -1,5 +1,6 @@
 import React from 'react';
 import LayerBadge from '../LayerBadge.jsx';
+import Sparkline from '../Sparkline.jsx';
 
 /** @typedef {import('../../types.js').Ticker} Ticker */
 
@@ -17,9 +18,10 @@ const LAYERS = [
  *   tickers: Record<string, Ticker>,
  *   tickersByLayer: Record<number, string[]>,
  *   timeScale: string,
+ *   liveHistory: any,
  * }} props
  */
-const ValueChainTab = ({ tickers, tickersByLayer, timeScale }) => (
+const ValueChainTab = ({ tickers, tickersByLayer, timeScale, liveHistory }) => (
   <div className="card">
     <div className="card-title">Full Ticker Universe — 4-Layer Humanoid Robotics Value Chain</div>
     <div className="data-table-wrap">
@@ -35,6 +37,7 @@ const ValueChainTab = ({ tickers, tickersByLayer, timeScale }) => (
             <th>Exposure</th>
             <th>Tier</th>
             <th>Segment</th>
+            <th>Trend</th>
           </tr>
         </thead>
         <tbody>
@@ -44,7 +47,7 @@ const ValueChainTab = ({ tickers, tickersByLayer, timeScale }) => (
               <React.Fragment key={layer.id}>
                 <tr style={{ background: 'rgba(255,255,255,0.02)' }}>
                   <td
-                    colSpan={9}
+                    colSpan={10}
                     style={{ padding: '8px 12px', fontWeight: 510, color: layer.color, fontSize: 12 }}
                   >
                     {layer.rank}. {layer.name} — {layer.desc}
@@ -97,6 +100,9 @@ const ValueChainTab = ({ tickers, tickersByLayer, timeScale }) => (
                         </span>
                       </td>
                       <td style={{ fontSize: 12, color: 'var(--text-tertiary)' }}>{d.se}</td>
+                      <td>
+                        <Sparkline data={liveHistory?.tickers?.[tk]?.close?.slice(-30)} />
+                      </td>
                     </tr>
                   );
                 })}

@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import LayerBadge from '../LayerBadge.jsx';
+import Sparkline from '../Sparkline.jsx';
 import { computeSegmentMomentum } from '../../lib/segmentMomentum.js';
 
 // Import types for JSDoc only — no runtime cost
@@ -67,9 +68,10 @@ const formatXAxis = (dateStr, scale) => {
  *   timeScale: string,
  *   setTimeScale: (s: string) => void,
  *   chartDataRaw: Array<{d:string,r:number,sp:number,nd:number}>,
+ *   liveHistory: any,
  * }} props
  */
-const OverviewTab = ({ cockpit, tickers, watchlist, timeScale, setTimeScale, chartDataRaw }) => {
+const OverviewTab = ({ cockpit, tickers, watchlist, timeScale, setTimeScale, chartDataRaw, liveHistory }) => {
   const chartData = filterTimeScale(chartDataRaw, timeScale);
   const segMomentum = useMemo(() => computeSegmentMomentum(tickers), [tickers]);
 
@@ -323,6 +325,7 @@ const OverviewTab = ({ cockpit, tickers, watchlist, timeScale, setTimeScale, cha
                 >
                   <span style={{ fontWeight: 500, width: 60 }}>{tk}</span>
                   <span style={{ flex: 1, color: 'var(--text-tertiary)', fontSize: 12 }}>{d.n}</span>
+                  <Sparkline data={liveHistory?.tickers?.[tk]?.close?.slice(-30)} />
                   <span
                     style={{
                       fontFamily: 'JetBrains Mono, monospace',

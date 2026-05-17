@@ -240,13 +240,13 @@ export default function App() {
         )}
 
         <div id="tabpanel-overview" role="tabpanel" hidden={tab !== 'overview'}>
-          <OverviewTab cockpit={cockpit} tickers={timeframeTickers} watchlist={watchlist} timeScale={timeScale} setTimeScale={setTimeScale} chartDataRaw={chartDataRaw} />
+          <OverviewTab cockpit={cockpit} tickers={timeframeTickers} watchlist={watchlist} timeScale={timeScale} setTimeScale={setTimeScale} chartDataRaw={chartDataRaw} liveHistory={liveHistory} />
         </div>
         <div id="tabpanel-thesis" role="tabpanel" hidden={tab !== 'thesis'}>
           <ThesisTab tickers={timeframeTickers} tickersByLayer={tickersByLayer} expandedLayer={expandedLayer} setExpandedLayer={setExpandedLayer} />
         </div>
         <div id="tabpanel-valuechain" role="tabpanel" hidden={tab !== 'valuechain'}>
-          <ValueChainTab tickers={timeframeTickers} tickersByLayer={tickersByLayer} timeScale={timeScale} />
+          <ValueChainTab tickers={timeframeTickers} tickersByLayer={tickersByLayer} timeScale={timeScale} liveHistory={liveHistory} />
         </div>
         <div id="tabpanel-signals" role="tabpanel" hidden={tab !== 'signals'}>
           <SignalsTab alerts={alerts} />
