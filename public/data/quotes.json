@@ -1,5 +1,5 @@
 {
-  "updated": "2026-05-25T14:00:48.415042+00:00",
+  "updated": "2026-05-25T16:00:47.337697+00:00",
   "source": "Yahoo Finance via yfinance (free/no API key)",
   "cost": "No paid API/service used",
   "quotes": {
@@ -34,14 +34,14 @@
       "volume": 8837400
     },
     "IFX.DE": {
-      "price": 75.7,
-      "change": 1.91,
-      "change_pct": 2.59,
-      "prev_close": 73.79,
+      "price": 76.73,
+      "change": 3.31,
+      "change_pct": 4.51,
+      "prev_close": 73.42,
       "high_52w": 73.83,
       "low_52w": 30.82,
-      "market_cap_bn": 98.37,
-      "volume": 1489124
+      "market_cap_bn": 99.71,
+      "volume": 3252312
     },
     "ALGM": {
       "price": 45.95,
@@ -68,7 +68,7 @@
       "change": 630.0,
       "change_pct": 8.96,
       "prev_close": 7030.0,
-      "high_52w": 7380.0,
+      "high_52w": 7850.0,
       "low_52w": 2316.0,
       "market_cap_bn": 725.15,
       "volume": 1849300
@@ -118,7 +118,7 @@
       "change": 433.0,
       "change_pct": 6.14,
       "prev_close": 7048.0,
-      "high_52w": 7578.0,
+      "high_52w": 7700.0,
       "low_52w": 2807.0,
       "market_cap_bn": 1940.33,
       "volume": 6412300
@@ -138,7 +138,7 @@
       "change": 21.0,
       "change_pct": 2.17,
       "prev_close": 969.0,
-      "high_52w": 986.0,
+      "high_52w": 1030.0,
       "low_52w": 98.1,
       "market_cap_bn": 1558.77,
       "volume": 23533822
