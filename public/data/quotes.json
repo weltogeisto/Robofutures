@@ -1,5 +1,5 @@
 {
-  "updated": "2026-05-25T18:01:24.566538+00:00",
+  "updated": "2026-05-25T20:00:35.687958+00:00",
   "source": "Yahoo Finance via yfinance (free/no API key)",
   "cost": "No paid API/service used",
   "quotes": {
@@ -141,7 +141,7 @@
       "high_52w": 1030.0,
       "low_52w": 98.1,
       "market_cap_bn": 1558.77,
-      "volume": 23533822
+      "volume": 22262249
     }
   }
 }
