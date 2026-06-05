@@ -1,5 +1,5 @@
 {
-  "updated": "2026-06-05T20:22:52.611734+00:00",
+  "updated": "2026-06-05T21:55:23.387691+00:00",
   "source": "Yahoo Finance via yfinance (free/no API key)",
   "cost": "No paid API/service used",
   "quotes": {
@@ -21,7 +21,7 @@
       "high_52w": 134.92,
       "low_52w": 44.56,
       "market_cap_bn": 45.59,
-      "volume": 17789856
+      "volume": 19027944
     },
     "MCHP": {
       "price": 88.34,
