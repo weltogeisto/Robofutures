@@ -1,5 +1,5 @@
 {
-  "updated": "2026-07-01T20:21:50.941123+00:00",
+  "updated": "2026-07-01T21:58:30.591447+00:00",
   "source": "Yahoo Finance via yfinance (free/no API key)",
   "cost": "No paid API/service used",
   "quotes": {
@@ -11,7 +11,7 @@
       "high_52w": 334.03,
       "low_52w": 152.73,
       "market_cap_bn": 271.58,
-      "volume": 7713552
+      "volume": 8455077
     },
     "ON": {
       "price": 94.63,
@@ -31,7 +31,7 @@
       "high_52w": 105.91,
       "low_52w": 48.52,
       "market_cap_bn": 48.08,
-      "volume": 11786453
+      "volume": 14150870
     },
     "IFX.DE": {
       "price": 77.9,
