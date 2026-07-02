@@ -1,37 +1,37 @@
 {
-  "updated": "2026-07-02T19:59:56.228757+00:00",
+  "updated": "2026-07-02T21:15:39.765891+00:00",
   "source": "Yahoo Finance via yfinance (free/no API key)",
   "cost": "No paid API/service used",
   "quotes": {
     "TXN": {
-      "price": 293.11,
-      "change": -2.99,
-      "change_pct": -1.01,
+      "price": 293.08,
+      "change": -3.02,
+      "change_pct": -1.02,
       "prev_close": 296.1,
       "high_52w": 334.03,
       "low_52w": 152.73,
-      "market_cap_bn": 266.76,
-      "volume": 6769699
+      "market_cap_bn": 266.73,
+      "volume": 9474580
     },
     "ON": {
-      "price": 91.21,
-      "change": -3.65,
-      "change_pct": -3.85,
+      "price": 91.22,
+      "change": -3.64,
+      "change_pct": -3.84,
       "prev_close": 94.86,
       "high_52w": 134.92,
       "low_52w": 44.56,
       "market_cap_bn": 35.5,
-      "volume": 12069913
+      "volume": 15719706
     },
     "MCHP": {
-      "price": 84.61,
-      "change": -4.09,
-      "change_pct": -4.61,
+      "price": 84.64,
+      "change": -4.06,
+      "change_pct": -4.58,
       "prev_close": 88.7,
       "high_52w": 105.91,
       "low_52w": 48.52,
-      "market_cap_bn": 45.87,
-      "volume": 9199065
+      "market_cap_bn": 45.88,
+      "volume": 14044672
     },
     "IFX.DE": {
       "price": 76.35,
@@ -44,24 +44,24 @@
       "volume": 4972745
     },
     "ALGM": {
-      "price": 55.5,
-      "change": -7.72,
-      "change_pct": -12.21,
+      "price": 55.49,
+      "change": -7.73,
+      "change_pct": -12.23,
       "prev_close": 63.22,
       "high_52w": 71.77,
       "low_52w": 22.41,
       "market_cap_bn": 10.34,
-      "volume": 4244179
+      "volume": 4680207
     },
     "RRX": {
-      "price": 218.33,
-      "change": -12.67,
-      "change_pct": -5.48,
+      "price": 218.45,
+      "change": -12.55,
+      "change_pct": -5.43,
       "prev_close": 231.0,
       "high_52w": 247.8,
       "low_52w": 127.96,
-      "market_cap_bn": 14.53,
-      "volume": 1373320
+      "market_cap_bn": 14.54,
+      "volume": 1571000
     },
     "6324.T": {
       "price": 8130.0,
@@ -131,7 +131,7 @@
       "high_52w": 89.14,
       "low_52w": 46.52,
       "market_cap_bn": 154.12,
-      "volume": 2837926
+      "volume": 2838916
     },
     "3037.TW": {
       "price": 979.0,
