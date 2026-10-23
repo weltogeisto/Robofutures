@@ -1,137 +1,137 @@
 {
-  "updated": "2026-10-22T21:49:22.593189+00:00",
+  "updated": "2026-10-23T21:33:31.738719+00:00",
   "source": "Yahoo Finance via yfinance (free/no API key)",
   "cost": "No paid API/service used",
   "quotes": {
     "TXN": {
-      "price": 279.5,
-      "change": -8.89,
-      "change_pct": -3.08,
-      "prev_close": 288.39,
+      "price": 284.69,
+      "change": 7.69,
+      "change_pct": 2.78,
+      "prev_close": 277.0,
       "high_52w": 334.03,
       "low_52w": 152.73,
-      "market_cap_bn": 255.25,
-      "volume": 13857322
+      "market_cap_bn": 259.99,
+      "volume": 6578957
     },
     "ON": {
-      "price": 73.23,
-      "change": -5.27,
-      "change_pct": -6.71,
-      "prev_close": 78.5,
+      "price": 72.25,
+      "change": -0.87,
+      "change_pct": -1.19,
+      "prev_close": 73.12,
       "high_52w": 134.92,
       "low_52w": 44.56,
-      "market_cap_bn": 28.51,
-      "volume": 12501560
+      "market_cap_bn": 28.13,
+      "volume": 8157350
     },
     "MCHP": {
-      "price": 74.52,
-      "change": -3.28,
-      "change_pct": -4.22,
-      "prev_close": 77.8,
+      "price": 74.05,
+      "change": -0.84,
+      "change_pct": -1.12,
+      "prev_close": 74.89,
       "high_52w": 105.91,
       "low_52w": 48.52,
-      "market_cap_bn": 40.47,
-      "volume": 17068574
+      "market_cap_bn": 40.21,
+      "volume": 7183297
     },
     "IFX.DE": {
-      "price": 49.88,
-      "change": -3.26,
-      "change_pct": -6.13,
-      "prev_close": 53.14,
+      "price": 48.67,
+      "change": -1.27,
+      "change_pct": -2.54,
+      "prev_close": 49.94,
       "high_52w": 88.83,
       "low_52w": 31.27,
-      "market_cap_bn": 64.83,
-      "volume": 4829293
+      "market_cap_bn": 63.25,
+      "volume": 4832866
     },
     "ALGM": {
-      "price": 31.69,
-      "change": -2.6,
-      "change_pct": -7.58,
-      "prev_close": 34.29,
+      "price": 31.48,
+      "change": -0.16,
+      "change_pct": -0.51,
+      "prev_close": 31.64,
       "high_52w": 71.77,
       "low_52w": 22.41,
-      "market_cap_bn": 5.91,
-      "volume": 2455506
+      "market_cap_bn": 5.87,
+      "volume": 5701973
     },
     "RRX": {
-      "price": 148.71,
-      "change": -10.07,
-      "change_pct": -6.34,
-      "prev_close": 158.78,
+      "price": 147.92,
+      "change": 4.06,
+      "change_pct": 2.82,
+      "prev_close": 143.86,
       "high_52w": 247.8,
       "low_52w": 127.96,
-      "market_cap_bn": 9.9,
-      "volume": 1877841
+      "market_cap_bn": 9.85,
+      "volume": 833290
     },
     "6324.T": {
-      "price": 4875.0,
-      "change": -545.0,
-      "change_pct": -10.06,
-      "prev_close": 5420.0,
+      "price": 4895.0,
+      "change": 40.0,
+      "change_pct": 0.82,
+      "prev_close": 4855.0,
       "high_52w": 9150.0,
       "low_52w": 2420.0,
-      "market_cap_bn": 461.5,
-      "volume": 1679600
+      "market_cap_bn": 463.39,
+      "volume": 1985000
     },
     "6268.T": {
-      "price": 4166.0,
-      "change": -210.0,
-      "change_pct": -4.8,
-      "prev_close": 4376.0,
+      "price": 4118.0,
+      "change": -37.0,
+      "change_pct": -0.89,
+      "prev_close": 4155.0,
       "high_52w": 6113.0,
       "low_52w": 3196.0,
-      "market_cap_bn": 484.3,
-      "volume": 947200
+      "market_cap_bn": 478.72,
+      "volume": 1422700
     },
     "6481.T": {
-      "price": 5676.0,
-      "change": -371.0,
-      "change_pct": -6.14,
-      "prev_close": 6047.0,
+      "price": 5571.0,
+      "change": -80.0,
+      "change_pct": -1.42,
+      "prev_close": 5651.0,
       "high_52w": 8244.0,
       "low_52w": 3761.0,
-      "market_cap_bn": 636.13,
-      "volume": 1251100
+      "market_cap_bn": 624.36,
+      "volume": 1155300
     },
     "6861.T": {
-      "price": 80360.0,
-      "change": -910.0,
-      "change_pct": -1.12,
-      "prev_close": 81270.0,
+      "price": 78380.0,
+      "change": -1850.0,
+      "change_pct": -2.31,
+      "prev_close": 80230.0,
       "high_52w": 87920.0,
       "low_52w": 51510.0,
-      "market_cap_bn": 19489.32,
-      "volume": 475400
+      "market_cap_bn": 19009.12,
+      "volume": 667100
     },
     "6954.T": {
-      "price": 5624.0,
-      "change": -208.0,
-      "change_pct": -3.57,
-      "prev_close": 5832.0,
+      "price": 5587.0,
+      "change": -65.0,
+      "change_pct": -1.15,
+      "prev_close": 5652.0,
       "high_52w": 8880.0,
       "low_52w": 4761.0,
-      "market_cap_bn": 5201.71,
-      "volume": 4531500
+      "market_cap_bn": 5167.49,
+      "volume": 7186300
     },
     "6506.T": {
-      "price": 4033.0,
-      "change": -192.0,
-      "change_pct": -4.54,
-      "prev_close": 4225.0,
+      "price": 4022.0,
+      "change": -1.0,
+      "change_pct": -0.02,
+      "prev_close": 4023.0,
       "high_52w": 7915.0,
       "low_52w": 3674.0,
-      "market_cap_bn": 1046.32,
-      "volume": 4610400
+      "market_cap_bn": 1043.47,
+      "volume": 6364900
     },
     "ABBN.SW": {
-      "price": 68.92,
-      "change": -2.74,
-      "change_pct": -3.82,
-      "prev_close": 71.66,
+      "price": 67.78,
+      "change": -0.8,
+      "change_pct": -1.17,
+      "prev_close": 68.58,
       "high_52w": 89.14,
       "low_52w": 53.78,
-      "market_cap_bn": 124.69,
-      "volume": 4077798
+      "market_cap_bn": 122.46,
+      "volume": 3413028
     },
     "3037.TW": {
       "price": 1085.0,
@@ -141,7 +141,7 @@
       "high_52w": 1420.0,
       "low_52w": 156.78,
       "market_cap_bn": 1779.82,
-      "volume": 20532656
+      "volume": 0
     }
   }
 }
